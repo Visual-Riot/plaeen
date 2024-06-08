@@ -8,6 +8,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'pink-purple': 'linear-gradient(319deg, #FF37DF 0%, #6E00FF 100%)'
+      },
       colors: {
         black: '#000000',
         lavender: '#9A50FB',
@@ -21,6 +26,7 @@ const config: Config = {
         plum: '#620A81',
         violet: '#6606E3',
         bubblegum: '#FF37DF',
+        red: '#FF304D',
       },
       fontFamily: {
         logo: ['"Abolition Soft"', 'sans-serif'],
