@@ -52,7 +52,7 @@ const config: Config = {
         cyanAccent: "#00FFFB",
       },
       fontFamily: {
-        sofia: ["sofia pro", "sans-serif"],
+        sofia: ["sofia-pro", "sans-serif"],
         abolition: ["abolition", "sans-serif"],
         logo: ["abolition-soft", "sans-serif"],
       },

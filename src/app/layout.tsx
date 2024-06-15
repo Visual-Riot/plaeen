@@ -13,7 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="font-sofia">
+      <head>
+        <link rel="stylesheet" href="https://use.typekit.net/qor3xoj.css" />
+      </head>
       <body>{children}</body>
     </html>
   );
