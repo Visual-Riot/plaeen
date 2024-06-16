@@ -13,6 +13,7 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         "pink-purple": "linear-gradient(319deg, #FF37DF 0%, #6E00FF 100%)",
+        "calendar-bg": "url('/img/bg-img_01.webp')",
       },
       colors: {
         // Tailwind default colors
