@@ -44,6 +44,18 @@ export default function Home() {
             Test Session page
           </p>
         </Link>
+
+        <Link href={"/calendar"}>
+          <h2 className="mb-3 text-2xl font-semibold">
+            Player Calendar{" "}
+            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+              -&gt;
+            </span>
+          </h2>
+          <p className="m-0 max-w-[30ch] text-sm opacity-50">
+            Test Calendar page
+          </p>
+        </Link>
       </div>
     </main>
   );
