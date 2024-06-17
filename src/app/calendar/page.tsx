@@ -66,7 +66,12 @@ export default function Page() {
                 </h2>
                 {hoursOfDay.map((hour) => (
                   <div className="w-10">
-                    <PlayerTimeSlot state="available" key={hour} hour={hour} />
+                    <PlayerTimeSlot
+                      state="available"
+                      key={hour}
+                      hour={hour}
+                      day={day}
+                    />
                   </div>
                 ))}
               </div>

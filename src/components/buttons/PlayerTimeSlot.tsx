@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 
 interface ButtonProps {
+  day: string;
   hour: number;
   className?: string;
   state: "available" | "single" | "recurring";
 }
 
-const PlayerTimeSlot: React.FC<ButtonProps> = ({ hour }) => {
+const PlayerTimeSlot: React.FC<ButtonProps> = ({ hour, day }) => {
   const [state, setState] = useState<"available" | "single" | "recurring">(
     "available"
   );
@@ -25,6 +26,8 @@ const PlayerTimeSlot: React.FC<ButtonProps> = ({ hour }) => {
           return "available";
       }
     });
+
+    console.log(`Hour ${hour} on ${day} is now ${state}`);
   };
 
   const getButtonColor = () => {
