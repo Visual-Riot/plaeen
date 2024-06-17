@@ -15,7 +15,7 @@ const OutlineButton: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className={`btn bg-transparent border border-lightGrey border-2 rounded-lg text-lightGrey py-2 px-4 ${className}`}
+      className={`btn bg-transparent border border-lightGrey hover:border-lightPurple hover:text-lightPurple border-2 rounded-lg text-lightGrey py-2 px-4 ease-in-out duration-300 ${className}`}
       onClick={onClick}
     >
       {children}

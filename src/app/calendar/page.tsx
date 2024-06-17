@@ -3,6 +3,9 @@ import React from "react";
 import PlayerTimeSlot from "../../components/buttons/PlayerTimeSlot";
 import OutlineButton from "../../components/buttons/OutlineButton";
 import GreenButton from "../../components/buttons/GreenButton";
+import TertiaryButton from "../../components/buttons/TertiaryButton";
+
+import ResetIcon from "../../components/icons/ResetIcon";
 
 export default function Page() {
   const daysOfWeek = [
@@ -72,7 +75,7 @@ export default function Page() {
         </div>
 
         {/* LOW ROW with legend and submit button */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center align-middle">
           <div className="flex flex-row text-lightGrey font-light text-sm">
             <div className="flex flex-row pr-8 ">
               <button className="w-5 h-5 bg-green opacity-50 rounded mr-2"></button>{" "}
@@ -89,7 +92,17 @@ export default function Page() {
           </div>
 
           <div>
-            <GreenButton onClick={() => console.log("Submit")}>
+            <TertiaryButton
+              className="mr-5 align-middle"
+              onClick={() => console.log("Reset")}
+            >
+              <ResetIcon className="mr-2 fill-current align-middle" />
+              Reset
+            </TertiaryButton>
+            <GreenButton
+              className="align-middle"
+              onClick={() => console.log("Submit")}
+            >
               Save and continue
             </GreenButton>
           </div>
