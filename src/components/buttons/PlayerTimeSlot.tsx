@@ -3,6 +3,8 @@ import React, { useState } from "react";
 
 interface ButtonProps {
   hour: number;
+  className?: string;
+  state: "available" | "single" | "recurring";
 }
 
 const PlayerTimeSlot: React.FC<ButtonProps> = ({ hour }) => {
@@ -28,11 +30,11 @@ const PlayerTimeSlot: React.FC<ButtonProps> = ({ hour }) => {
   const getButtonColor = () => {
     switch (state) {
       case "available":
-        return "bg-green opacity-40";
+        return "bg-green opacity-50";
       case "single":
-        return "bg-cyanAccent opacity-80";
+        return "bg-cyanAccent opacity-50";
       case "recurring":
-        return "bg-pinkAccent opacity-80";
+        return "bg-pinkAccent opacity-50";
       default:
         return "bg-green opacity-40";
     }

@@ -55,6 +55,8 @@ const config: Config = {
       fontFamily: {
         sofia: ["sofia-pro", "sans-serif"],
         abolition: ["abolition", "sans-serif"],
+        roboto: ["roboto", "sans-serif"],
+        robotoMono: ["roboto-mono", "monospace"],
         logo: ["abolition-soft", "sans-serif"],
       },
       fontWeight: {
