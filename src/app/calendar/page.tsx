@@ -41,42 +41,45 @@ export default function Page() {
         </div>
 
         {/* CALENDAR */}
-        <div className="my-10">
+        <div className="my-10 overflow-x-auto flex flex-row">
           <div className="flex flex-col">
-            <div className="flex flex-row justify-between">
-              <div className="flex flex-row w-1/6"></div>
-              {hoursOfDay.map((hour) => (
-                <div className="w-10 text-center justify-center items-center">
-                  <h2
-                    key={hour}
-                    className="text-lightPurple font-robotoMono font-regular uppercase text-center"
-                  >
-                    {hour}
-                  </h2>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {daysOfWeek.map((day) => (
-            <div key={day} className="flex flex-col">
-              <div className="flex flex-row justify-between my-2">
-                <h2 className="text-lightPurple font-robotoMono font-regular uppercase w-1/6">
+            <div className="h-10"></div>
+            {daysOfWeek.map((day) => (
+              <div key={day} className="h-10 flex items-center">
+                <h2 className="text-lightPurple font-robotoMono font-regular uppercase">
                   {day}
                 </h2>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col w-full">
+            <div className="flex flex-row justify-between">
+              <div className="w-20 h-10"></div>
+              <div className="overflow-x-auto flex flex-row w-full justify-between">
                 {hoursOfDay.map((hour) => (
-                  <div className="w-10">
-                    <PlayerTimeSlot
-                      state="available"
-                      key={hour}
-                      hour={hour}
-                      day={day}
-                    />
+                  <div
+                    key={hour}
+                    className="text-center justify-center items-center"
+                  >
+                    <h2 className="text-lightPurple font-robotoMono font-regular uppercase text-center w-10 h-10">
+                      {hour}
+                    </h2>
+                    <div>
+                      {daysOfWeek.map((day) => (
+                        <div key={`${day}-${hour}`} className="h-10">
+                          <PlayerTimeSlot
+                            state="available"
+                            hour={hour}
+                            day={day}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-          ))}
+          </div>
         </div>
 
         {/* LOW ROW with legend and submit button */}
