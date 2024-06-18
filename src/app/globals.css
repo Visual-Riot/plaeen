@@ -6,6 +6,9 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --green: 35, 89, 3;
+  --darkPurple: 40, 2, 89;
+  --lightPurple: 76, 57, 100;
 }
 
 @media (prefers-color-scheme: dark) {

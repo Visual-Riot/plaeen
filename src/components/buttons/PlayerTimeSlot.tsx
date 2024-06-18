@@ -6,9 +6,14 @@ interface ButtonProps {
   hour: number;
   className?: string;
   state: "available" | "single" | "recurring";
+  displayedHour?: number;
 }
 
-const PlayerTimeSlot: React.FC<ButtonProps> = ({ hour, day }) => {
+const PlayerTimeSlot: React.FC<ButtonProps> = ({
+  hour,
+  day,
+  displayedHour,
+}) => {
   const [state, setState] = useState<"available" | "single" | "recurring">(
     "available"
   );
@@ -33,24 +38,26 @@ const PlayerTimeSlot: React.FC<ButtonProps> = ({ hour, day }) => {
   const getButtonColor = () => {
     switch (state) {
       case "available":
-        return "bg-green opacity-50";
+        return "bg-green bg-opacity-50 text-darkPurple";
       case "single":
-        return "bg-cyanAccent opacity-50";
+        return "bg-cyanAccent bg-opacity-50 text-darkPurple";
       case "recurring":
-        return "bg-pinkAccent opacity-50";
+        return "bg-pinkAccent bg-opacity-50 text-lightPurple";
       default:
-        return "bg-green opacity-40";
+        return "bg-green bg-opacity-40 text-darkPurple";
     }
   };
 
   const defaultClasses =
-    "w-6 h-6 hover:scale-90 ease-in-out duration-200 text-black rounded mx-1";
+    "grow w-12 h-12 lg:w-4 lg:h-4 xl:h-5 xl:w-5 font-semibold hover:scale-90 ease-in-out duration-200 rounded mx-1";
 
   return (
     <button
       className={`${defaultClasses} ${getButtonColor()}`}
       onClick={handleClick}
-    ></button>
+    >
+      {displayedHour}
+    </button>
   );
 };
 
