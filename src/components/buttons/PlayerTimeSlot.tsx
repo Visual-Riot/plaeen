@@ -38,13 +38,13 @@ const PlayerTimeSlot: React.FC<ButtonProps> = ({
   const getButtonColor = () => {
     switch (state) {
       case "available":
-        return "bg-green bg-opacity-50 text-darkPurple";
+        return "bg-green bg-opacity-80 text-darkPurple";
       case "single":
-        return "bg-cyanAccent bg-opacity-50 text-darkPurple";
+        return "bg-green border-3 border-offWhite bg-opacity-80 text-darkPurple";
       case "recurring":
-        return "bg-pinkAccent bg-opacity-50 text-lightPurple";
+        return "bg-accentOne bg-opacity-80 text-lightPurple";
       default:
-        return "bg-green bg-opacity-40 text-darkPurple";
+        return "bg-green bg-opacity-80 text-darkPurple";
     }
   };
 

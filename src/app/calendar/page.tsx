@@ -44,11 +44,11 @@ export default function Page() {
               <p>Available</p>
             </div>
             <div className="flex flex-row pr-8">
-              <button className="w-5 h-5 bg-pinkAccent opacity-50 rounded mb-4 mr-2"></button>{" "}
+              <button className="w-5 h-5 bg-accentTwo opacity-50 rounded mb-4 mr-2"></button>{" "}
               <p className="text-nowrap">Single event</p>
             </div>
             <div className="flex flex-row pr-8">
-              <button className="w-5 h-5 bg-cyanAccent opacity-50 rounded mb-4 mr-2"></button>{" "}
+              <button className="w-5 h-5 bg-accentOne opacity-50 rounded mb-4 mr-2"></button>{" "}
               <p className="text-nowrap">Recurring event</p>
             </div>
           </div>

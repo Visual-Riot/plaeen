@@ -49,8 +49,10 @@ const config: Config = {
         info: "#1B5CDF",
 
         // accents
-        pinkAccent: "#FF08C4",
-        cyanAccent: "#00FFFB",
+        accentOne: "#ff1ef0", // pink "#ef0c67"
+        accentTwo: "#defb8c", // orange "#f79b31"
+        accentThree: "#3be1e1", // cyan
+        accentFour: "#bce339", // lemon
       },
       fontFamily: {
         sofia: ["sofia-pro", "sans-serif"],
