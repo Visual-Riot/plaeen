@@ -16,7 +16,7 @@ export default function PlayerCalendarDesktop({ className = "", ...props }) {
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
 
   return (
-    <div className={`my-10 w-full flex ${className}`}>
+    <div className={`my-5 w-full flex ${className}`}>
       {/* Days Names Column */}
       <div className="flex flex-col">
         <div className="h-10"></div>
@@ -34,7 +34,7 @@ export default function PlayerCalendarDesktop({ className = "", ...props }) {
 
       {/* Hours columns */}
       <div className="flex flex-col w-full">
-        <div className="flex flex-row pr-6">
+        <div className="flex flex-row">
           <div className="w-5 md:w-10 h-10"></div>
           <div className="flex flex-row justify-between w-full">
             {hoursOfDay.map((hour) => (

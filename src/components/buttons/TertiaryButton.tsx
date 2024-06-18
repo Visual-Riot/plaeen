@@ -15,7 +15,7 @@ const TertiaryButton: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className={`btn text-lightGrey hover:text-lightPurple py-1 px-2 inline-flex items-center justify-center  ease-in-out duration-300 ${className}`}
+      className={`btn text-mediumGrey hover:text-lightPurple py-1 px-2 inline-flex items-center justify-center ease-in-out duration-300 ${className}`}
       onClick={onClick}
     >
       {children}
