@@ -1,17 +1,31 @@
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
+import React from "react";
 
-export default function PlayerCalendarDesktop({ className = "", ...props }) {
-  const daysOfWeekFull = [
-    "Sunday",
+interface Props {
+  dayHours: { [key: string]: { [key: number]: string } };
+
+  onHourStateChange: (
+    day: string,
+    hour: number,
+    newState: "available" | "single" | "recurring"
+  ) => void;
+  className?: string;
+}
+
+const PlayerCalendarDesktop: React.FC<Props> = ({
+  dayHours,
+  onHourStateChange,
+  className = "",
+}) => {
+  const daysOfWeek = [
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
     "Saturday",
+    "Sunday",
   ];
-
-  const daysOfWeekShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
 
@@ -20,13 +34,10 @@ export default function PlayerCalendarDesktop({ className = "", ...props }) {
       {/* Days Names Column */}
       <div className="flex flex-col">
         <div className="h-10"></div>
-        {daysOfWeekFull.map((day, index) => (
+        {daysOfWeek.map((day, index) => (
           <div key={day} className="h-10 flex items-center">
             <h2 className="hidden md:inline text-lightPurple font-robotoMono font-regular uppercase">
               {day}
-            </h2>
-            <h2 className="inline md:hidden text-lightPurple font-robotoMono font-regular uppercase">
-              {daysOfWeekShort[index]}
             </h2>
           </div>
         ))}
@@ -46,12 +57,12 @@ export default function PlayerCalendarDesktop({ className = "", ...props }) {
                   {hour}
                 </h2>
                 <div className="flex flex-col">
-                  {daysOfWeekFull.map((day) => (
+                  {daysOfWeek.map((day) => (
                     <div
                       key={`${day}-${hour}`}
                       className="h-10 flex flex-shrink"
                     >
-                      <PlayerTimeSlot state="available" hour={hour} day={day} />
+                      <PlayerTimeSlot day={day} hour={hour} state="available" />
                     </div>
                   ))}
                 </div>
@@ -62,4 +73,6 @@ export default function PlayerCalendarDesktop({ className = "", ...props }) {
       </div>
     </div>
   );
-}
+};
+
+export default PlayerCalendarDesktop;

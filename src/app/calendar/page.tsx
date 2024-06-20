@@ -1,14 +1,13 @@
 "use client";
-import React from "react";
-import PlayerCalendarDesktop from "../../components/calendar/PlayerCalendarDesktop";
-import PlayerCalendarMobile from "../../components/calendar/PlayerCalendarMobile";
+import React, { useState, useEffect } from "react";
 import OutlineButton from "../../components/buttons/OutlineButton";
 import GreenButton from "../../components/buttons/GreenButton";
 import TertiaryButton from "../../components/buttons/TertiaryButton";
-
 import ResetIcon from "../../components/icons/ResetIcon";
+import PlayerCalendarWrapper from "../../components/calendar/PlayerCalendarWrapper";
 
 export default function Page() {
+  // PLACEHOLDER FOR IMPORT CALENDARS FUNCTIONALITY
   const importHandleClick = () => {
     console.log("Import calendars");
   };
@@ -33,8 +32,7 @@ export default function Page() {
         </div>
 
         {/* CALENDAR */}
-        <PlayerCalendarMobile className="flex lg:hidden" />
-        <PlayerCalendarDesktop className="hidden lg:flex" />
+        <PlayerCalendarWrapper />
 
         {/* LOW ROW with legend and submit button */}
         <div className="flex items-center w-full justify-between  px-2">
@@ -63,7 +61,10 @@ export default function Page() {
 
             <TertiaryButton
               className="mr-0 lg:mr-5 align-middle"
-              onClick={() => console.log("Reset")}
+              onClick={() => {
+                setDayHours({});
+                console.log("Reset");
+              }}
             >
               <ResetIcon className="mr-2 fill-current align-middle" />
               Reset

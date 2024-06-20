@@ -1,42 +1,58 @@
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import DayButton from "../buttons/DayButton";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export default function PlayerCalendarMobile({ className = "", ...props }) {
-  const daysOfWeekShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+interface Props {
+  className?: string;
+}
+
+const PlayerCalendarMobile: React.FC<Props> = ({ className }) => {
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
 
-  const [selectedDay, setSelectedDay] = useState<string | null>("Mon");
+  const [selectedDay, setSelectedDay] = useState<string | null>("Monday");
+
+  const handleDayChange = (day: string) => {
+    setSelectedDay(day);
+  };
 
   return (
     <div className={`my-10 ${className}`}>
       <div className="w-full">
         {/* Days Names Column */}
         <div className="grid grid-cols-7 gap-1 md:gap-1 px-2 mt-4">
-          {daysOfWeekShort.map((day) => (
+          {daysOfWeek.map((day) => (
             <div key={day} className="flex justify-center">
               <DayButton
                 key={day}
-                onClick={() => setSelectedDay(day)}
                 state={selectedDay === day ? "selected" : "unselected"}
+                onClick={() => {
+                  handleDayChange(day);
+                }}
               >
-                {day}
+                {day.slice(0, 3)}
               </DayButton>
             </div>
           ))}
         </div>
 
-        {/* Hours columns */}
-
+        {/* Render time slots for the selected day */}
         <div className="grid grid-cols-6 gap-2 md:gap-4 px-2 mt-4">
           {hoursOfDay.map((hour) => (
             <div key={hour} className="flex justify-center">
               <PlayerTimeSlot
-                state="available"
-                day="day"
+                day={selectedDay || ""}
                 hour={hour}
-                className="w-full"
+                state="available"
                 displayedHour={hour}
               />
             </div>
@@ -45,4 +61,6 @@ export default function PlayerCalendarMobile({ className = "", ...props }) {
       </div>
     </div>
   );
-}
+};
+
+export default PlayerCalendarMobile;
