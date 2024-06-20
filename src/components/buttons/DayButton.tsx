@@ -40,7 +40,8 @@ const DayButton: React.FC<ButtonProps> = ({
     }
   };
 
-  const defaultClasses = "btn rounded-md w-11 h-11 ease-in-out duration-300";
+  const defaultClasses =
+    "grow btn rounded-md w-11 h-11 ease-in-out duration-300";
 
   return (
     <button

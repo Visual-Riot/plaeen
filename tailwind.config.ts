@@ -50,7 +50,7 @@ const config: Config = {
 
         // accents
         accentOne: "#ff1ef0", // pink "#ef0c67"
-        accentTwo: "#defb8c", // orange "#f79b31"
+        accentTwo: "#f79b31", // orange "#f79b31"
         accentThree: "#3be1e1", // cyan
         accentFour: "#bce339", // lemon
       },
