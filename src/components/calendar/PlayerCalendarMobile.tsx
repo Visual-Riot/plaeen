@@ -1,22 +1,25 @@
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import DayButton from "../buttons/DayButton";
+import React, { useState } from "react";
 
 export default function PlayerCalendarMobile({ className = "", ...props }) {
-  const daysOfWeekShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const daysOfWeekShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
+
+  const [selectedDay, setSelectedDay] = useState<string | null>("Mon");
 
   return (
     <div className={`my-10 ${className}`}>
       <div className="w-full">
         {/* Days Names Column */}
-        <div className="grid grid-cols-7 gap-2 md:gap-4 px-2 mt-4">
+        <div className="grid grid-cols-7 gap-1 md:gap-1 px-2 mt-4">
           {daysOfWeekShort.map((day) => (
             <div key={day} className="flex justify-center">
               <DayButton
                 key={day}
-                onClick={() => console.log(day)}
-                state="unselected"
+                onClick={() => setSelectedDay(day)}
+                state={selectedDay === day ? "selected" : "unselected"}
               >
                 {day}
               </DayButton>

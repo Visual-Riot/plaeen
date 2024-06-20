@@ -11,7 +11,7 @@ export default function PlayerCalendarDesktop({ className = "", ...props }) {
     "Saturday",
   ];
 
-  const daysOfWeekShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const daysOfWeekShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
 

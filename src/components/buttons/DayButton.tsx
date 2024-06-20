@@ -13,40 +13,26 @@ const DayButton: React.FC<ButtonProps> = ({
   children,
   onClick,
   className = "",
+  state,
 }) => {
-  const [state, setState] = useState<"selected" | "unselected">("unselected");
-
-  const handleClick = () => {
-    setState((prevState) => {
-      switch (prevState) {
-        case "selected":
-          return "unselected";
-        case "unselected":
-          return "selected";
-        default:
-          return "unselected";
-      }
-    });
-  };
-
   const getButtonColor = () => {
     switch (state) {
       case "selected":
-        return "bg-lightPurple bg-opacity-50 text-black";
+        return "bg-lightPurple bg-opacity-70 text-black";
       case "unselected":
-        return "bg-darkPurple bg-opacity-50 text-white ";
+        return "bg-lightPurple bg-opacity-30 text-lightPurple ";
       default:
-        return "bg-darkPurple bg-opacity-40 text-white ";
+        return "bg-lightPurple bg-opacity-30 text-black ";
     }
   };
 
   const defaultClasses =
-    "grow btn rounded-md w-11 h-11 ease-in-out duration-300";
+    "grow btn rounded-sm w-11 h-12 ease-in-out duration-300";
 
   return (
     <button
       className={`${defaultClasses} ${getButtonColor()}`}
-      onClick={handleClick}
+      onClick={onClick}
     >
       {children}
     </button>
