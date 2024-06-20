@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect } from "react";
 
 interface ButtonProps {
@@ -7,6 +6,11 @@ interface ButtonProps {
   className?: string;
   state: "available" | "single" | "recurring";
   displayedHour?: number;
+  onStateChange: (
+    day: string,
+    hour: number,
+    newState: "available" | "single" | "recurring"
+  ) => void;
 }
 
 const PlayerTimeSlot: React.FC<ButtonProps> = ({
@@ -14,24 +18,20 @@ const PlayerTimeSlot: React.FC<ButtonProps> = ({
   day,
   displayedHour,
   state: initialState,
+  onStateChange,
   className = "",
 }) => {
   const [state, setState] = useState(initialState);
 
   const handleClick = () => {
-    switch (state) {
-      case "available":
-        setState("single");
-        break;
-      case "single":
-        setState("recurring");
-        break;
-      case "recurring":
-        setState("available");
-        break;
-      default:
-        break;
-    }
+    const newState =
+      state === "available"
+        ? "single"
+        : state === "single"
+        ? "recurring"
+        : "available";
+    setState(newState);
+    onStateChange(day, hour, newState);
   };
 
   const getButtonColor = () => {

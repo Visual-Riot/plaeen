@@ -14,7 +14,7 @@ interface Props {
 
 const PlayerCalendarDesktop: React.FC<Props> = ({
   dayHours,
-  onHourStateChange,
+  onHoursStateChange,
   className = "",
 }) => {
   const daysOfWeek = [
@@ -62,7 +62,12 @@ const PlayerCalendarDesktop: React.FC<Props> = ({
                       key={`${day}-${hour}`}
                       className="h-10 flex flex-shrink"
                     >
-                      <PlayerTimeSlot day={day} hour={hour} state="available" />
+                      <PlayerTimeSlot
+                        day={day}
+                        hour={hour}
+                        state={dayHours[day]?.[hour] || "available"}
+                        onStateChange={onHoursStateChange}
+                      />
                     </div>
                   ))}
                 </div>

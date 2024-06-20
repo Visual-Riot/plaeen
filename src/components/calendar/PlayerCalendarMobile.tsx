@@ -4,9 +4,19 @@ import React, { useState, useEffect } from "react";
 
 interface Props {
   className?: string;
+  dayHours: { [key: string]: { [key: number]: string } };
+  onHoursStateChange: (
+    day: string,
+    hour: number,
+    newState: "available" | "single" | "recurring"
+  ) => void;
 }
 
-const PlayerCalendarMobile: React.FC<Props> = ({ className }) => {
+const PlayerCalendarMobile: React.FC<Props> = ({
+  className,
+  dayHours,
+  onHoursStateChange,
+}) => {
   const daysOfWeek = [
     "Monday",
     "Tuesday",
@@ -23,6 +33,7 @@ const PlayerCalendarMobile: React.FC<Props> = ({ className }) => {
 
   const handleDayChange = (day: string) => {
     setSelectedDay(day);
+    console.log(dayHours[day]);
   };
 
   return (
@@ -52,8 +63,14 @@ const PlayerCalendarMobile: React.FC<Props> = ({ className }) => {
               <PlayerTimeSlot
                 day={selectedDay || ""}
                 hour={hour}
-                state="available"
+                state={
+                  (dayHours[selectedDay || ""]?.[hour] as
+                    | "available"
+                    | "single"
+                    | "recurring") || "available"
+                }
                 displayedHour={hour}
+                onStateChange={onHoursStateChange}
               />
             </div>
           ))}
