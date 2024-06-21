@@ -4,7 +4,7 @@ import React from "react";
 interface Props {
   dayHours: { [key: string]: { [key: number]: string } };
 
-  onHourStateChange: (
+  onHoursStateChange: (
     day: string,
     hour: number,
     newState: "available" | "single" | "recurring"

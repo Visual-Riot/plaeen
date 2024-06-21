@@ -56,7 +56,7 @@ export default function PlayerCalendarWrapper() {
         <PlayerCalendarDesktop
           className="hidden lg:flex"
           dayHours={dayHours}
-          onHourStateChange={handleHourStateChange}
+          onHoursStateChange={handleHourStateChange}
         />
       )}
     </div>
