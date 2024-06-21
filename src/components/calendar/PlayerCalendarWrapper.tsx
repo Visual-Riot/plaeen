@@ -1,15 +1,20 @@
-"use client";
+// Removed unused import
 import React, { useState, useEffect } from "react";
 import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
 import PlayerCalendarMobile from "./PlayerCalendarMobile";
 
-export default function PlayerCalendarWrapper() {
+interface PlayerCalendarWrapperProps {
+  dayHours: { [key: string]: { [key: number]: string } };
+  setDayHours: React.Dispatch<
+    React.SetStateAction<{ [key: string]: { [key: number]: string } }>
+  >;
+}
+
+const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
+  dayHours,
+  setDayHours,
+}) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
-
-  const [dayHours, setDayHours] = useState<{
-    [key: string]: { [key: number]: string };
-  }>({});
-
   const [selectedDay, setSelectedDay] = useState<string>("Monday");
 
   useEffect(() => {
@@ -23,7 +28,6 @@ export default function PlayerCalendarWrapper() {
     localStorage.setItem("dayHours", JSON.stringify(dayHours));
   }, [dayHours]);
 
-  // HANDLE SCREEN RESIZE
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 1024);
@@ -64,4 +68,6 @@ export default function PlayerCalendarWrapper() {
       )}
     </div>
   );
-}
+};
+
+export default PlayerCalendarWrapper;

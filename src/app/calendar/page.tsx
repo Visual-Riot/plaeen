@@ -12,6 +12,14 @@ export default function Page() {
     console.log("Import calendars");
   };
 
+  const [dayHours, setDayHours] = useState<{
+    [key: string]: { [key: number]: string };
+  }>({});
+
+  const resetDayHours = () => {
+    setDayHours({});
+  };
+
   return (
     // background
     <div className="relative min-h-screen bg-calendar-bg bg-cover bg-center flex justify-center items-center">
@@ -32,7 +40,7 @@ export default function Page() {
         </div>
 
         {/* CALENDAR */}
-        <PlayerCalendarWrapper />
+        <PlayerCalendarWrapper dayHours={dayHours} setDayHours={setDayHours} />
 
         {/* LOW ROW with legend and submit button */}
         <div className="flex items-center w-full justify-between  px-2">
@@ -62,7 +70,7 @@ export default function Page() {
             <TertiaryButton
               className="mr-0 lg:mr-5 align-middle"
               onClick={() => {
-                setDayHours({});
+                resetDayHours();
                 console.log("Reset");
               }}
             >
