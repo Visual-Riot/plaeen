@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 interface Props {
   className?: string;
   dayHours: { [key: string]: { [key: number]: string } };
+  selectedDay: string;
   onHoursStateChange: (
     day: string,
     hour: number,
@@ -29,11 +30,31 @@ const PlayerCalendarMobile: React.FC<Props> = ({
 
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
 
-  const [selectedDay, setSelectedDay] = useState<string | null>("Monday");
+  const [selectedDay, setSelectedDay] = useState<string>("Monday");
 
   const handleDayChange = (day: string) => {
     setSelectedDay(day);
-    console.log(dayHours[day]);
+    console.log(day);
+  };
+
+  // render player time slots for each day of the week depending on the selected day
+  const renderTimeSlots = () => {
+    console.log(`Rendering time slots for: ${selectedDay}`);
+    console.log(dayHours[selectedDay]);
+    return hoursOfDay.map((hour) => {
+      const slotState = dayHours[selectedDay]?.[hour] || "available";
+      return (
+        <div key={hour} className="flex justify-center">
+          <PlayerTimeSlot
+            day={selectedDay}
+            hour={hour}
+            state={slotState as "available" | "single" | "recurring"}
+            displayedHour={hour}
+            onStateChange={onHoursStateChange}
+          />
+        </div>
+      );
+    });
   };
 
   return (
@@ -44,7 +65,7 @@ const PlayerCalendarMobile: React.FC<Props> = ({
           {daysOfWeek.map((day) => (
             <div key={day} className="flex justify-center">
               <DayButton
-                key={day}
+                // key={day}
                 state={selectedDay === day ? "selected" : "unselected"}
                 onClick={() => {
                   handleDayChange(day);
@@ -58,23 +79,9 @@ const PlayerCalendarMobile: React.FC<Props> = ({
 
         {/* Render time slots for the selected day */}
         <div className="grid grid-cols-6 gap-2 md:gap-4 px-2 mt-4">
-          {hoursOfDay.map((hour) => (
-            <div key={hour} className="flex justify-center">
-              <PlayerTimeSlot
-                day={selectedDay || ""}
-                hour={hour}
-                state={
-                  (dayHours[selectedDay || ""]?.[hour] as
-                    | "available"
-                    | "single"
-                    | "recurring") || "available"
-                }
-                displayedHour={hour}
-                onStateChange={onHoursStateChange}
-              />
-            </div>
-          ))}
+          {renderTimeSlots()}
         </div>
+        {/* end of render time slots */}
       </div>
     </div>
   );

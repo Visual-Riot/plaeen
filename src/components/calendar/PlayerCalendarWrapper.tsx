@@ -10,6 +10,8 @@ export default function PlayerCalendarWrapper() {
     [key: string]: { [key: number]: string };
   }>({});
 
+  const [selectedDay, setSelectedDay] = useState<string>("Monday");
+
   useEffect(() => {
     const storedState = localStorage.getItem("dayHours");
     if (storedState) {
@@ -51,6 +53,7 @@ export default function PlayerCalendarWrapper() {
           className="flex lg:hidden"
           dayHours={dayHours}
           onHoursStateChange={handleHourStateChange}
+          selectedDay={selectedDay}
         />
       ) : (
         <PlayerCalendarDesktop

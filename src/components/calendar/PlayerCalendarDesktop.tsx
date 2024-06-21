@@ -7,7 +7,8 @@ interface Props {
   onHoursStateChange: (
     day: string,
     hour: number,
-    newState: "available" | "single" | "recurring"
+    newState: "available" | "single" | "recurring",
+    selectedDay?: string
   ) => void;
   className?: string;
 }
@@ -65,7 +66,12 @@ const PlayerCalendarDesktop: React.FC<Props> = ({
                       <PlayerTimeSlot
                         day={day}
                         hour={hour}
-                        state={dayHours[day]?.[hour] || "available"}
+                        state={
+                          (dayHours[day]?.[hour] as
+                            | "available"
+                            | "single"
+                            | "recurring") || "available"
+                        }
                         onStateChange={onHoursStateChange}
                       />
                     </div>

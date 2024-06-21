@@ -23,6 +23,10 @@ const PlayerTimeSlot: React.FC<ButtonProps> = ({
 }) => {
   const [state, setState] = useState(initialState);
 
+  useEffect(() => {
+    setState(initialState);
+  }, [initialState]);
+
   const handleClick = () => {
     const newState =
       state === "available"
@@ -52,7 +56,7 @@ const PlayerTimeSlot: React.FC<ButtonProps> = ({
 
   return (
     <button
-      className={`${defaultClasses} ${getButtonColor()}`}
+      className={`${defaultClasses} ${className} ${getButtonColor()}`}
       onClick={handleClick}
     >
       {displayedHour}
