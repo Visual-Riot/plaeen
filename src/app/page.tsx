@@ -1,49 +1,36 @@
-import Image from "next/image";
+'use client';
+
+import GreenButton from "@/components/buttons/GreenButton";
 import Link from "next/link";
+import HomeNavbar from "@/components/layout/HomeNavbar";
+import USPs from "@/components/cards/USPs";
+import { url } from "inspector";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <h1 className="text-5xl font-semibold">Plaeen Landing Page</h1>
+    <main>
+      {/* Landing page */}
+      <div className="h-screen w-screen bg-[url('/img/hero-bg.webp')] bg-cover bg-center">
+        <HomeNavbar />
+        <div className="relative top-[160px] space-y-5 left-[139px]">
+          <h1 className="text-neonGreen font-semibold font-sofia text-[64px]">Unleash the power of<br />plaeen together.</h1>
+          <p className="text-lightGrey font-sofia text-[16px]">Life gets busy, but gaming with friends shouldn't be. Plaeen makes scheduling sessions<br />
+          effortless, so you can spend more time playing and less time planning.</p>
+          <div>
+            <input type="email" placeholder="john.smith@gmail.com" className="border-neonGreen border-2 h-[64px] w-[408px] p-5 rounded-lg bg-transparent"/>
+            <GreenButton onClick={() => console.log('Button clicked!')}>Get started</GreenButton>
+          </div>
+        </div>
       </div>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <Link href={"/login"}>
-          <h2 className="mb-3 text-2xl font-semibold">
-            Login{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Test login link page.
-          </p>
-        </Link>
-
-        <Link href={"/signup"}>
-          <h2 className="mb-3 text-2xl font-semibold">
-            Sign Up{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Test sign up page
-          </p>
-        </Link>
-
-        <Link href={"/session"}>
-          <h2 className="mb-3 text-2xl font-semibold">
-            Session{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Test Session page
-          </p>
-        </Link>
+      {/* USP/Benefits */}
+      <div>
+        <h2 className="relative font-sofia text-neonGreen text-left text-[38px] top-[100px] left-0 w-[50%] mx-auto">Why Plaeen?</h2>
+        <div className="flex relative top-[150px] w-[50%] mx-auto justify-between">
+          <USPs icon={'/icons/easy-scheduling_icon.svg'} headline={'Effortless Scheduling'} text={'Stop juggling calendars. Plaeen finds the perfect time for your next gaming session with friends.'}></USPs>
+          <USPs icon={'/icons/friends-only_icon.svg'} headline={'Friends Only'} text={'Plaeen is your safe space. Play with the people you know and trust, without worrying about random invites.'}></USPs>
+          <USPs icon={'/icons/more-game_icon.svg'} headline={'More time, more games'} text={'Spend less time planning, more time playing. Plaeen makes scheduling gaming sessions a breeze.'}></USPs>
+        </div>
       </div>
     </main>
   );
