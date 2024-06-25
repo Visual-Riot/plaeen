@@ -19,8 +19,8 @@ export default function Home() {
             plaeen together.
           </h1>
           <p className="text-lightGrey font-sofia text-[16px]">
-            Life gets busy, but gaming with friends shouldn't be. Plaeen makes
-            scheduling sessions
+            {`Life gets busy, but gaming with friends shouldn't be. Plaeen makes
+            scheduling sessions`}
             <br />
             effortless, so you can spend more time playing and less time
             planning.
