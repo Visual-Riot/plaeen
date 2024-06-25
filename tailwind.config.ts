@@ -13,6 +13,7 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         "pink-purple": "linear-gradient(319deg, #FF37DF 0%, #6E00FF 100%)",
+        "calendar-bg": "url('/img/bg-img_01.webp')",
       },
       colors: {
         // Tailwind default colors
@@ -37,7 +38,7 @@ const config: Config = {
 
         // text
         offWhite: "#D0CBD6",
-        lightGrey: "#B8B4BD",
+        lightGrey: "#9B999E",
         mediumGrey: "#707070",
         darkGrey: "#313131",
 
@@ -48,12 +49,16 @@ const config: Config = {
         info: "#1B5CDF",
 
         // accents
-        pinkAccent: "#FF08C4",
-        cyanAccent: "#00FFFB",
+        accentOne: "#ff1ef0", // pink "#ef0c67"
+        accentTwo: "#f79b31", // orange "#f79b31"
+        accentThree: "#3be1e1", // cyan
+        accentFour: "#bce339", // lemon
       },
       fontFamily: {
         sofia: ["sofia-pro", "sans-serif"],
         abolition: ["abolition", "sans-serif"],
+        roboto: ["roboto", "sans-serif"],
+        robotoMono: ["roboto-mono", "monospace"],
         logo: ["abolition-soft", "sans-serif"],
       },
       fontWeight: {
