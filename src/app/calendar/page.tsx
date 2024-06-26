@@ -4,7 +4,8 @@ import OutlineButton from "../../components/buttons/OutlineButton";
 import GreenButton from "../../components/buttons/GreenButton";
 import TertiaryButton from "../../components/buttons/TertiaryButton";
 import ResetIcon from "../../components/icons/ResetIcon";
-import PlayerCalendarWrapper from "../../components/calendar/PlayerCalendarWrapper";
+// import PlayerCalendarWrapper from "../../components/calendar/PlayerCalendarWrapper";
+import dynamic from "next/dynamic";
 
 export default function Page() {
   // PLACEHOLDER FOR IMPORT CALENDARS FUNCTIONALITY
@@ -20,6 +21,11 @@ export default function Page() {
     setDayHours({});
   };
 
+  // DYNAMICALLY LOADING CALENDAR to prevent deployment error due to use of browser API window
+  const DynamicCalendar = dynamic(() => import('../../components/calendar/PlayerCalendarWrapper'), {
+    ssr: false,
+  })
+  
   return (
     // background
     <div className="relative min-h-screen bg-calendar-bg bg-cover bg-center flex justify-center items-center">
@@ -40,7 +46,7 @@ export default function Page() {
         </div>
 
         {/* CALENDAR */}
-        <PlayerCalendarWrapper dayHours={dayHours} setDayHours={setDayHours} />
+        <DynamicCalendar dayHours={dayHours} setDayHours={setDayHours} />
 
         {/* LOW ROW with legend and submit button */}
         <div className="flex items-center w-full justify-between  px-2">
