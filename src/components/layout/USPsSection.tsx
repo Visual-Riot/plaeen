@@ -5,10 +5,10 @@ import USPs from "@/components/cards/USPs";
 const USPsSection = () => {
   return (
     <div>
-      <h2 className="relative font-sofia text-neonGreen text-left text-[38px] xs:top-[100px] sm:top-[80px] left-0 w-[70%] mx-auto">
+      <h2 className="font-sofia text-neonGreen text-left text-[38px] xs:mt-[100px] sm:mt-[80px] left-0 w-[70%] mx-auto mb-10">
         Why Plaeen?
       </h2>
-      <div className="flex flex-wrap relative top-[120px] w-[80%] mx-auto justify-evenly">
+      <div className="flex flex-wrap w-[80%] mx-auto justify-evenly">
         <USPs
           className="bg-usp1"
           icon={"/icons/easy-scheduling_icon.svg"}
