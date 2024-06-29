@@ -18,7 +18,7 @@ export default function FAQsSection() {
 
   return (
     <div className="relative mt-28">
-        <h2 className="mb-10 font-sofia text-neonGreen text-left text-[38px] xs:top-[100px] sm:top-[80px] left-0 w-[70%] mx-auto">
+        <h2 className="mb-10 font-sofia text-neonGreen text-left text-[38px] xs:top-[100px] sm:top-[80px] left-0 w-[72%] mx-auto">
             Frequently Asked Questions
         </h2>
         <div className="xs:w-[74%] md:w-[72%] mx-auto">

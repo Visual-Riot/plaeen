@@ -5,7 +5,7 @@ import USPs from "@/components/cards/USPs";
 const USPsSection = () => {
   return (
     <div>
-      <h2 className="font-sofia text-neonGreen text-left text-[38px] xs:mt-[100px] sm:mt-[80px] left-0 w-[70%] mx-auto mb-10">
+      <h2 className="font-sofia text-neonGreen text-left text-[38px] mt-28 w-[72%] mx-auto mb-10">
         Why Plaeen?
       </h2>
       <div className="flex flex-wrap w-[80%] mx-auto justify-evenly">
