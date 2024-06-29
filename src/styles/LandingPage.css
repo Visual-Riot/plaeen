@@ -1,5 +1,3 @@
-/* LandingPage.css */
-
 .landing-heading {
     font-size: clamp(1.5rem, 4vw + 1rem, 5rem); /* Adjusted clamp for smoother scaling */
     line-height: 1.2;
