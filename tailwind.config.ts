@@ -39,7 +39,7 @@ const config: Config = {
 
         // text
         offWhite: "#D0CBD6",
-        lightGrey: "#9B999E",
+        lightGrey: "#BFCCD8",
         mediumGrey: "#707070",
         darkGrey: "#313131",
 

@@ -15,7 +15,7 @@ const GreenButton: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className={`btn bg-neonGreen rounded-lg text-black py-2 px-4 w-[203px] h-[64px] ml-4 ${className}`}
+      className={`btn bg-neonGreen rounded-lg text-black py-2 px-4 w-[203px] h-[64px] xs:ml-0 sm:ml-4 ${className}`}
       onClick={onClick}
     >
       {children}
