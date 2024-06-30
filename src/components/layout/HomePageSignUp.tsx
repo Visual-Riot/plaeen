@@ -10,7 +10,7 @@ const HomePageSignUp = () => {
             Ready to lose all excuses not to play?
         </h2>
         <div className="xs:w-[74%] md:w-[72%] mx-auto">
-            <p className="mb-5 text-lightGrey font-sofia font-extralight landing-paragraph w-full sm:w-[1/2] xl:w-[63%]">
+            <p className="mb-5 text-lightGrey font-sofia font-extralight landing-paragraph w-full sm:w-[1/2] xl:w-[63%] xxs:ms-11 xs:ms-0 xxs:w-4/5">
             Enter your email to create an account.
             </p>
             <div className="flex flex-col sm:flex-row items-center xs:items-start space-y-4 lg:space-y-0 lg:space-x-4">

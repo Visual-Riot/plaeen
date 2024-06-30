@@ -14,7 +14,7 @@ const FaqCard: React.FC<FaqCardProps> = ({ question, answer }) => {
   };
 
   return (
-    <div className="bg-usp2 bg-opacity-80 shadow-lg rounded-lg p-4 my-2 backdrop-blur-sm border-none">
+    <div className="bg-usp2 bg-opacity-80 shadow-lg rounded-lg p-4 my-2 backdrop-blur-sm border-none xxs:w-[90%] mx-auto">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-light font-sofia ms-3 text-white">{question}</h3>
         <PlusButton isOpen={isOpen} onClick={toggleOpen} className="text-white text-2xl" />

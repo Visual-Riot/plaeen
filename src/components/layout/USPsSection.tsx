@@ -8,7 +8,7 @@ const USPsSection = () => {
       <h2 className="font-sofia text-neonGreen text-left text-[38px] mt-28 w-[72%] mx-auto mb-10">
         Why Plaeen?
       </h2>
-      <div className="flex flex-wrap w-[80%] mx-auto justify-evenly">
+      <div className="flex flex-wrap xxs:w-full sm:w-[80%] mx-auto justify-evenly">
         <USPs
           className="bg-usp1"
           icon={"/icons/easy-scheduling_icon.svg"}
