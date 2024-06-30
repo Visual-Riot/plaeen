@@ -75,6 +75,7 @@ const config: Config = {
       },
     },
     screens: {
+      'xxs': '320px', // Example width for extra small screens
       'xs': '480px', // Example min-width for common mobile devices
       'sm': '640px',
       'md': '768px',
