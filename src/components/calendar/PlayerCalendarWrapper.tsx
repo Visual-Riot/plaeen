@@ -1,3 +1,4 @@
+'use client'
 // Removed unused import
 import React, { useState, useEffect } from "react";
 import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
