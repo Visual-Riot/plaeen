@@ -10,8 +10,9 @@ const config: Config = {
     extend: {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "usp1": "linear-gradient(198deg, #6606E3 0%, #620A81 100%)",
+        "usp2": "linear-gradient(180deg, #6606E3 0%, #330372 100%)",
+        "usp3": "linear-gradient(157deg, #6606E3 0%, #330372 100%)",
         "pink-purple": "linear-gradient(319deg, #FF37DF 0%, #6E00FF 100%)",
         "calendar-bg": "url('/img/bg-img_01.webp')",
       },
@@ -38,7 +39,7 @@ const config: Config = {
 
         // text
         offWhite: "#D0CBD6",
-        lightGrey: "#9B999E",
+        lightGrey: "#BFCCD8",
         mediumGrey: "#707070",
         darkGrey: "#313131",
 
@@ -72,6 +73,15 @@ const config: Config = {
         normal: "normal",
         italic: "italic",
       },
+    },
+    screens: {
+      'xxs': '320px', // Example width for extra small screens
+      'xs': '480px', // Example min-width for common mobile devices
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
     },
   },
   plugins: [],

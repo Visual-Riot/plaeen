@@ -1,23 +1,21 @@
 import React from 'react';
 
 // Define the prop types for the button
-type ButtonProps = {
-  children: React.ReactNode; // Accept any valid React node
-  onClick: () => void;       // Function to call on button click
-  className?: string;        // Optional prop to allow custom styling
+interface PlusButtonProps {
+  isOpen: boolean;
+  onClick: () => void;
+  className?: string; // Add className prop
 }
 
-// Button component
-const PlusButton: React.FC<ButtonProps> = ({children, onClick, className = ''}) => {
+const PlusButton: React.FC<PlusButtonProps> = ({ isOpen, onClick, className }) => {
   return (
     <button
-      className={`btn bg-pink-purple rounded-lg text-black py-1 px-1 inline-flex items-center ${className}`}
       onClick={onClick}
+      className={`bg-pink-purple rounded-lg flex items-center justify-center w-10 h-10 ${className}`}
     >
-      <svg className="w-4 h-4 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-        <path d="M12 5v14m7-7H5"></path>
-      </svg>
-      {children}
+      <span className="text-aubergine text-2xl font-medium flex items-center justify-center leading-none mb-1">
+        {isOpen ? '−' : '+'}
+      </span>
     </button>
   );
 };
