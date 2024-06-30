@@ -14,8 +14,12 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   dayHours,
   setDayHours,
 }) => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+  const [isMobile, setIsMobile] = useState(false);
   const [selectedDay, setSelectedDay] = useState<string>("Monday");
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 1024);
+  }, []);
 
   useEffect(() => {
     const storedState = localStorage.getItem("dayHours");
