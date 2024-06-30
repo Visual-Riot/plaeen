@@ -13,7 +13,7 @@ const LandingPage = () => {
           Unleash the power of plaeen together.
         </h1>
         <p className="text-lightGrey font-sofia font-extralight landing-paragraph w-full sm:w-[1/2] xl:w-[63%]">
-          Life gets busy, but gaming with friends shouldn't be. Plaeen makes scheduling sessions effortless, so you can spend more time playing and less time planning.
+          {"Life gets busy, but gaming with friends shouldn't be. Plaeen makes scheduling sessions effortless, so you can spend more time playing and less time planning."}
         </p>
         <div className="flex flex-col sm:flex-row items-center xs:items-start space-y-4 lg:space-y-0 lg:space-x-4">
           <input
