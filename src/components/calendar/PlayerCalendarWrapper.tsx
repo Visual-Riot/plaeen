@@ -17,9 +17,10 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   const [isMobile, setIsMobile] = useState(false);
   const [selectedDay, setSelectedDay] = useState<string>("Monday");
 
+  // window.innerWidth can only be referenced after component mounts
   useEffect(() => {
     setIsMobile(window.innerWidth <= 1024);
-  }, []);
+  }, []); 
 
   useEffect(() => {
     const storedState = localStorage.getItem("dayHours");
