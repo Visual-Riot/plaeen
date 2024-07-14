@@ -19,7 +19,7 @@ const FaqCard: React.FC<FaqCardProps> = ({ question, answer }) => {
         <h3 className="text-lg font-light font-sofia ms-3 text-white">{question}</h3>
         <PlusButton isOpen={isOpen} onClick={toggleOpen} className="text-white text-2xl" />
       </div>
-      {isOpen && <p className="mt-4 text-lightGrey ms-3 font-extralight font-sofia">{answer}</p>}
+      {isOpen && <p className="mt-4 mb-3 text-lightGrey ms-3 font-extralight font-sofia">{answer}</p>}
     </div>
   );
 };

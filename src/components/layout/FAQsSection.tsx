@@ -13,7 +13,7 @@ export default function FAQsSection() {
     { question: 'How much does Plaeen cost?', answer: 'Plaeen offers various pricing plans to suit different needs. Visit our pricing page for more details.' },
     { question: 'How do I cancel?', answer: 'You can cancel your subscription anytime from your account settings page.' },
     { question: 'How does it work?', answer: 'Plaeen integrates with your calendar to find the best times for you and your friends to play together.' },
-    { question: 'Is Plaeen safe for children?', answer: 'Plaeen is designed for a mature audience and focuses on closed friend circles to create a safer environment for gamers.' }
+    { question: 'Is Plaeen safe for children?', answer: "Plaeen is designed for a mature audience and focuses on closed friend circles. While we cannot guarantee complete safety online, Plaeen's privacy features (closed groups, no random invites) create a safer environment for gamers, especially those who may be concerned about inappropriate content."}
   ];
 
   return (
