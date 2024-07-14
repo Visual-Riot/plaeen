@@ -6,10 +6,10 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="sm:mt-0 xxs:mt-[-200px] bg-[#1B0131] py-1 text-center text-white min-h-[262px] w-screen bg-[url('/img/footer-bg-noshadow.webp')] bg-cover bg-center">
-      <div className="container mx-auto">
-        <div className="flex justify-center xxs:mt-[400px] sm:mt-72 mb-12">
-          <Image src="/logo/logo-text.svg" alt="Plaeen Logo" width={100} height={100} />
+    <footer className="flex items-center justify-center xs:h-[55vh] sm:h-[40vh] mt-[150px] text-center text-white w-screen bg-[url('/img/footer-bg-noshadow.webp')] bg-cover bg-top">
+      <div className="text-center">
+        <div className="flex justify-center mb-12">
+          <Image src="/logo/logo-text.svg" alt="Plaeen Logo" width={100} height={100} className="mt-[60px] 2xl:mt-[80px]" />
         </div>
         <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-16 mb-10 text-sm font-sofia font-light justify-center items-center">
           <Link href="#" legacyBehavior>
