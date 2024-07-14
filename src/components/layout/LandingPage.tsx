@@ -8,7 +8,7 @@ const LandingPage = () => {
   return (
     <div className="h-[85vh] w-screen bg-[url('/img/hero-bg-noshadow.webp')] bg-cover bg-bottom mb-[16rem]">
       <HomeNavbar />
-      <div className="relative top-[80px] space-y-5 px-6 sm:px-12 md:px-20 lg:px-32">
+      <div className="relative top-[0%] 2xl:top-[10%] space-y-5 px-6 sm:px-12 md:px-20 lg:px-32">
         <h1 className="text-neonGreen font-semibold font-sofia landing-heading">
           Unleash the power of<br />plaeen together.
         </h1>

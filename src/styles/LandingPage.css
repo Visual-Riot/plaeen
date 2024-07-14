@@ -8,8 +8,14 @@
     line-height: 1.6;
 }
 
-@media (min-width: 1280px) {
+@media (max-width: 1280px) {
     .landing-heading {
-        font-size: 80px; /* Ensure font-size is 80px on xl screens */
+        font-size: 60px; /* Ensure font-size is 80px on xl screens */
+    }
+}
+
+@media (max-width: 1580px) {
+    .landing-heading {
+        font-size: 70px; /* Ensure font-size is 80px on xl screens */
     }
 }
