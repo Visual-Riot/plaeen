@@ -12,8 +12,8 @@ const LandingPage = () => {
         <h1 className="text-neonGreen font-semibold font-sofia landing-heading">
           Unleash the power of<br />plaeen together.
         </h1>
-        <p className="text-lightGrey font-sofia font-extralight landing-paragraph py-3">
-          Life gets busy, but gaming with friends shouldn't be. Plaeen makes scheduling sessions<br />
+        <p className="text-lightGrey font-sofia font-extralight landing-paragraph py-3 w-full md:w-[80%] xl:w-[50%]">
+          Life gets busy, but gaming with friends shouldn't be. Plaeen makes scheduling sessions
           effortless, so you can spend more time playing and less time planning.
         </p>
         <div className="flex flex-col sm:flex-row items-center xs:items-start space-y-4 lg:space-y-0 lg:space-x-4">
