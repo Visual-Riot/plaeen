@@ -57,9 +57,6 @@ const PlayerCalendarDesktop: React.FC<Props> = ({
             >
               {day}
             </button>
-            {/* <h2 className="hidden md:inline text-lightPurple font-robotoMono font-regular uppercase">
-              {day}
-            </h2> */}
           </div>
         ))}
       </div>
