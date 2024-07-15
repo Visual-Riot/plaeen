@@ -21,7 +21,7 @@ const config: Config = {
         black: "#000000",
         lavender: "#9A50FB",
         aubergine: "#1F0244",
-        neonGreen: "#1BFF00",
+        neonGreen: "#5AE307",
         white: "#FFFFFF",
         grey: "#707070",
         plum: "#620A81",
