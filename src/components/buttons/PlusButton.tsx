@@ -13,7 +13,7 @@ const PlusButton: React.FC<PlusButtonProps> = ({ isOpen, onClick, className }) =
       onClick={onClick}
       className={`bg-pink-purple rounded-lg flex items-center justify-center w-10 h-10 ${className}`}
     >
-      <span className="text-aubergine text-2xl font-medium flex items-center justify-center leading-none mb-1">
+      <span className="text-plum text-[38px] font-light flex items-center justify-center leading-none mb-3">
         {isOpen ? '−' : '+'}
       </span>
     </button>
