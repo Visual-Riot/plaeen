@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import OutlineButton from "../../../components/buttons/OutlineButton";
-import GreenButton from "../../../components/buttons/GreenButton";
-import TertiaryButton from "../../../components/buttons/TertiaryButton";
-import ResetIcon from "../../../components/icons/ResetIcon";
-import PlayerCalendarWrapper from "../../../components/calendar/PlayerCalendarWrapper";
+import OutlineButton from "@/components/buttons/OutlineButton";
+import GreenButton from "@/components/buttons/GreenButton";
+import TertiaryButton from "@/components/buttons/TertiaryButton";
+import ResetIcon from "@/components/icons/ResetIcon";
+import PlayerCalendarWrapper from "@/components/calendar/PlayerCalendarWrapper";
 
 export default function Page() {
   // PLACEHOLDER FOR IMPORT CALENDARS FUNCTIONALITY
