@@ -34,13 +34,10 @@ const PlayerCalendarMobile: React.FC<Props> = ({
 
   const handleDayChange = (day: string) => {
     setSelectedDay(day);
-    console.log(day);
   };
 
   // render player time slots for each day of the week depending on the selected day
   const renderTimeSlots = () => {
-    console.log(`Rendering time slots for: ${selectedDay}`);
-    console.log(dayHours[selectedDay]);
     return hoursOfDay.map((hour) => {
       const slotState = dayHours[selectedDay]?.[hour] || "available";
       return (
