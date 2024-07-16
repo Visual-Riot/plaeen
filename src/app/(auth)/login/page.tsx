@@ -36,7 +36,7 @@ export default function Page() {
             Log in or Sign up
           </h2>
           <p className="text-lightGrey font-light text-lg mt-2.5">Get started for free</p>
-          <button onClick={()=>onClick("google")}className="text-lightGrey text-lg mt-8 border-4 border-accentFive rounded-[10px] w-full p-5 border-opacity-50 flex items-center justify-center gap-7">
+          <button onClick={()=>onClick("google")}className="text-lightGrey text-lg mt-8 border-4 border-green rounded-[10px] w-full p-5 border-opacity-50 flex items-center justify-center gap-7">
             <FcGoogle size={24} />
             Continue with Google
           </button>
