@@ -13,5 +13,6 @@ export const Header = ({header, label}: HeaderProps) => {
         {label}
       </p>
     </div>
+    
   )
 }
