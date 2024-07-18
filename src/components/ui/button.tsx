@@ -13,7 +13,8 @@ const buttonVariants = cva(
         default: " bg-neonGreen font-semiBold text-black opacity-70 hover:opacity-100",
         outline:
         " border-lightGrey hover:border-lightPurple hover:text-lightPurple border-2 text-lightGrey",
-        social: "text-white/80 font-light border-4 border-green border-opacity-50 hover:border-opacity-100 hover:text-white"
+        social: "text-white/80 font-light border-4 border-green border-opacity-50 hover:border-opacity-100 hover:text-white",
+        link: "text-lightGrey underline-offset-4 hover:underline",
 
         // ** SHADCN UI DEFAULT STYLINGS
         // destructive:
@@ -21,7 +22,6 @@ const buttonVariants = cva(
         // secondary:
         //   "bg-slate-100 text-slate-900 hover:bg-slate-100/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80",
         // ghost: "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
-        // link: "text-slate-900 underline-offset-4 hover:underline dark:text-slate-50",
       },
       size: {
         default: "h-10 px-4 py-2",

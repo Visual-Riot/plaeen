@@ -8,7 +8,7 @@ export const LoginForm = () => {
     <CardWrapper 
     header="Login or Sign up"
     headerLabel="Get started for free"
-    backButtonHref="/forgot"
+    backButtonHref="/forgot-password"
     backButtonLabel="Forgot password?"
     showSocial
     >
