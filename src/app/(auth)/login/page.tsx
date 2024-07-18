@@ -1,32 +1,22 @@
 "use client"
 
-import Image from "next/image";
-import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react"
+import { LoginForm } from "@/components/auth/LoginForm";
 
-export default function Page() {
+export default function LoginPage() {
+  return (
+    <LoginForm/>
+  )
+
+
   const onClick = (provider: "google") => {
     signIn(provider, {
       callbackUrl: '/calendar'
     })
   }
   return (
-    <div className="bg-black w-full h-[100vh] bg-[url('/img/bg-img_01.webp')] bg-cover bg-center">
-    <div className="bg-[black]/85 w-full h-[100vh] flex flex-col items-center">
-    <div className="bg-[#6606E3]/5 w-full h-[100vh] flex flex-col items-center">
-
-      {/* Logo */}
-      <div className="flex justify-center">
-        <Image
-          src="logo\logo-icon.svg"
-          alt="Plaeen logo"
-          width={70}
-          height={52}
-          className="py-11"
-        />
-      </div>
-
+      <>
       {/* Log in / Sign in Card */}
         <div className="p-16 bg-lightPurple/15 min-w-[520px] rounded-lg backdrop-blur-[14px] backdrop-brightness-[1.4]">
 
@@ -47,9 +37,8 @@ export default function Page() {
         </div>
 
         </div>
+      </>
 
-        </div>
-        </div>
-    </div>
+
   );
 }
