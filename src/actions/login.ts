@@ -4,6 +4,7 @@ import { signIn } from "@/auth"
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { LoginSchema } from "@/schemas";
 import { AuthError } from "next-auth";
+import { redirect } from "next/navigation";
 import * as z from "zod";
 
 export const login =  async (values: z.infer<typeof LoginSchema>) => {
@@ -14,17 +15,17 @@ export const login =  async (values: z.infer<typeof LoginSchema>) => {
   }
 
   const { email, password } = validatedFields.data
-
+  let errorOccurred = false;
   try {
     await signIn("credentials", {
       email,
       password,
-      redirect: true,
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     })
     return {error: "", success: ""}
   } catch (error) {
     if (error instanceof AuthError) {
+      errorOccurred = true
       switch (error.type) {
         case "CallbackRouteError":
           return { error: "Invalid Email or Password"}
@@ -33,6 +34,10 @@ export const login =  async (values: z.infer<typeof LoginSchema>) => {
         default:
           return { error: "Something went wrong!"}
       }
+    }
+  } finally {
+    if (!errorOccurred) {
+      redirect('/calendar')
     }
   }
 };
