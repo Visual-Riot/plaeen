@@ -13,7 +13,7 @@ export const options: NextAuthConfig = {
         }),
         Credentials({
             async authorize(credentials) {
-              const user={id:"42", email: "test@gmail.com", password: "plaeen"}
+              const user={id:"42", email: "test@gmail.com", password: "plaeen2024"}
                 if (credentials?.email === user.email && credentials?.password === user.password) {
                     console.log(user)
                     return user
