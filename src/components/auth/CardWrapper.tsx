@@ -35,20 +35,16 @@ export const CardWrapper = ({
       <CardHeader>
         <Header header={header} label={headerLabel} />
       </CardHeader>
+      <CardContent className="my-8">
+        {children}
+        <BackButton href={backButtonHref} label={backButtonLabel} />
+      </CardContent>
       {showSocial && (
         <CardContent>
           <Social />
         </CardContent>
       )}
-      <CardContent>{children}</CardContent>
-      <CardFooter>
-        <BackButton href={backButtonHref} label={backButtonLabel} />
-        {showTerms && (
-        
-          <Terms />
-        
-      )}
-      </CardFooter>
+      <CardFooter>{showTerms && <Terms />}</CardFooter>
     </Card>
   );
 };

@@ -5,11 +5,11 @@ interface HeaderProps {
 
 export const Header = ({header, label}: HeaderProps) => {
   return (
-    <div>
-      <h1 className="text-white font-semibold text-3xl mt-0.5">
+    <div className="space-y-3 ">
+      <h1 className="text-white font-semibold text-3xl">
         {header}
       </h1>
-      <p className="text-lightGrey font-light text-lg mt-2.5">
+      <p className="text-lightGrey font-light text-lg">
         {label}
       </p>
     </div>
