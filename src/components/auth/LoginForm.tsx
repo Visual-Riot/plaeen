@@ -33,6 +33,7 @@ export const LoginForm = () => {
       backButtonHref="/forgot-password"
       backButtonLabel="Forgot password?"
       showSocial
+      showTerms
     >
       <Form {...form}>
         <form onSubmit={() => {}} className="space-y-6">
@@ -73,10 +74,10 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          <Button className="w-full" type="submit" 
+          <Button size="full" className="font-bold text-md" type="submit" 
           // disabled={isPending}
           >
-            Login
+            Continue with email
           </Button>
         </form>
       </Form>

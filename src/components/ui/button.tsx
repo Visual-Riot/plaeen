@@ -15,6 +15,7 @@ const buttonVariants = cva(
         " border-lightGrey hover:border-lightPurple hover:text-lightPurple border-2 text-lightGrey",
         social: "text-white/80 font-light border-4 border-green border-opacity-50 hover:border-opacity-100 hover:text-white",
         link: "text-lightGrey underline-offset-4 hover:underline",
+        
 
         // ** SHADCN UI DEFAULT STYLINGS
         // destructive:
@@ -28,7 +29,7 @@ const buttonVariants = cva(
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
-        full: "w-full p-5"      
+        full: "h-16 w-full p-5"      
       },
     },
     defaultVariants: {

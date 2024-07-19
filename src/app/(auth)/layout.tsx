@@ -14,7 +14,10 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
               className="py-11"
             />
           </div>
+          <div className="flex justify-center pb-16">
+            
           {children}
+          </div>
         </div>
       </div>
     </div>
