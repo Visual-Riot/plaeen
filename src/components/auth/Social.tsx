@@ -1,7 +1,16 @@
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "../ui/button";
+import { signIn } from "next-auth/react";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const Social = () => {
+
+  const onClick = (provider: "google") => {
+    signIn(provider, {
+      callbackUrl: DEFAULT_LOGIN_REDIRECT
+    })
+  }
+
   return (
     <>
       <div className="flex flex-col items-center w-full gap-y-2 mt-8 ">
@@ -9,7 +18,7 @@ export const Social = () => {
           size="full"
           className="gap-7"
           variant="social"
-          onClick={() => {}}
+          onClick={() => {onClick("google")}}
         >
           <FcGoogle size={24} />
           Continue with Google
