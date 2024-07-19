@@ -3,7 +3,7 @@ import { options } from "./auth.config";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
     // TODO decide on session strategy
-    // session: { strategy: "jwt" },
+    session: { strategy: "jwt" },
     ...options
   });
   

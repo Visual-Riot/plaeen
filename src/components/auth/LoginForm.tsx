@@ -16,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { login } from "@/actions/login";
+import { FormError } from "@/components/forms/FormError";
+import { FormSuccess } from "@/components/forms/FormSuccess";
 
 export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -53,7 +55,7 @@ export const LoginForm = () => {
       showTerms
     >
       <Form {...form}>
-        <form onSubmit={() => {}} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
           <FormField
               control={form.control}
@@ -96,6 +98,8 @@ export const LoginForm = () => {
           >
             Continue with email
           </Button>
+          <FormSuccess message={success} />
+          <FormError message={error} />
         </form>
       </Form>
     </CardWrapper>
