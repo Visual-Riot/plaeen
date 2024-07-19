@@ -2,6 +2,8 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+// TODO: Add input styling - Default, Outline and Filled
+
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
 
