@@ -1,6 +1,9 @@
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
+import Credentials from "next-auth/providers/credentials";
+import { LoginSchema } from "@/schemas";
+import bcrypt from "bcryptjs";
+import { getUserByEmail } from "@/lib/data/user";
 
 export const options: NextAuthConfig = {
     providers: [
@@ -8,31 +11,23 @@ export const options: NextAuthConfig = {
             clientId: process.env.GOOGLE_ID as string,
             clientSecret: process.env.GOOGLE_SECRET as string,
         }),
-        CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-                username: {
-                    label: "Username:",
-                    type: "text",
-                    placeholder: "your-cool-username"
-                },
-                password: {
-                    label: "Password:",
-                    type: "password",
-                }
-            },
+        Credentials({
             async authorize(credentials) {
-                // retrieve real user data here
-                // Docs: next-auth.js providers credentials
-                const user={id:"42", name: "Kane", password: "plaeen"}
-                if (credentials?.username === user.name && credentials?.password === user.password) {
-                    console.log(user)
-                    return user
-                } else {
-                    return null
-                }
+              const validatedFields = LoginSchema.safeParse(credentials);
+              if (validatedFields.success) {
+                const { email, password } = validatedFields.data;
+                
+                const user = await getUserByEmail(email); 
+                
+                if (!user || !user.password) return null;
+      
+                const passwordsMatch = await bcrypt.compare(password, user.password);
+                if (passwordsMatch) return user;
+              }
+              
+              return null;
             },
-        })
+          }),
     ],
     pages: {
         // signIn: '/login'
