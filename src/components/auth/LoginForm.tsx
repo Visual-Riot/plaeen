@@ -11,14 +11,16 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TfiEmail } from "react-icons/tfi";
 import { Button } from "../ui/button";
+import { login } from "@/actions/login";
 
 export const LoginForm = () => {
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -26,6 +28,21 @@ export const LoginForm = () => {
       password: "",
     },
   });
+
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    setError("");
+    setSuccess("");
+
+
+      login(values).then((data) => {
+        if (data) {
+          setError(data.error);
+          setSuccess(data.success);
+        }
+      });
+
+  };
+
   return (
     <CardWrapper
       header="Login or Sign up"
