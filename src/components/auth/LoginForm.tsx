@@ -22,6 +22,7 @@ import { FormSuccess } from "@/components/forms/FormSuccess";
 export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -35,14 +36,14 @@ export const LoginForm = () => {
     setError("");
     setSuccess("");
 
-
+    startTransition(() => {
       login(values).then((data) => {
         if (data) {
           setError(data.error);
           setSuccess(data.success);
         }
       });
-
+    });
   };
 
   return (
@@ -57,14 +58,14 @@ export const LoginForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
-          <FormField
+            <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Input
-                      // disabled={isPending}
+                      disabled={isPending}
                       {...field}
                       placeholder="Email Address"
                       type="email"
@@ -79,10 +80,9 @@ export const LoginForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-              
                   <FormControl>
                     <Input
-                      // disabled={isPending}
+                      disabled={isPending}
                       {...field}
                       placeholder="Password"
                       type="password"
@@ -93,8 +93,11 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          <Button size="full" className="font-bold text-md" type="submit" 
-          // disabled={isPending}
+          <Button
+            size="full"
+            className="font-bold text-md"
+            type="submit"
+            disabled={isPending}
           >
             Continue with email
           </Button>
