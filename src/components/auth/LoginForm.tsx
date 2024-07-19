@@ -111,7 +111,7 @@ export const LoginForm = () => {
             type="submit"
             disabled={isPending}
           >
-            Continue with email
+            Login
           </Button>
           <FormSuccess message={success} />
           <FormError message={error} />

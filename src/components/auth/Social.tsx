@@ -1,4 +1,5 @@
 import { FcGoogle } from "react-icons/fc";
+import { FaTwitch, FaDiscord } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
@@ -26,6 +27,28 @@ export const Social = () => {
         >
           <FcGoogle size={24} />
           Continue with Google
+        </Button>
+        <Button
+          size="full"
+          className="gap-7"
+          variant="social"
+          onClick={() => {
+            onClick("google");
+          }}
+        >
+          <FaTwitch size={24} />
+          Continue with Twitch
+        </Button>
+        <Button
+          size="full"
+          className="gap-7"
+          variant="social"
+          onClick={() => {
+            onClick("google");
+          }}
+        >
+          <FaDiscord size={24} />
+          Continue with Discord
         </Button>
       </div>
     </>
