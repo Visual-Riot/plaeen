@@ -1,6 +1,7 @@
 // components/layout/Navbar.tsx
+import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
-import { FC, useState, useEffect, useRef } from 'react';
+import { FC } from 'react';
 import { FaBell } from 'react-icons/fa';
 import { FiMenu } from 'react-icons/fi';
 import { IoMdClose } from 'react-icons/io';
@@ -11,9 +12,21 @@ import { IoMdSettings } from 'react-icons/io';
 import { ImExit } from 'react-icons/im';
 import NavItem from './NavItem';
 
-const Navbar: FC = () => {
+interface NavbarProps {
+  avatar: string | null;
+}
+
+const Navbar: FC<NavbarProps> = ({ avatar }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [userAvatar, setUserAvatar] = useState<string | null>(avatar);
+
+  useEffect(() => {
+    if (avatar) {
+      setUserAvatar(avatar);
+    }
+  }, [avatar]);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleMobileMenu = () => {
@@ -67,17 +80,27 @@ const Navbar: FC = () => {
           </button>
           <div className="relative" ref={dropdownRef}>
             <button onClick={toggleDropdown} className="focus:outline-none flex items-center">
-              <Image
-                src="/path-to-user-avatar.jpg"
-                alt="User Avatar"
-                width={32}
-                height={32}
-                className="rounded-full border border-neonGreen cursor-pointer"
-              />
+              {userAvatar ? (
+                <Image
+                  src={userAvatar}
+                  alt="User Avatar"
+                  width={32}
+                  height={32}
+                  className="rounded-full border border-neonGreen cursor-pointer"
+                />
+              ) : (
+                <Image
+                  src="/path-to-default-avatar.jpg"
+                  alt="Default Avatar"
+                  width={32}
+                  height={32}
+                  className="rounded-full border border-neonGreen cursor-pointer"
+                />
+              )}
             </button>
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-8 w-56 bg-black rounded-lg shadow-lg z-10 p-4 leading-8">
-                <ul className="flex flex-col space-y-1 font-light">
+              <div className="absolute right-0 mt-2 w-56 bg-black rounded-lg shadow-lg z-10 p-4 leading-8">
+                <ul className="flex flex-col space-y-1">
                   <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
                     <BsFillPencilFill />
                     <span>Manage Teams</span>
@@ -108,29 +131,39 @@ const Navbar: FC = () => {
         {isMobileMenuOpen && (
           <div className="absolute top-0 left-0 w-full bg-black flex flex-col p-4 z-50">
             <div className="flex justify-between items-center">
-              <Image src="/logo/logo-icon.svg" alt="Logo" width={50} height={50} className='left-[1.65rem] relative' />
+              <Image src="/logo/logo-icon.svg" alt="Logo" width={50} height={50} />
               <button onClick={toggleMobileMenu} className="text-white focus:outline-none">
-                <IoMdClose size={24} className='relative right-6' />
+                <IoMdClose size={24} />
               </button>
             </div>
-            <div className="mt-8 flex flex-col space-y-1 relative left-5">
+            <div className="mt-8 flex flex-col space-y-8">
               <NavItem href="/teams" label="Teams" />
               <NavItem href="/friends" label="Friends" />
               <NavItem href="/wishlist" label="Wishlist" />
-              <button className="text-white hover:text-gray-300 flex items-center relative left-5 mt-[1rem!important]">
-                <FaBell className="scale-[1.5] text-white" />
+              <button className="text-white hover:text-gray-300 flex items-center">
+                <FaBell className="scale-[2] text-white" />
               </button>
-              <button onClick={toggleDropdown} className="text-white hover:text-gray-300 flex items-center relative left-4 mt-[1.5rem!important]">
-                <Image
-                  src=""
-                  alt="User Avatar"
-                  width={32}
-                  height={32}
-                  className="rounded-full border border-neonGreen cursor-pointer"
-                />
+              <button onClick={toggleDropdown} className="text-white hover:text-gray-300 flex items-center">
+                {userAvatar ? (
+                  <Image
+                    src={userAvatar}
+                    alt="User Avatar"
+                    width={32}
+                    height={32}
+                    className="rounded-full border border-neonGreen cursor-pointer"
+                  />
+                ) : (
+                  <Image
+                    src="/path-to-default-avatar.jpg"
+                    alt="Default Avatar"
+                    width={32}
+                    height={32}
+                    className="rounded-full border border-neonGreen cursor-pointer"
+                  />
+                )}
               </button>
               {isDropdownOpen && (
-                <div className="mt-2 w-full bg-black rounded-lg shadow-lg z-10 p-4 leading-8">
+                <div className="absolute right-0 mt-2 w-56 bg-black rounded-lg shadow-lg z-10 p-4 leading-8">
                   <ul className="flex flex-col space-y-1">
                     <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
                       <BsFillPencilFill />

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { TiPlus } from "react-icons/ti";
@@ -10,6 +10,13 @@ import GreenButton from "@/components/buttons/GreenButton";
 export default function Page() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const savedImage = localStorage.getItem("userAvatar");
+    if (savedImage) {
+      setSelectedImage(savedImage);
+    }
+  }, []);
 
   const handleFileInputClick = () => {
     if (fileInputRef.current) {
@@ -28,9 +35,17 @@ export default function Page() {
     }
   };
 
+  const handleContinue = () => {
+    if (selectedImage) {
+      localStorage.setItem("userAvatar", selectedImage);
+      console.log('Image saved to local storage');
+      // Additional logic can be added here if needed
+    }
+  };
+
   return (
     <>
-      <Navbar />
+      <Navbar avatar={selectedImage} />
       <div className="bg-black w-full h-full bg-[url('/img/bg-img_01.webp')] bg-cover bg-center">
         <div className="bg-[black]/85 w-full h-screen flex flex-col items-center justify-center mt-[-70px]">
           <div className="bg-[#6606E3]/5 w-full flex flex-col items-center justify-center h-full">
@@ -58,7 +73,7 @@ export default function Page() {
                     <TiPlus />
                   </div>
                 )}
-                <button onClick={handleFileInputClick} className="text-green underline ml-5">
+                <button onClick={handleFileInputClick} className="text-green underline ml-5" title="Only jpg and png accepted">
                   Upload avatar
                 </button>
                 <input
@@ -69,10 +84,12 @@ export default function Page() {
                   onChange={handleFileChange}
                 />
               </div>
-              <div>
-                <GreenButton onClick={() => console.log('clicked')} className="mt-8 p-[1.25rem!important] text-black w-full">
-                  Continue
-                </GreenButton>
+              <div onClick={handleContinue}>
+                <Link href="/">
+                  <GreenButton onClick={handleContinue} className="mt-8 p-[1.25rem!important] text-black w-full">
+                    Continue
+                  </GreenButton>
+                </Link>
               </div>
               <div>
                 <Link href="/" className="text-white underline text-sm flex justify-center mt-8 hover:text-gray-300">
