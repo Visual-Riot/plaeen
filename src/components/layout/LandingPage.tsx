@@ -20,7 +20,7 @@ const LandingPage = () => {
             placeholder="john.smith@gmail.com"
             className="border-neonGreen border-2 mt-4 lg:mt-0 h-12 xs:h-[64px] xs:w-full sm:w-[250px] md:w-[408px] p-5 rounded-lg bg-transparent"
           />
-          <GreenButton onClick={() => console.log('Button clicked!')}>
+          <GreenButton onClick={() => console.log('Button clicked!')} className='h-[64px]'>
             Get started
           </GreenButton>
         </div>
