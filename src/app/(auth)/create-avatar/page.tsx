@@ -53,6 +53,17 @@ export default function Page() {
     }
   };
 
+  const handleSkip = () => {
+    let newUsername = "avatar1";
+    const storedUsernames = Object.keys(localStorage).filter(key => key.startsWith("avatar"));
+    if (storedUsernames.length > 0) {
+      const highestNumber = Math.max(...storedUsernames.map(name => parseInt(name.replace("avatar", ""), 10)));
+      newUsername = `avatar${highestNumber + 1}`;
+    }
+    localStorage.setItem("userAvatar", "/icons/avatar-default.jpg");
+    localStorage.setItem("username", newUsername);
+  };
+
   return (
     <>
       <Navbar avatar={selectedImage} />
@@ -103,9 +114,11 @@ export default function Page() {
                   </GreenButton>
                 </Link>
               </div>
-              <div>
-                <Link href="/" className="text-white underline text-sm flex justify-center mt-8 hover:text-gray-300">
-                  Skip for now
+              <div onClick={handleSkip}>
+                <Link href="/">
+                  <div className="text-white underline text-sm flex justify-center mt-8 hover:text-gray-300 cursor-pointer">
+                    Skip for now
+                  </div>
                 </Link>
               </div>
             </div>

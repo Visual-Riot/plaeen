@@ -84,16 +84,16 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
                 <Image
                   src={userAvatar}
                   alt="User Avatar"
-                  width={32}
-                  height={32}
+                  width={40}
+                  height={40}
                   className="rounded-full border border-neonGreen cursor-pointer"
                 />
               ) : (
                 <Image
                   src="/icons/avatar-default.jpg"
                   alt="Default Avatar"
-                  width={32}
-                  height={32}
+                  width={40}
+                  height={40}
                   className="rounded-full border border-neonGreen cursor-pointer"
                 />
               )}
