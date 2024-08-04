@@ -1,5 +1,6 @@
 "use client"
 
+import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { TiPlus } from "react-icons/ti";
@@ -7,6 +8,26 @@ import Navbar from "@/components/layout/Navbar";
 import GreenButton from "@/components/buttons/GreenButton";
 
 export default function Page() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileInputClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -30,13 +51,23 @@ export default function Page() {
                 />
               </div>
               <div className="flex mt-8 items-center">
-                <Link href="/">
-                    <div className="border border-taupe bg-taupe opacity-35 rounded-full w-[77px] h-[77px] flex items-center justify-center text-white text-2xl">
-                        <TiPlus />
-                    </div>
-                </Link>
-                
-                <Link href="/" className="text-green underline ml-5">Upload avatar</Link>
+                {selectedImage ? (
+                  <img src={selectedImage} alt="Selected Avatar" className="w-[77px] h-[77px] rounded-full object-cover" />
+                ) : (
+                  <div onClick={handleFileInputClick} className="border border-taupe bg-taupe opacity-35 rounded-full w-[77px] h-[77px] flex items-center justify-center text-white text-2xl cursor-pointer">
+                    <TiPlus />
+                  </div>
+                )}
+                <button onClick={handleFileInputClick} className="text-green underline ml-5">
+                  Upload avatar
+                </button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/jpeg, image/png"
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                />
               </div>
               <div>
                 <GreenButton onClick={() => console.log('clicked')} className="mt-8 p-[1.25rem!important] text-black w-full">
@@ -44,7 +75,9 @@ export default function Page() {
                 </GreenButton>
               </div>
               <div>
-                <Link href="/" className="text-white underline text-sm flex justify-center mt-8 hover:text-gray-300">Skip for now</Link>
+                <Link href="/" className="text-white underline text-sm flex justify-center mt-8 hover:text-gray-300">
+                  Skip for now
+                </Link>
               </div>
             </div>
 
