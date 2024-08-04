@@ -1,17 +1,15 @@
 // components/layout/Navbar.tsx
 import Image from 'next/image';
 import { FC, useState, useEffect, useRef } from 'react';
-import { GoBell } from 'react-icons/go';
+import { FaBell } from 'react-icons/fa';
 import { FiMenu } from 'react-icons/fi';
 import { IoMdClose } from 'react-icons/io';
+import { BsFillPencilFill } from 'react-icons/bs';
+import { FaUserFriends } from 'react-icons/fa';
+import { MdEditCalendar } from 'react-icons/md';
+import { IoMdSettings } from 'react-icons/io';
+import { ImExit } from 'react-icons/im';
 import NavItem from './NavItem';
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu';
 
 const Navbar: FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -45,7 +43,7 @@ const Navbar: FC = () => {
   }, [isDropdownOpen]);
 
   return (
-    <nav className="bg-black p-4">
+    <nav className="bg-black p-4 relative z-50">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className="flex-shrink-0">
@@ -59,61 +57,107 @@ const Navbar: FC = () => {
           </button>
         </div>
 
-        {/* Navigation Links and Icons */}
-        <div className={`md:flex items-center justify-end space-x-6 w-full ${isMobileMenuOpen ? 'block' : 'hidden'} md:block`}>
-          <NavigationMenu>
-            <NavigationMenuList className="flex items-center space-x-6">
-              <NavigationMenuItem>
-                <NavItem href="/teams" label="Teams" />
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavItem href="/friends" label="Friends" />
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavItem href="/wishlist" label="Wishlist" />
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <button className="text-white hover:text-gray-300">
-                  <GoBell className="scale-[2]" />
-                </button>
-              </NavigationMenuItem>
-              <NavigationMenuItem ref={dropdownRef}>
-                <button onClick={toggleDropdown} className="focus:outline-none flex items-center">
-                  <NavigationMenuTrigger>
-                    <Image
-                      src="/path-to-user-avatar.jpg"
-                      alt="User Avatar"
-                      width={32}
-                      height={32}
-                      className="rounded-full border border-neonGreen cursor-pointer"
-                    />
-                  </NavigationMenuTrigger>
-                </button>
-                {isDropdownOpen && (
-                  <NavigationMenuContent className="absolute right-0 mt-2 w-48 bg-black border border-gray-700 rounded-md shadow-lg z-10">
-                    <NavigationMenuList className="flex flex-col">
-                      <NavigationMenuItem>
-                        <NavItem href="/manage-teams" label="Manage Teams" />
-                      </NavigationMenuItem>
-                      <NavigationMenuItem>
-                        <NavItem href="/friends" label="Friends" />
-                      </NavigationMenuItem>
-                      <NavigationMenuItem>
-                        <NavItem href="/edit-calendar" label="Edit Calendar" />
-                      </NavigationMenuItem>
-                      <NavigationMenuItem>
-                        <NavItem href="/account" label="Account" />
-                      </NavigationMenuItem>
-                      <NavigationMenuItem>
-                        <NavItem href="/sign-out" label="Sign Out of Plaeen" />
-                      </NavigationMenuItem>
-                    </NavigationMenuList>
-                  </NavigationMenuContent>
-                )}
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+        {/* Desktop Navigation Links and Icons */}
+        <div className={`hidden md:flex items-center space-x-14 font-light w-full justify-end`}>
+          <NavItem href="/teams" label="Teams" />
+          <NavItem href="/friends" label="Friends" />
+          <NavItem href="/wishlist" label="Wishlist" />
+          <button className="text-white hover:text-gray-300">
+            <FaBell className="scale-[2] text-white" />
+          </button>
+          <div className="relative" ref={dropdownRef}>
+            <button onClick={toggleDropdown} className="focus:outline-none flex items-center">
+              <Image
+                src="/path-to-user-avatar.jpg"
+                alt="User Avatar"
+                width={32}
+                height={32}
+                className="rounded-full border border-neonGreen cursor-pointer"
+              />
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-8 w-56 bg-black rounded-lg shadow-lg z-10 p-4 leading-8">
+                <ul className="flex flex-col space-y-1 font-light">
+                  <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
+                    <BsFillPencilFill />
+                    <span>Manage Teams</span>
+                  </li>
+                  <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
+                    <FaUserFriends />
+                    <span>Friends</span>
+                  </li>
+                  <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
+                    <MdEditCalendar />
+                    <span>Edit Calendar</span>
+                  </li>
+                  <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
+                    <IoMdSettings />
+                    <span>Account</span>
+                  </li>
+                  <li className="flex items-center space-x-2 border-t border-gray-700 pt-2 text-white hover:text-gray-300 cursor-pointer">
+                    <ImExit />
+                    <span>Sign Out of Plaeen</span>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Mobile Navigation Links */}
+        {isMobileMenuOpen && (
+          <div className="absolute top-0 left-0 w-full bg-black flex flex-col p-4 z-50">
+            <div className="flex justify-between items-center">
+              <Image src="/logo/logo-icon.svg" alt="Logo" width={50} height={50} className='left-[1.65rem] relative' />
+              <button onClick={toggleMobileMenu} className="text-white focus:outline-none">
+                <IoMdClose size={24} className='relative right-6' />
+              </button>
+            </div>
+            <div className="mt-8 flex flex-col space-y-1 relative left-5">
+              <NavItem href="/teams" label="Teams" />
+              <NavItem href="/friends" label="Friends" />
+              <NavItem href="/wishlist" label="Wishlist" />
+              <button className="text-white hover:text-gray-300 flex items-center relative left-5 mt-[1rem!important]">
+                <FaBell className="scale-[1.5] text-white" />
+              </button>
+              <button onClick={toggleDropdown} className="text-white hover:text-gray-300 flex items-center relative left-4 mt-[1.5rem!important]">
+                <Image
+                  src=""
+                  alt="User Avatar"
+                  width={32}
+                  height={32}
+                  className="rounded-full border border-neonGreen cursor-pointer"
+                />
+              </button>
+              {isDropdownOpen && (
+                <div className="mt-2 w-full bg-black rounded-lg shadow-lg z-10 p-4 leading-8">
+                  <ul className="flex flex-col space-y-1">
+                    <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
+                      <BsFillPencilFill />
+                      <span>Manage Teams</span>
+                    </li>
+                    <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
+                      <FaUserFriends />
+                      <span>Friends</span>
+                    </li>
+                    <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
+                      <MdEditCalendar />
+                      <span>Edit Calendar</span>
+                    </li>
+                    <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
+                      <IoMdSettings />
+                      <span>Account</span>
+                    </li>
+                    <li className="flex items-center space-x-2 border-t border-gray-700 pt-2 text-white hover:text-gray-300 cursor-pointer">
+                      <ImExit />
+                      <span>Sign Out of Plaeen</span>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
