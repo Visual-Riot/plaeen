@@ -11,6 +11,7 @@ import { MdEditCalendar } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 import { ImExit } from 'react-icons/im';
 import NavItem from './NavItem';
+import Link from 'next/link';
 
 interface NavbarProps {
   avatar: string | null;
@@ -59,9 +60,11 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
     <nav className="bg-black p-4 relative z-50">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="flex-shrink-0">
-          <Image src="/logo/logo-icon.svg" alt="Logo" width={50} height={50} />
-        </div>
+        <Link href="/" passHref>
+          <div className="flex items-center cursor-pointer">
+            <Image src="/logo/logo-icon.svg" alt="Logo" width={50} height={50} />
+          </div>
+        </Link>
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
@@ -131,7 +134,11 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
         {isMobileMenuOpen && (
           <div className="absolute top-0 left-0 w-full bg-black flex flex-col p-4 z-50">
             <div className="flex justify-between items-center">
-              <Image src="/logo/logo-icon.svg" alt="Logo" width={50} height={50} />
+              <Link href="/" passHref>
+                <div className="flex items-center cursor-pointer">
+                  <Image src="/logo/logo-icon.svg" alt="Logo" width={50} height={50} />
+                </div>
+              </Link>
               <button onClick={toggleMobileMenu} className="text-white focus:outline-none">
                 <IoMdClose size={24} />
               </button>
