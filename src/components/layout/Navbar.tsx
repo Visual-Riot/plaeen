@@ -90,7 +90,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
                 />
               ) : (
                 <Image
-                  src="/path-to-default-avatar.jpg"
+                  src="/icons/avatar-default.jpg"
                   alt="Default Avatar"
                   width={32}
                   height={32}
@@ -99,7 +99,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
               )}
             </button>
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-56 bg-black rounded-lg shadow-lg z-10 p-4 leading-8">
+              <div className="absolute right-0 mt-8 w-56 bg-black rounded-lg shadow-lg z-10 p-4 leading-8">
                 <ul className="flex flex-col space-y-1">
                   <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
                     <BsFillPencilFill />
@@ -136,14 +136,14 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
                 <IoMdClose size={24} />
               </button>
             </div>
-            <div className="mt-8 flex flex-col space-y-8">
+            <div className="mt-8 flex flex-col space-y-2">
               <NavItem href="/teams" label="Teams" />
               <NavItem href="/friends" label="Friends" />
               <NavItem href="/wishlist" label="Wishlist" />
-              <button className="text-white hover:text-gray-300 flex items-center">
-                <FaBell className="scale-[2] text-white" />
+              <button className="text-white hover:text-gray-300 flex items-center relative left-4 mt-[1.25rem!important]">
+                <FaBell className="scale-[1.5] text-white" />
               </button>
-              <button onClick={toggleDropdown} className="text-white hover:text-gray-300 flex items-center">
+              <button onClick={toggleDropdown} className="text-white hover:text-gray-300 flex items-center relative left-3 mt-[1.5rem!important]">
                 {userAvatar ? (
                   <Image
                     src={userAvatar}
@@ -154,7 +154,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
                   />
                 ) : (
                   <Image
-                    src="/path-to-default-avatar.jpg"
+                    src="/icons/avatar-default.jpg"
                     alt="Default Avatar"
                     width={32}
                     height={32}
@@ -163,7 +163,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
                 )}
               </button>
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-black rounded-lg shadow-lg z-10 p-4 leading-8">
+                <div className="mt-[0px!important] relative w-full bg-black rounded-lg shadow-lg z-10 p-4 leading-8">
                   <ul className="flex flex-col space-y-1">
                     <li className="flex items-center space-x-2 text-white hover:text-gray-300 cursor-pointer">
                       <BsFillPencilFill />
