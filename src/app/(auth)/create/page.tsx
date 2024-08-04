@@ -9,12 +9,17 @@ import GreenButton from "@/components/buttons/GreenButton";
 
 export default function Page() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [username, setUsername] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const savedImage = localStorage.getItem("userAvatar");
+    const savedUsername = localStorage.getItem("username");
     if (savedImage) {
       setSelectedImage(savedImage);
+    }
+    if (savedUsername) {
+      setUsername(savedUsername);
     }
   }, []);
 
@@ -35,11 +40,16 @@ export default function Page() {
     }
   };
 
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
+  };
+
   const handleContinue = () => {
     if (selectedImage) {
       localStorage.setItem("userAvatar", selectedImage);
-      console.log('Image saved to local storage');
-      // Additional logic can be added here if needed
+    }
+    if (username) {
+      localStorage.setItem("username", username);
     }
   };
 
@@ -62,7 +72,9 @@ export default function Page() {
                 <input
                   type="text"
                   placeholder="username"
-                  className="border-green bg-green opacity-75 border-2 mt-4 w-full p-5 rounded-lg"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  className="border-green bg-green opacity-75 border-2 mt-4 w-full p-5 rounded-lg placeholder-gray-700 text-gray-900"
                 />
               </div>
               <div className="flex mt-8 items-center">
