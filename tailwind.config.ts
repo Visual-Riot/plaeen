@@ -8,11 +8,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        blend: '0 -100px 50px -10px black inset'
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "usp1": "linear-gradient(198deg, #6606E3 0%, #620A81 100%)",
-        "usp2": "linear-gradient(180deg, #6606E3 0%, #330372 100%)",
-        "usp3": "linear-gradient(157deg, #6606E3 0%, #330372 100%)",
+        usp1: "linear-gradient(198deg, #6606E3 0%, #620A81 100%)",
+        usp2: "linear-gradient(180deg, #6606E3 0%, #330372 100%)",
+        usp3: "linear-gradient(157deg, #6606E3 0%, #330372 100%)",
         "pink-purple": "linear-gradient(319deg, #FF37DF 0%, #6E00FF 100%)",
         "calendar-bg": "url('/img/bg-img_01.webp')",
       },
@@ -73,18 +76,32 @@ const config: Config = {
         normal: "normal",
         italic: "italic",
       },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
     },
     screens: {
-      'xxs': '320px', // Example width for extra small screens
-      'xs': '480px', // Example min-width for common mobile devices
-      'sm': '640px',
-      'md': '768px',
-      'lg': '1024px',
-      'xl': '1280px',
-      '2xl': '1536px',
+      xxs: "320px", // Example width for extra small screens
+      xs: "480px", // Example min-width for common mobile devices
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };
 
 export default config;
