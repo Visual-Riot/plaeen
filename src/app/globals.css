@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-  
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -17,6 +17,12 @@
   }
 }
 
+@layer components {
+  .leading-trim {
+    @apply font-sofia align-middle;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -26,4 +32,10 @@
 body {
   background-color: black;
   overflow-x: hidden;
+}
+
+.custom-alignment {
+  line-height: 4; /* Adjust as needed */
+  margin-top: -0.2em; /* Adjust as needed */
+  /* margin-bottom: -2em; */
 }

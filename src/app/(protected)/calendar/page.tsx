@@ -79,24 +79,30 @@ export default function Page() {
         </div>
 
         {/* CALENDAR NAVIGATION ROW */}
-        <div className="flex justify-between items-center my-12 text-lightPurple text-2xl font-semibold">
+        <div className="flex justify-between items-center my-12 text-lightPurple text-xl font-semibold">
           <div className="flex items-center">
             <button onClick={handlePreviousWeek}>
-              <LeftArrow className="mr-2 fill-current align-middle" />
+              <LeftArrow className="mr-2 fill-green" />
             </button>
-            <span className="mx-2">{currentWeekRange}</span>
+            <span className="mx-2 mt-[-0.2em] w-36 flex justify-center items-center">
+              {currentWeekRange}
+            </span>
             <button onClick={handleNextWeek}>
-              <RightArrow className="ml-2 fill-current align-middle" />
+              <RightArrow className="ml-2 fill-green" />
             </button>
           </div>
           <div className="flex items-center">
             <button onClick={handlePreviousMonth}>
-              <LeftArrow className="mr-2 fill-current align-middle" />
+              <LeftArrow className="mr-2 align-middle fill-green" />
             </button>
-            <span className="mx-2">{currentMonth}</span>{" "}
-            <button className="ml-2">&#128197; {/* calendar icon */}</button>
+            <div className=" w-56 flex justify-center items-center">
+              <span className="mx-2 mt-[-0.2em] text-nowrap">
+                {currentMonth}
+              </span>{" "}
+              <button className="ml-2">&#128197; {/* calendar icon */}</button>
+            </div>
             <button onClick={handleNextMonth}>
-              <RightArrow className="ml-2 fill-current align-middle" />
+              <RightArrow className="ml-2 align-middle fill-green" />
             </button>
           </div>
         </div>
