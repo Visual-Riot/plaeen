@@ -4,7 +4,20 @@ import OutlineButton from "@/components/buttons/OutlineButton";
 import GreenButton from "@/components/buttons/GreenButton";
 import TertiaryButton from "@/components/buttons/TertiaryButton";
 import ResetIcon from "@/components/icons/ResetIcon";
+import LeftArrow from "@/components/icons/LeftArrow";
+import RightArrow from "@/components/icons/RightArrow";
 import PlayerCalendarWrapper from "@/components/calendar/PlayerCalendarWrapper";
+//import calendar options
+import {
+  format,
+  addWeeks,
+  subWeeks,
+  addMonths,
+  subMonths,
+  startOfWeek,
+  endOfWeek,
+  startOfMonth,
+} from "date-fns";
 
 export default function Page() {
   // PLACEHOLDER FOR IMPORT CALENDARS FUNCTIONALITY
@@ -16,8 +29,34 @@ export default function Page() {
     [key: string]: { [key: number]: string };
   }>({});
 
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+
   const resetDayHours = () => {
     setDayHours({});
+  };
+
+  // Calendar Update option
+  const currentWeekRange = `${format(
+    startOfWeek(currentDate),
+    "dd.MM"
+  )} - ${format(endOfWeek(currentDate), "dd.MM")}`;
+  const currentMonth = format(currentDate, "MMMM yyyy");
+
+  // Calendar Navigation
+  const handlePreviousWeek = () => {
+    setCurrentDate((prevDate) => subWeeks(prevDate, 1));
+  };
+
+  const handleNextWeek = () => {
+    setCurrentDate((prevDate) => addWeeks(prevDate, 1));
+  };
+
+  const handlePreviousMonth = () => {
+    setCurrentDate((prevDate) => subMonths(prevDate, 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate((prevDate) => addMonths(prevDate, 1));
   };
 
   return (
@@ -36,6 +75,29 @@ export default function Page() {
             <OutlineButton onClick={importHandleClick} className="mt-7 md:mt-0">
               Import Calendars
             </OutlineButton>
+          </div>
+        </div>
+
+        {/* CALENDAR NAVIGATION ROW */}
+        <div className="flex justify-between items-center my-12 text-lightPurple text-2xl font-semibold">
+          <div className="flex items-center">
+            <button onClick={handlePreviousWeek}>
+              <LeftArrow className="mr-2 fill-current align-middle" />
+            </button>
+            <span className="mx-2">{currentWeekRange}</span>
+            <button onClick={handleNextWeek}>
+              <RightArrow className="ml-2 fill-current align-middle" />
+            </button>
+          </div>
+          <div className="flex items-center">
+            <button onClick={handlePreviousMonth}>
+              <LeftArrow className="mr-2 fill-current align-middle" />
+            </button>
+            <span className="mx-2">{currentMonth}</span>{" "}
+            <button className="ml-2">&#128197; {/* calendar icon */}</button>
+            <button onClick={handleNextMonth}>
+              <RightArrow className="ml-2 fill-current align-middle" />
+            </button>
           </div>
         </div>
 
