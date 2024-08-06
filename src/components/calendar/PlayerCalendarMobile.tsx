@@ -1,6 +1,6 @@
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import DayButton from "../buttons/DayButton";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { startOfWeek, endOfWeek, format } from "date-fns";
 
 interface PlayerCalendarMobileProps {
@@ -22,8 +22,8 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   className,
 }) => {
   const daysOfWeek: string[] = [];
-  const start = startOfWeek(currentDate);
-  const end = endOfWeek(currentDate);
+  const start = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const end = endOfWeek(currentDate, { weekStartsOn: 1 });
 
   for (
     let date = start;

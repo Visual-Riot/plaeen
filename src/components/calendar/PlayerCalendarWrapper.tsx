@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
 import PlayerCalendarMobile from "./PlayerCalendarMobile";
-import { format, subWeeks, addWeeks, startOfWeek } from "date-fns";
+import { format, startOfWeek } from "date-fns";
 
 interface PlayerCalendarWrapperProps {
   dayHours: { [key: string]: { [key: number]: string } };
@@ -20,7 +20,7 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   const [selectedDay, setSelectedDay] = useState<string>("Monday");
 
   const getCurrentWeekKey = (date: Date) => {
-    const start = startOfWeek(date);
+    const start = startOfWeek(date, { weekStartsOn: 1 });
     return format(start, "dd.MM.yyyy");
   };
 
@@ -146,7 +146,6 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
         <PlayerCalendarDesktop
           className="hidden lg:flex"
           dayHours={dayHours}
-          setDayHours={setDayHours} // ??
           onHoursStateChange={handleHourStateChange}
           onSelectAllSlotsForHours={selectAllSlotsForHours}
           onSelectAllSlotsForDays={selectAllSlotsForDays}

@@ -35,20 +35,10 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
   currentDate,
   className = "",
 }) => {
-  // const daysOfWeek = [
-  //   "Monday",
-  //   "Tuesday",
-  //   "Wednesday",
-  //   "Thursday",
-  //   "Friday",
-  //   "Saturday",
-  //   "Sunday",
-  // ];
-
   const daysOfWeek: string[] = [];
 
-  const start = startOfWeek(currentDate);
-  const end = endOfWeek(currentDate);
+  const start = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const end = endOfWeek(currentDate, { weekStartsOn: 1 });
 
   for (
     let date = start;
