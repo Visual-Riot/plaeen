@@ -33,9 +33,3 @@ body {
   background-color: black;
   overflow-x: hidden;
 }
-
-.custom-alignment {
-  line-height: 4; /* Adjust as needed */
-  margin-top: -0.2em; /* Adjust as needed */
-  /* margin-bottom: -2em; */
-}

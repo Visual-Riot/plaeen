@@ -108,7 +108,11 @@ export default function Page() {
         </div>
 
         {/* CALENDAR */}
-        <PlayerCalendarWrapper dayHours={dayHours} setDayHours={setDayHours} />
+        <PlayerCalendarWrapper
+          dayHours={dayHours}
+          setDayHours={setDayHours}
+          currentDate={currentDate}
+        />
 
         {/* LOW ROW with legend and submit button */}
         <div className="flex items-center w-full justify-between  px-2">

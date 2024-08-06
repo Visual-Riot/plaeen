@@ -1,32 +1,37 @@
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import DayButton from "../buttons/DayButton";
 import React, { useState, useEffect } from "react";
+import { startOfWeek, endOfWeek, format } from "date-fns";
 
-interface Props {
-  className?: string;
+interface PlayerCalendarMobileProps {
   dayHours: { [key: string]: { [key: number]: string } };
   selectedDay: string;
+  currentDate: Date;
   onHoursStateChange: (
     day: string,
     hour: number,
     newState: "available" | "single" | "recurring"
   ) => void;
+  className?: string;
 }
 
-const PlayerCalendarMobile: React.FC<Props> = ({
-  className,
+const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   dayHours,
+  currentDate,
   onHoursStateChange,
+  className,
 }) => {
-  const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  const daysOfWeek: string[] = [];
+  const start = startOfWeek(currentDate);
+  const end = endOfWeek(currentDate);
+
+  for (
+    let date = start;
+    date <= end;
+    date = new Date(date.setDate(date.getDate() + 1))
+  ) {
+    daysOfWeek.push(format(date, "EEEE"));
+  }
 
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
 
