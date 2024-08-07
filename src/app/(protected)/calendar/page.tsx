@@ -6,6 +6,8 @@ import TertiaryButton from "@/components/buttons/TertiaryButton";
 import ResetIcon from "@/components/icons/ResetIcon";
 import LeftArrow from "@/components/icons/LeftArrow";
 import RightArrow from "@/components/icons/RightArrow";
+import DoubleLeftArrow from "@/components/icons/DoubleLeftArrow";
+import DoubleRightArrow from "@/components/icons/DoubleRightArrow";
 import PlayerCalendarWrapper from "@/components/calendar/PlayerCalendarWrapper";
 import {
   format,
@@ -30,18 +32,12 @@ export default function Page() {
   }>({});
 
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const [showMobileCalendar, setShowMobileCalendar] = useState(false);
 
   // Reset dayHours state
   const resetDayHours = () => {
     setDayHours({});
   };
-
-  // Calendar Update option
-  const currentWeekRange = `${format(
-    startOfWeek(currentDate, { weekStartsOn: 1 }),
-    "dd.MM"
-  )} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), "dd.MM")}`;
-  const currentMonth = format(currentDate, "MMMM yyyy");
 
   const getFirstFullWeekOfMonth = (date: Date) => {
     const firstDayOfMonth = startOfMonth(date);
@@ -77,6 +73,13 @@ export default function Page() {
     });
   };
 
+  // Current week display
+  const currentWeekRange = `${format(
+    startOfWeek(currentDate, { weekStartsOn: 1 }),
+    "dd.MM"
+  )} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), "dd.MM")}`;
+  const currentMonth = format(currentDate, "MMMM yyyy");
+
   return (
     // background
     <div className="relative min-h-screen bg-calendar-bg bg-cover bg-center flex justify-center items-center">
@@ -97,31 +100,62 @@ export default function Page() {
         </div>
 
         {/* CALENDAR NAVIGATION ROW */}
-        <div className="flex justify-between items-center mt-16 mb-12 text-lightPurple text-2xl font-semibold">
-          <div className="flex items-center">
-            <button onClick={handlePreviousWeek}>
-              <LeftArrow className="mr-2 fill-green" />
-            </button>
-            <span className="mx-2 mt-[-0.2em] w-38 flex justify-center items-center">
-              {currentWeekRange}
-            </span>
-            <button onClick={handleNextWeek}>
-              <RightArrow className="ml-2 fill-green" />
-            </button>
-          </div>
-          <div className="flex items-center">
-            <button onClick={handlePreviousMonth}>
-              <LeftArrow className="mr-2 align-middle fill-green" />
-            </button>
-            <div className=" w-64 flex justify-center items-center">
-              <span className="mx-2 mt-[-0.2em] text-nowrap">
-                {currentMonth}
-              </span>{" "}
-              <button className="ml-2">&#128197; {/* calendar icon */}</button>
+        <div className="flex justify-between items-center mt-16 md:mb-12 text-lightPurple text-2xl font-semibold">
+          {/* Mobile view */}
+          <div className="flex flex-col md:hidden w-full items-center">
+            <div className="flex items-center">
+              <button onClick={handlePreviousMonth}>
+                <DoubleLeftArrow className="mr-4 fill-green" />
+              </button>
+              <button onClick={handlePreviousWeek}>
+                <LeftArrow className="mr-2 fill-green" />
+              </button>
+              <div className=" w-60 flex justify-center items-center">
+                <span className="mx-2 mt-[-0.2em] text-nowrap">
+                  {currentWeekRange}
+                </span>{" "}
+                <button className="ml-2">
+                  &#128197; {/* calendar icon */}
+                </button>
+              </div>
+              <button onClick={handleNextWeek}>
+                <RightArrow className="ml-2 fill-green" />
+              </button>
+              <button onClick={handlePreviousMonth}>
+                <DoubleRightArrow className="ml-4 fill-green" />
+              </button>
             </div>
-            <button onClick={handleNextMonth}>
-              <RightArrow className="ml-2 align-middle fill-green" />
-            </button>
+          </div>
+
+          {/* Desktop view */}
+          <div className="hidden md:flex justify-between items-center w-full">
+            <div className="flex items-center">
+              <button onClick={handlePreviousWeek}>
+                <LeftArrow className="mr-2 fill-green" />
+              </button>
+              <span className="mx-2 mt-[-0.2em] w-38 flex justify-center items-center">
+                {currentWeekRange}
+              </span>
+              <button onClick={handleNextWeek}>
+                <RightArrow className="ml-2 fill-green" />
+              </button>
+            </div>
+            <div className="flex items-center">
+              <button onClick={handlePreviousMonth}>
+                <LeftArrow className="mr-2 align-middle fill-green" />
+              </button>
+              <div className=" w-64 flex justify-center items-center">
+                <span className="mx-2 mt-[-0.2em] text-nowrap">
+                  {currentMonth}
+                </span>{" "}
+                <button className="ml-2">
+                  &#128197; {/* calendar icon */}
+                </button>
+              </div>
+              <button onClick={handleNextMonth}>
+                <RightArrow className="ml-2 align-middle fill-green" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -134,17 +168,17 @@ export default function Page() {
 
         {/* LOW ROW with legend and submit button */}
         <div className="flex items-center w-full justify-between mt-8 px-2">
-          <div className="flex flex-col md:flex-row text-lightGrey font-light text-sm">
+          <div className="flex flex-col lg:flex-row text-lightGrey font-light text-sm">
             <div className="flex flex-row pr-8 ">
-              <button className="w-5 h-5 bg-green opacity-50 rounded mb-4 mr-2"></button>{" "}
+              <button className="w-5 h-5 bg-green opacity-50 rounded mb-4 lg:mb-0 mr-2"></button>{" "}
               <p>Available</p>
             </div>
             <div className="flex flex-row pr-8">
-              <button className="w-5 h-5 bg-accentTwo opacity-50 rounded mb-4 mr-2"></button>{" "}
+              <button className="w-5 h-5 bg-accentTwo opacity-50 rounded mb-4 lg:mb-0  mr-2"></button>{" "}
               <p className="text-nowrap">Single event</p>
             </div>
             <div className="flex flex-row pr-8">
-              <button className="w-5 h-5 bg-accentOne opacity-50 rounded mb-4 mr-2"></button>{" "}
+              <button className="w-5 h-5 bg-accentOne opacity-50 rounded mb-4 lg:mb-0  mr-2"></button>{" "}
               <p className="text-nowrap">Recurring event</p>
             </div>
           </div>
@@ -158,7 +192,7 @@ export default function Page() {
             </GreenButton>
 
             <TertiaryButton
-              className="mr-0 lg:mr-5 align-middle"
+              className="mr-0 mt-4 lg:mt-0 lg:mr-5 align-middle"
               onClick={() => {
                 resetDayHours();
               }}
