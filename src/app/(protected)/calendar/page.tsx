@@ -16,6 +16,7 @@ import {
   startOfWeek,
   endOfWeek,
   startOfMonth,
+  isBefore,
 } from "date-fns";
 
 export default function Page() {
@@ -30,6 +31,7 @@ export default function Page() {
 
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
+  // Reset dayHours state
   const resetDayHours = () => {
     setDayHours({});
   };
@@ -41,6 +43,15 @@ export default function Page() {
   )} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), "dd.MM")}`;
   const currentMonth = format(currentDate, "MMMM yyyy");
 
+  const getFirstFullWeekOfMonth = (date: Date) => {
+    const firstDayOfMonth = startOfMonth(date);
+    const weekStart = startOfWeek(firstDayOfMonth, { weekStartsOn: 1 });
+    if (isBefore(weekStart, firstDayOfMonth)) {
+      return addWeeks(weekStart, 1);
+    }
+    return weekStart;
+  };
+
   // Calendar Navigation
   const handlePreviousWeek = () => {
     setCurrentDate((prevDate) => subWeeks(prevDate, 1));
@@ -51,11 +62,19 @@ export default function Page() {
   };
 
   const handlePreviousMonth = () => {
-    setCurrentDate((prevDate) => subMonths(prevDate, 1));
+    setCurrentDate((prevDate) => {
+      const newDate = subMonths(prevDate, 1);
+      const weekStart = getFirstFullWeekOfMonth(newDate);
+      return weekStart;
+    });
   };
 
   const handleNextMonth = () => {
-    setCurrentDate((prevDate) => addMonths(prevDate, 1));
+    setCurrentDate((prevDate) => {
+      const newDate = addMonths(prevDate, 1);
+      const weekStart = getFirstFullWeekOfMonth(newDate);
+      return weekStart;
+    });
   };
 
   return (
@@ -78,12 +97,12 @@ export default function Page() {
         </div>
 
         {/* CALENDAR NAVIGATION ROW */}
-        <div className="flex justify-between items-center mt-16 mb-12 text-lightPurple text-xl font-semibold">
+        <div className="flex justify-between items-center mt-16 mb-12 text-lightPurple text-2xl font-semibold">
           <div className="flex items-center">
             <button onClick={handlePreviousWeek}>
               <LeftArrow className="mr-2 fill-green" />
             </button>
-            <span className="mx-2 mt-[-0.2em] w-36 flex justify-center items-center">
+            <span className="mx-2 mt-[-0.2em] w-38 flex justify-center items-center">
               {currentWeekRange}
             </span>
             <button onClick={handleNextWeek}>
@@ -94,7 +113,7 @@ export default function Page() {
             <button onClick={handlePreviousMonth}>
               <LeftArrow className="mr-2 align-middle fill-green" />
             </button>
-            <div className=" w-56 flex justify-center items-center">
+            <div className=" w-64 flex justify-center items-center">
               <span className="mx-2 mt-[-0.2em] text-nowrap">
                 {currentMonth}
               </span>{" "}
