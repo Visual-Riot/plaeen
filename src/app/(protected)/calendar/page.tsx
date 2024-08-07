@@ -8,6 +8,7 @@ import LeftArrow from "@/components/icons/LeftArrow";
 import RightArrow from "@/components/icons/RightArrow";
 import DoubleLeftArrow from "@/components/icons/DoubleLeftArrow";
 import DoubleRightArrow from "@/components/icons/DoubleRightArrow";
+import CalendarIcon from "@/components/icons/CalendarIcon";
 import PlayerCalendarWrapper from "@/components/calendar/PlayerCalendarWrapper";
 import {
   format,
@@ -115,7 +116,7 @@ export default function Page() {
                   {currentWeekRange}
                 </span>{" "}
                 <button className="ml-2">
-                  &#128197; {/* calendar icon */}
+                  <CalendarIcon className="ml-2 align-middle fill-lightPurple" />
                 </button>
               </div>
               <button onClick={handleNextWeek}>
@@ -149,7 +150,7 @@ export default function Page() {
                   {currentMonth}
                 </span>{" "}
                 <button className="ml-2">
-                  &#128197; {/* calendar icon */}
+                  <CalendarIcon className="ml-2 align-middle fill-lightPurple" />
                 </button>
               </div>
               <button onClick={handleNextMonth}>
