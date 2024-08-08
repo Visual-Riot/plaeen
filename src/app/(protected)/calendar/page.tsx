@@ -106,24 +106,24 @@ export default function Page() {
           <div className="flex flex-col lg:hidden w-full items-center">
             <div className="flex items-center">
               <button onClick={handlePreviousMonth}>
-                <DoubleLeftArrow className="mr-4 fill-green" />
+                <DoubleLeftArrow className="mr-4 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
               <button onClick={handlePreviousWeek}>
-                <LeftArrow className="mr-2 fill-green" />
+                <LeftArrow className="mr-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
               <div className="w-[240px] flex justify-center items-center">
                 <span className="mx-2 mt-[-0.2em] text-nowrap">
                   {currentWeekRange}
                 </span>{" "}
                 <button className="ml-2">
-                  <CalendarIcon className="ml-2 align-middle fill-lightPurple" />
+                  <CalendarIcon className="ml-2 align-middle fill-lightPurple opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
                 </button>
               </div>
               <button onClick={handleNextWeek}>
-                <RightArrow className="ml-2 fill-green" />
+                <RightArrow className="ml-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
               <button onClick={handleNextMonth}>
-                <DoubleRightArrow className="ml-4 fill-green" />
+                <DoubleRightArrow className="ml-4 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
             </div>
           </div>
@@ -132,29 +132,29 @@ export default function Page() {
           <div className="hidden lg:flex justify-between items-center w-full">
             <div className="flex items-center">
               <button onClick={handlePreviousWeek}>
-                <LeftArrow className="mr-2 fill-green" />
+                <LeftArrow className="mr-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
               <span className="mx-2 mt-[-0.2em] w-[150px] flex justify-center items-center text-nowrap">
                 {currentWeekRange}
               </span>
               <button onClick={handleNextWeek}>
-                <RightArrow className="ml-2 fill-green" />
+                <RightArrow className="ml-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
             </div>
             <div className="flex items-center">
               <button onClick={handlePreviousMonth}>
-                <LeftArrow className="mr-2 align-middle fill-green" />
+                <LeftArrow className="mr-2 align-middle fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
               <div className="w-[250px] flex justify-center items-center">
                 <span className="mx-2 mt-[-0.2em] text-nowrap">
                   {currentMonth}
                 </span>{" "}
                 <button className="ml-2">
-                  <CalendarIcon className="ml-2 align-middle fill-lightPurple" />
+                  <CalendarIcon className="ml-2 align-middle fill-lightPurple opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
                 </button>
               </div>
               <button onClick={handleNextMonth}>
-                <RightArrow className="ml-2 align-middle fill-green" />
+                <RightArrow className="ml-2 align-middle fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
             </div>
           </div>

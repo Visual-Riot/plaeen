@@ -17,7 +17,7 @@ const CalendarIcon = ({
     viewBox="0 0 21.378 21"
     className={className}
   >
-    <g id="_x31_5_38_" transform="translate(0 0)" opacity="0.6">
+    <g id="_x31_5_38_" transform="translate(0 0)">
       <g id="Group_287" data-name="Group 287" transform="translate(0 0)">
         <path
           id="Path_189"

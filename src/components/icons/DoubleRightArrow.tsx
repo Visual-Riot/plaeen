@@ -8,7 +8,7 @@ const DoubleRightArrow = ({ className }: { className: string }) => (
     viewBox="0 0 16.885 12.382"
     className={className}
   >
-    <g id="fast-forward" transform="translate(0 -64.013)" opacity="0.6">
+    <g id="fast-forward" transform="translate(0 -64.013)">
       <g
         id="Group_402"
         data-name="Group 402"

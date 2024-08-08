@@ -22,7 +22,7 @@ const RightArrow = ({ className }: { className: string }) => (
     viewBox="0 0 12 19.43"
     className={className}
   >
-    <g id="Arrow-23" transform="translate(-117.653 -32)" opacity="0.6">
+    <g id="Arrow-23" transform="translate(-117.653 -32)">
       <path
         id="Path_15"
         data-name="Path 15"
