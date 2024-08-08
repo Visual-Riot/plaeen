@@ -103,7 +103,7 @@ export default function Page() {
         {/* CALENDAR NAVIGATION ROW */}
         <div className="flex justify-between items-center mt-16 md:mb-12 text-lightPurple text-2xl font-semibold">
           {/* Mobile view */}
-          <div className="flex flex-col md:hidden w-full items-center">
+          <div className="flex flex-col lg:hidden w-full items-center">
             <div className="flex items-center">
               <button onClick={handlePreviousMonth}>
                 <DoubleLeftArrow className="mr-4 fill-green" />
@@ -111,7 +111,7 @@ export default function Page() {
               <button onClick={handlePreviousWeek}>
                 <LeftArrow className="mr-2 fill-green" />
               </button>
-              <div className=" w-60 flex justify-center items-center">
+              <div className="w-[240px] flex justify-center items-center">
                 <span className="mx-2 mt-[-0.2em] text-nowrap">
                   {currentWeekRange}
                 </span>{" "}
@@ -122,19 +122,19 @@ export default function Page() {
               <button onClick={handleNextWeek}>
                 <RightArrow className="ml-2 fill-green" />
               </button>
-              <button onClick={handlePreviousMonth}>
+              <button onClick={handleNextMonth}>
                 <DoubleRightArrow className="ml-4 fill-green" />
               </button>
             </div>
           </div>
 
           {/* Desktop view */}
-          <div className="hidden md:flex justify-between items-center w-full">
+          <div className="hidden lg:flex justify-between items-center w-full">
             <div className="flex items-center">
               <button onClick={handlePreviousWeek}>
                 <LeftArrow className="mr-2 fill-green" />
               </button>
-              <span className="mx-2 mt-[-0.2em] w-38 flex justify-center items-center">
+              <span className="mx-2 mt-[-0.2em] w-[150px] flex justify-center items-center text-nowrap">
                 {currentWeekRange}
               </span>
               <button onClick={handleNextWeek}>
@@ -145,7 +145,7 @@ export default function Page() {
               <button onClick={handlePreviousMonth}>
                 <LeftArrow className="mr-2 align-middle fill-green" />
               </button>
-              <div className=" w-64 flex justify-center items-center">
+              <div className="w-[250px] flex justify-center items-center">
                 <span className="mx-2 mt-[-0.2em] text-nowrap">
                   {currentMonth}
                 </span>{" "}

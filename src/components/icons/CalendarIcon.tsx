@@ -1,11 +1,19 @@
 import React from "react";
 
-const CalendarIcon = ({ className }: { className?: string }) => (
+const CalendarIcon = ({
+  className,
+  width,
+  height,
+}: {
+  className?: string;
+  width?: string;
+  height?: string;
+}) => (
   <svg
     id="BTN_Calendar"
     xmlns="http://www.w3.org/2000/svg"
-    width="21.378"
-    height="21"
+    width={`${width || "21.378"}`}
+    height={`${height || "21.378"}`}
     viewBox="0 0 21.378 21"
     className={className}
   >
