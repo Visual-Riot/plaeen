@@ -10,7 +10,6 @@
     "git": "git add -A && git commit -m"
   },
   "dependencies": {
-    "@shadcn/ui": "^0.0.4",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
