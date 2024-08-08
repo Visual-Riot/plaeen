@@ -171,15 +171,15 @@ export default function Page() {
         <div className="flex items-center w-full justify-between mt-8 px-2">
           <div className="flex flex-col lg:flex-row text-lightGrey font-light text-sm">
             <div className="flex flex-row pr-8 ">
-              <button className="w-5 h-5 bg-green opacity-50 rounded mb-4 lg:mb-0 mr-2"></button>{" "}
+              <div className="w-5 h-5 bg-green opacity-50 rounded mb-4 lg:mb-0 mr-2"></div>{" "}
               <p>Available</p>
             </div>
             <div className="flex flex-row pr-8">
-              <button className="w-5 h-5 bg-accentTwo opacity-50 rounded mb-4 lg:mb-0  mr-2"></button>{" "}
+              <div className="w-5 h-5 bg-accentTwo opacity-50 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
               <p className="text-nowrap">Single event</p>
             </div>
             <div className="flex flex-row pr-8">
-              <button className="w-5 h-5 bg-accentOne opacity-50 rounded mb-4 lg:mb-0  mr-2"></button>{" "}
+              <div className="w-5 h-5 bg-accentOne opacity-50 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
               <p className="text-nowrap">Recurring event</p>
             </div>
           </div>
