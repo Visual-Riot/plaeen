@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { TiPlus } from "react-icons/ti";
 import Navbar from "@/components/layout/Navbar";
@@ -10,6 +9,7 @@ import GreenButton from "@/components/buttons/GreenButton";
 export default function Page() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>('');
+  const [fileError, setFileError] = useState<string | null>(null); // State for error message
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -32,11 +32,17 @@ export default function Page() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      if (file.size > 2 * 1024 * 1024) { // 2MB in bytes
+        setFileError('File size exceeds 2MB.');
+        return;
+      } else {
+        setFileError(null); // Clear any previous errors
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setSelectedImage(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -96,7 +102,7 @@ export default function Page() {
                     <TiPlus />
                   </div>
                 )}
-                <button onClick={handleFileInputClick} className="text-green underline ml-5" title="Only jpg and png accepted">
+                <button onClick={handleFileInputClick} className="text-green underline ml-5" title="Please upload an image in JPG or PNG format with a size of 2MB or less.">
                   Upload avatar
                 </button>
                 <input
@@ -107,6 +113,7 @@ export default function Page() {
                   onChange={handleFileChange}
                 />
               </div>
+              {fileError && <div className="text-white mt-2 text-sm">{fileError}</div>} {/* Display error message */}
               <div onClick={handleContinue}>
                 <Link href="/">
                   <GreenButton onClick={handleContinue} className="mt-8 p-[1.25rem!important] text-black w-full">
