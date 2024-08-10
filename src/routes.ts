@@ -6,7 +6,9 @@
 export const publicRoutes = [
     "/",
     "/privacy",
-    "/tos"
+    "/tos",
+    "/contact-us",
+    "/cookie-policy"
   ];
   
   /**
