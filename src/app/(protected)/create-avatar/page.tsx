@@ -87,11 +87,11 @@ export default function Page() {
                 </h2>
                 <p className="font-light text-white text-sm mt-8">Add your username</p>
                 <input
-                  type="text"
-                  placeholder="username"
-                  value={username}
-                  onChange={handleUsernameChange}
-                  className="border-green bg-green opacity-75 border-2 mt-4 w-full p-5 rounded-lg placeholder-gray-700 text-gray-900"
+                    type="text"
+                    placeholder="username"
+                    value={username}
+                    onChange={handleUsernameChange}
+                    className={`border-green bg-green ${username ? 'opacity-100' : 'opacity-75'} border-2 mt-4 w-full p-5 rounded-lg placeholder-gray-700 text-gray-900`}
                 />
               </div>
               <div className="flex mt-8 items-center">
