@@ -72,10 +72,10 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
     position: 'absolute' as 'absolute',
     left: 0,
     right: 0,
-    bottom: '-1rem', // Adjust this value as needed to position the ellipse correctly below the navbar
-    height: '2rem',
+    bottom: '-0.5rem', // Adjust this value as needed to position the ellipse correctly below the navbar
+    height: '1.5rem',
     backgroundColor: 'black',
-    clipPath: 'ellipse(100% 100% at 50% 0%)', // Flip the curve to the top
+    clipPath: 'ellipse(90% 100% at 50% 0%)', // Flip the curve to the top
     borderBottom: '3px solid #6606E3', // Purple border on the curved side at the top
     overflow: 'hidden', // Ensure that the content inside does not overflow
   };
@@ -84,7 +84,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
   return (
     <div style={navContainerStyles}>
       <nav style={navStyles}>
-        <div className="container mx-auto flex justify-between items-center">
+        <div className="container mx-auto flex justify-between items-center mt-1">
           {/* Logo */}
           <Link href="/" passHref>
             <div className="flex items-center cursor-pointer">
@@ -104,8 +104,9 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
             <NavItem href="/teams" label="Teams" />
             <NavItem href="/friends" label="Friends" />
             <NavItem href="/wishlist" label="Wishlist" />
-            <button className="text-white hover:text-gray-300">
-              <FaBell className="scale-[2] text-white" />
+            <button className="relative text-white hover:text-gray-300">
+                <FaBell className="scale-[2] text-white" />
+                <span className="absolute top-0 right-0 bg-purple-600 border-[3px] border-black rounded-full w-5 h-5 translate-x-1/2 -translate-y-1/2"></span>
             </button>
             <div className="relative" ref={dropdownRef}>
               <button onMouseOver={toggleDropdown} className="focus:outline-none flex items-center">
@@ -175,6 +176,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
                     <NavItem href="/wishlist" label="Wishlist" />
                     <button className="text-white hover:text-gray-300 flex items-center relative left-4 mt-[1.25rem!important]">
                         <FaBell className="scale-[1.5] text-white" />
+                        <span className="relative top-0 right-4 bg-purple-600 border-[2px] border-black rounded-full w-4 h-4 translate-x-1/2 -translate-y-1/2"></span>
                     </button>
                     <button onClick={toggleDropdown} className="text-white hover:text-gray-300 flex items-center relative left-3 mt-[1.5rem!important]">
                         {userAvatar ? (
