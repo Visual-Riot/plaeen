@@ -106,7 +106,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
             <NavItem href="/wishlist" label="Wishlist" />
             <button className="relative text-white hover:text-gray-300">
                 <FaBell className="scale-[2] text-white" />
-                <span className="absolute top-0 right-0 bg-purple-600 border-[3px] border-black rounded-full w-5 h-5 translate-x-1/2 -translate-y-1/2"></span>
+                <span className="absolute top-0 right-0 bg-[#6606E3] border-[3px] border-black rounded-full w-5 h-5 translate-x-1/2 -translate-y-1/2"></span>
             </button>
             <div
             className="relative"
@@ -180,7 +180,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
                     <NavItem href="/wishlist" label="Wishlist" />
                     <button className="text-white hover:text-gray-300 flex items-center relative left-4 mt-[1.25rem!important]">
                         <FaBell className="scale-[1.5] text-white" />
-                        <span className="relative top-0 right-4 bg-purple-600 border-[2px] border-black rounded-full w-4 h-4 translate-x-1/2 -translate-y-1/2"></span>
+                        <span className="relative top-0 right-4 bg-[#6606E3] border-[2px] border-black rounded-full w-4 h-4 translate-x-1/2 -translate-y-1/2"></span>
                     </button>
                     <button onClick={toggleDropdown} className="text-white hover:text-gray-300 flex items-center relative left-3 mt-[1.5rem!important]">
                         {userAvatar ? (
