@@ -108,8 +108,12 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
                 <FaBell className="scale-[2] text-white" />
                 <span className="absolute top-0 right-0 bg-purple-600 border-[3px] border-black rounded-full w-5 h-5 translate-x-1/2 -translate-y-1/2"></span>
             </button>
-            <div className="relative" ref={dropdownRef}>
-              <button onMouseOver={toggleDropdown} className="focus:outline-none flex items-center">
+            <div
+            className="relative"
+            ref={dropdownRef}
+            onMouseEnter={() => setIsDropdownOpen(true)}
+            >
+              <button className="focus:outline-none flex items-center">
                 {userAvatar ? (
                   <Image
                     src={userAvatar}
