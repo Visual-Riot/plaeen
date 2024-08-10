@@ -2,6 +2,7 @@
 
 import React from 'react'
 import GreenButton from '../buttons/GreenButton';
+import Link from 'next/link';
 
 const HomePageSignUp = () => {
   return (
@@ -19,9 +20,11 @@ const HomePageSignUp = () => {
                     placeholder="john.smith@gmail.com"
                     className="border-neonGreen border-2 mt-4 lg:mt-0 h-12 xs:h-[64px] xs:w-full sm:w-[250px] md:w-[408px] p-5 rounded-lg bg-transparent"
                 />
-                <GreenButton onClick={() => console.log("Button clicked!")}>
-                    Get started
-                </GreenButton>
+                <Link href="/login" passHref>
+                    <div className="cursor-pointer">
+                    <GreenButton onClick={() => console.log('clicked')} className='xs:w-[115px] sm:w-[170px] h-[64px]'>Get Started</GreenButton>
+                    </div>
+                </Link>
             </div>
         </div>
     </div>
