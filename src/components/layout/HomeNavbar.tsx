@@ -14,9 +14,9 @@ const HomeNavbar: React.FC = () => {
         </div>
       </Link>
 
-      <Link href="/signup" passHref className='mt-[0px!important]'>
+      <Link href="/login" passHref>
         <div className="cursor-pointer">
-          <GreenButton onClick={() => console.log('Button clicked!')} className='xs:w-[115px] sm:w-[170px]'>Sign up</GreenButton>
+          <GreenButton onClick={() => console.log('clicked')} className='xs:w-[115px] sm:w-[170px] h-[64px]'>Login</GreenButton>
         </div>
       </Link>
     </nav>
