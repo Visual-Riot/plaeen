@@ -7,15 +7,18 @@ import OutlineButton from "@/components/buttons/OutlineButton";
 import { useRouter } from 'next/navigation';
 import { FaSteamSymbol } from "react-icons/fa";
 import SearchBar from "@/components/ui/SearchBar";
-// import RelevanceFilter from '@/components/filters/RelevanceFilter';
-// import GenreFilter from '@/components/filters/GenreFilter';
-// import ThemeFilter from '@/components/filters/ThemeFilter';
-// import PlatformFilter from '@/components/filters/PlatformFilter';
+import RelevanceFilter from '@/components/filters/RelevanceFilter';
+import GenreFilter from '@/components/filters/GenreFilter';
+import ThemeFilter from '@/components/filters/ThemeFilter';
+import PlatformFilter from '@/components/filters/PlatformFilter';
 
 export default function Page() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedRelevance, setSelectedRelevance] = useState<string>('');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
 
   useEffect(() => {
     const savedImage = localStorage.getItem("userAvatar");
@@ -72,12 +75,29 @@ export default function Page() {
               <SearchBar
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="my-16"
+                className="mt-16 mb-8 font-extralight"
               />
             </div>
-            <div className="container mx-auto mt-16 p-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-             
-            </div>
+            <div className="flex flex-row w-4/5 mx-auto gap-10">
+            <RelevanceFilter
+              selectedOption={selectedRelevance}
+              handleRelevanceChange={setSelectedRelevance}
+              className="filter-box"
+            />
+            <GenreFilter
+              selectedGenres={selectedGenres}
+              handleGenreChange={setSelectedGenres}
+              className="filter-box"
+            />
+            <PlatformFilter
+              selectedPlatforms={selectedPlatforms}
+              handlePlatformChange={setSelectedPlatforms}
+              className="filter-box"
+            />
+            <ThemeFilter
+              className="filter-box"
+            />
+          </div>
           </div>
           
           <div>

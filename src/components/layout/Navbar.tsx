@@ -100,7 +100,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
           </div>
 
           {/* Desktop Navigation Links and Icons */}
-          <div className={`hidden md:flex items-center space-x-14 font-light w-full justify-end`}>
+          <div className={`hidden md:flex items-center space-x-14 font-extraLight w-full justify-end`}>
             <NavItem href="/teams" label="Teams" />
             <NavItem href="/friends" label="Friends" />
             <NavItem href="/wishlist" label="Wishlist" />
@@ -174,7 +174,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
                         <IoMdClose size={24} />
                     </button>
                     </div>
-                    <div className="mt-8 flex flex-col space-y-2">
+                    <div className="mt-8 flex flex-col space-y-2 font-extralight">
                     <NavItem href="/teams" label="Teams" />
                     <NavItem href="/friends" label="Friends" />
                     <NavItem href="/wishlist" label="Wishlist" />
