@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import GreenButton from "@/components/buttons/GreenButton";
 import OutlineButton from "@/components/buttons/OutlineButton";
 import { useRouter } from 'next/navigation';
+import { FaSteamSymbol } from "react-icons/fa";
 
 export default function Page() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -30,7 +31,7 @@ export default function Page() {
   return (
     <div className="text-taupe font-light font-sofia">
       <Navbar avatar={selectedImage} />
-      <div className="container mx-auto mt-16 rounded-xl p-16"  
+      <div className="container mx-auto mt-16 rounded-xl py-16"  
            style={{ backgroundColor: 'rgba(184, 180, 189, 0.15)' }}>
 
         {/* New Session Header */}
@@ -42,8 +43,16 @@ export default function Page() {
         </div>
 
         {/* Recommended Game */}
-        <div>
-          {/* Content here */}
+        <div className="bg-black p-16">
+          <p className="text-neonGreen uppercase">Our Recommendation</p>
+          <h2 className="text-7xl text-white font-abolition my-5">Dead By Daylight</h2>
+          <div className="flex w-[46%] justify-between">
+            <GreenButton onClick={() => {}} className="w-[200px] h-[60px]">Let's play!</GreenButton>
+            <OutlineButton onClick={() => {}} className="flex justify-center items-center w-[200px] h-[60px]">
+              <FaSteamSymbol />
+              <span>&nbsp; Check on Steam</span>
+            </OutlineButton>
+          </div>
         </div>
 
         {/* Filtered Games */}
