@@ -15,7 +15,7 @@ export default function Home() {
       <USPsSection />
       <FAQsSection />
       <HomePageSignUp />
-      <Footer />
+      <Footer useBackgroundImage={true} />
     </main>
   );
 }
