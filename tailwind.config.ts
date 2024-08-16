@@ -34,6 +34,7 @@ const config: Config = {
         yellow: "#FFBB00",
         blue: "#167EE6",
         taupe: "#b8b4bd",
+        neonPurple: "#5811c0",
 
         // PLAEEN specific colors
         // main colors
