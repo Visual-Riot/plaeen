@@ -7,6 +7,10 @@ import OutlineButton from "@/components/buttons/OutlineButton";
 import { useRouter } from 'next/navigation';
 import { FaSteamSymbol } from "react-icons/fa";
 import SearchBar from "@/components/ui/SearchBar";
+// import RelevanceFilter from '@/components/filters/RelevanceFilter';
+// import GenreFilter from '@/components/filters/GenreFilter';
+// import ThemeFilter from '@/components/filters/ThemeFilter';
+// import PlatformFilter from '@/components/filters/PlatformFilter';
 
 export default function Page() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -71,7 +75,9 @@ export default function Page() {
                 className="my-16"
               />
             </div>
-            <div>Filters</div>
+            <div className="container mx-auto mt-16 p-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+             
+            </div>
           </div>
           
           <div>
