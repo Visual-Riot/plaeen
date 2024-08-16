@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { FaHeart, FaExternalLinkAlt, FaSteam, FaPlaystation, FaXbox, FaApple } from 'react-icons/fa';
+import { FaHeart, FaExternalLinkAlt, FaSteam, FaPlaystation, FaXbox, FaApple, FaWindows, FaLinux, FaAndroid, FaGlobe } from 'react-icons/fa';
+import { BsNintendoSwitch } from "react-icons/bs";
+import { SiPlaystationvita } from "react-icons/si";
 import { FiHeart } from 'react-icons/fi';
 import { format } from 'date-fns';
 
@@ -8,7 +10,7 @@ interface GameCardProps {
   name: string;
   releaseDate: string;
   genre: string;
-  platform: string; // Change to string
+  platform: string;
   rating: string;
   onCreateSession: () => void;
   onFavourite: () => void;
@@ -41,16 +43,43 @@ const GameCard: React.FC<GameCardProps> = ({
     Steam: <FaSteam size={20} className="text-white" />,
     PlayStation: <FaPlaystation size={20} className="text-white" />,
     Xbox: <FaXbox size={20} className="text-white" />,
-    PC: <FaApple size={20} className="text-white" />, // Replace with a more appropriate icon if needed
+    macOS: <FaApple size={20} className="text-white" />,
+    PC: <FaWindows size={20} className="text-white" />,
+    Linux: <FaLinux size={20} className="text-white" />,
+    Android: <FaAndroid size={20} className="text-white" />,
+    Web: <FaGlobe size={20} className="text-white" />,
+    "Nintendo Switch": <BsNintendoSwitch size={20} className="text-white" />,
+    "PS Vita": <SiPlaystationvita size={20} className="text-white" />,
   };
 
-  // Split the platform string into an array
-  const platforms = platform.split(', ').map(plat => plat.trim());
+  // Normalize platform name to handle different PlayStation and Xbox models
+  const normalizePlatformName = (platform: string) => {
+    if (/PlayStation/i.test(platform)) {
+      return "PlayStation";
+    }
+    if (/Xbox/i.test(platform)) {
+      return "Xbox";
+    }
+    if (/macOs/i.test(platform) || /iOs/i.test(platform)) {
+      return "macOS";
+    }
+    return platform;
+  };
+
+  // Split the platform string into an array and normalize the names
+  const platforms = platform.split(', ').map(plat => normalizePlatformName(plat.trim()));
+
+  // Track displayed icons to avoid duplicates
+  const displayedIcons = new Set<string>();
 
   return (
-    <div className="max-w-sm rounded overflow-hidden bg-transparent text-white">
-        <img className="w-full h-48 object-cover" src={coverImage} alt={`${name} cover`} />
-        <div className="px-6 py-4">
+    <div className="max-w-[20rem] mx-auto rounded overflow-hidden bg-transparent text-white">
+        <img 
+          className="w-full h-48 rounded-t-xl object-cover" 
+          src={coverImage} 
+          alt={`${name} cover`} 
+        />
+        <div className="px-2 py-4">
             <div className="font-semiBold text-neonGreen text-xl mb-2">{name}</div>
             
             <div className="flex justify-between text-gray-400 text-base border-b border-b-taupe py-2">
@@ -66,11 +95,18 @@ const GameCard: React.FC<GameCardProps> = ({
             <div className="flex justify-between text-gray-400 text-base border-b border-b-taupe py-2">
                 <span>Platform:</span>
                 <div className="flex gap-2">
-                {platforms.map((plat) => (
-                    <span key={plat} className="inline-flex items-center">
-                    {platformIcons[plat as keyof typeof platformIcons] || plat} {/* Default to text if no icon */}
-                    </span>
-                ))}
+                {platforms.map((plat) => {
+                  const iconKey = plat as keyof typeof platformIcons;
+                  if (!displayedIcons.has(iconKey)) {
+                    displayedIcons.add(iconKey);
+                    return (
+                      <span key={plat} className="inline-flex items-center">
+                        {platformIcons[iconKey] || plat} {/* Default to text if no icon */}
+                      </span>
+                    );
+                  }
+                  return null; // Do not render if icon is already displayed
+                })}
                 </div>
             </div>
             
@@ -79,7 +115,7 @@ const GameCard: React.FC<GameCardProps> = ({
                 <span>{rating}</span>
             </div>
         </div>
-      <div className="px-6 pt-4 pb-6 flex justify-between items-center gap-2">
+      <div className="px-2 pt-4 pb-6 flex justify-between items-center gap-2">
         <button
           className="bg-violet text-white font-medium font-roboto py-2 px-4 uppercase rounded"
           onClick={onCreateSession}

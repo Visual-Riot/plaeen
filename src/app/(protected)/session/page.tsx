@@ -96,7 +96,7 @@ export default function Page() {
         </div>
 
         {/* Recommended Game */}
-        <div className="bg-black p-16 h-96 flex flex-col justify-center">
+        <div className="bg-black p-16 h-[30rem] flex flex-col justify-center">
           <p className="text-neonGreen uppercase">Our Recommendation</p>
           <h2 className="text-7xl text-white font-abolition my-5">Dead By Daylight</h2>
           <div className="flex xs:flex-col md:flex-row">
@@ -143,7 +143,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="w-4/5 mx-auto my-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="w-4/5 mx-auto mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-32 gap-y-12">
             {/* Map through game cards */}
             {games.map((game) => (
               <GameCard
@@ -153,7 +153,7 @@ export default function Page() {
                 releaseDate={game.released}
                 genre={game.genres.map((genre) => genre.name).join(", ")}
                 platform={game.platforms.map((p) => p.platform.name).join(", ")}
-                rating={`${game.rating}/10`}
+                rating={`${game.rating}/5`}
                 onCreateSession={() => console.log('Create Session Clicked')}
                 onFavourite={() => console.log('Favourite Clicked')}
                 gameInfoUrl={`https://rawg.io/games/${game.id}`}
@@ -164,7 +164,7 @@ export default function Page() {
 
         <div className="flex justify-center">
           {hasMoreGames && (
-            <GreenButton onClick={showMore} className="font-robotoMono uppercase z-10 w-[230px]">
+            <GreenButton onClick={showMore} className="font-robotoMono uppercase z-10 w-[230px] mt-16">
               Load More
             </GreenButton>
           )}
