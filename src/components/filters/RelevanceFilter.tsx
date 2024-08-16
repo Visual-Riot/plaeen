@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 interface RelevanceFilterProps {
   selectedOption: string;
@@ -8,11 +8,26 @@ interface RelevanceFilterProps {
 
 const RelevanceFilter: React.FC<RelevanceFilterProps> = ({ selectedOption, handleRelevanceChange, className }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-  const options = ["A-Z", "Z-A", "By Rating", "By Release Date"];
+  const handleClickOutside = (event: MouseEvent) => {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const options = ["None", "A-Z", "Z-A", "By Rating", "By Release Date"];
 
   return (
     <div
+      ref={ref}
       className={`relative inline-block text-left w-full ${className}`}
       style={{
         backgroundColor: 'rgba(88, 17, 192, 0.1)',
@@ -24,7 +39,7 @@ const RelevanceFilter: React.FC<RelevanceFilterProps> = ({ selectedOption, handl
       <div>
         <button
           type="button"
-          className="inline-flex justify-between items-center w-full rounded-md px-4 bg-transparent text-xl font-extraLight font-sofia text-white hover:bg-[#5811C0] focus:outline-none"
+          className="inline-flex justify-between items-center w-full rounded-md px-4 bg-transparent text-xl font-extraLight font-sofia text-white hover:bg-violet focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
           style={{
             height: '65px',
@@ -32,7 +47,9 @@ const RelevanceFilter: React.FC<RelevanceFilterProps> = ({ selectedOption, handl
             paddingBottom: '0',
           }}
         >
-          <span className="leading-none text-sm">Relevance</span> {/* Ensure text is vertically centered */}
+          <span className="leading-none text-sm">
+            {selectedOption === "None" ? "Relevance" : selectedOption}
+          </span>
           <svg
             className={`ml-2 h-5 w-5 transform ${isOpen ? "rotate-180" : "rotate-0"}`}
             xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +64,7 @@ const RelevanceFilter: React.FC<RelevanceFilterProps> = ({ selectedOption, handl
         </button>
       </div>
       {isOpen && (
-        <div className="absolute mt-2 w-full rounded-md shadow-lg bg-[#5811C0] z-10">
+        <div className="absolute mt-2 w-full rounded-md shadow-lg bg-violet z-10">
           <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
             {options.map(option => (
               <button

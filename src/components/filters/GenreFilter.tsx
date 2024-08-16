@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 interface GenreFilterProps {
   selectedGenres: string[];
@@ -8,6 +8,20 @@ interface GenreFilterProps {
 
 const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, handleGenreChange, className }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const genres = ["Action", "Adventure", "RPG", "Simulation", "Strategy"];
 
@@ -21,6 +35,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, handleGenreCh
 
   return (
     <div
+      ref={ref}
       className={`relative inline-block text-left w-full ${className}`}
       style={{
         backgroundColor: 'rgba(88, 17, 192, 0.1)',
@@ -32,7 +47,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, handleGenreCh
       <div>
         <button
           type="button"
-          className="inline-flex justify-between items-center w-full rounded-md px-4 bg-transparent text-xl font-extraLight font-sofia text-white hover:bg-[#5811C0] focus:outline-none"
+          className="inline-flex justify-between items-center w-full rounded-md px-4 bg-transparent text-xl font-extraLight font-sofia text-white hover:bg-violet focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
           style={{
             height: '65px',
@@ -41,18 +56,17 @@ const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, handleGenreCh
           }}
         >
           <span className="leading-none text-sm">Genre</span>
-          <div className='flex'>
+          <div className="flex items-center">
             <span
-                className="ml-2 flex items-center justify-center rounded-full bg-lightPurple text-white"
-                style={{
-                  width: '24px',
-                  height: '24px',
-                  fontSize: '0.875rem',
-                }}
-              >
-                {selectedGenres.length}
-              </span>
-            
+              className="ml-2 flex items-center justify-center rounded-full bg-lightPurple text-white"
+              style={{
+                width: '24px',
+                height: '24px',
+                fontSize: '0.875rem',
+              }}
+            >
+              {selectedGenres.length}
+            </span>
             <svg
               className={`ml-2 h-5 w-5 transform ${isOpen ? "rotate-180" : "rotate-0"}`}
               xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +82,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, handleGenreCh
         </button>
       </div>
       {isOpen && (
-        <div className="absolute mt-2 w-full rounded-md shadow-lg bg-[#5811C0] z-10">
+        <div className="absolute mt-2 w-full rounded-md shadow-lg bg-violet z-10">
           <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
             {genres.map(genre => (
               <div key={genre} className="px-4 py-2">
