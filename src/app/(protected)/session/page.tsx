@@ -120,8 +120,8 @@ export default function Page() {
           </div>
         </div>
 
-        <div>
-          <GreenButton onClick={showMore} className="font-robotoMono uppercase z-10">
+        <div className="flex justify-center">
+          <GreenButton onClick={showMore} className="font-robotoMono uppercase z-10 w-[230px]">
             Load More
           </GreenButton>
         </div>
