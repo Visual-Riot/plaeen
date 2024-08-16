@@ -11,12 +11,13 @@ import RelevanceFilter from '@/components/filters/RelevanceFilter';
 import GenreFilter from '@/components/filters/GenreFilter';
 import ThemeFilter from '@/components/filters/ThemeFilter';
 import PlatformFilter from '@/components/filters/PlatformFilter';
+import GameCard from "@/components/game/GardCard";
 
 export default function Page() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [selectedRelevance, setSelectedRelevance] = useState<string>('');
+  const [selectedRelevance, setSelectedRelevance] = useState<string>('None'); // Set default to 'None'
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
 
@@ -29,6 +30,9 @@ export default function Page() {
     if (savedUsername) {
       setUsername(savedUsername);
     }
+
+    // Reset selectedRelevance to 'None' when the component mounts
+    setSelectedRelevance('None');
   }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +54,7 @@ export default function Page() {
         {/* New Session Header */}
         <div className="flex justify-between items-center pb-16">
           <h1 className="font-abolition text-neonGreen text-7xl ms-16">CREATE NEW SESSION</h1>
-          <OutlineButton onClick={() => router.back()} className="uppercase me-32 xs:w-[200px] md:w-fit">
+          <OutlineButton onClick={() => router.back()} className="uppercase me-32 xs:w-[200px] md:w-fit bg-transparent">
             Go Back
           </OutlineButton>
         </div>
@@ -61,14 +65,14 @@ export default function Page() {
           <h2 className="text-7xl text-white font-abolition my-5">Dead By Daylight</h2>
           <div className="flex xs:flex-col md:flex-row">
             <GreenButton onClick={() => {}} className="w-[200px] h-[60px] xs:mb-3 md:mb-0 opacity-[1!important] hover:bg-violet hover:text-white">Let's play!</GreenButton>
-            <OutlineButton onClick={() => {}} className="flex ms-3 justify-center items-center w-[200px] h-[60px]">
+            <OutlineButton onClick={() => {}} className="flex ms-3 justify-center items-center w-[200px] h-[60px] bg-transparent">
               <FaSteamSymbol />
               <span>&nbsp; Check on Steam</span>
             </OutlineButton>
           </div>
         </div>
 
-        {/* Filtered Games */}
+        {/* Filters */}
         <div>
           <div>
             <div>
@@ -79,29 +83,40 @@ export default function Page() {
               />
             </div>
             <div className="flex flex-row w-4/5 mx-auto gap-10">
-            <RelevanceFilter
-              selectedOption={selectedRelevance}
-              handleRelevanceChange={setSelectedRelevance}
-              className="filter-box"
-            />
-            <GenreFilter
-              selectedGenres={selectedGenres}
-              handleGenreChange={setSelectedGenres}
-              className="filter-box"
-            />
-            <PlatformFilter
-              selectedPlatforms={selectedPlatforms}
-              handlePlatformChange={setSelectedPlatforms}
-              className="filter-box"
-            />
-            <ThemeFilter
-              className="filter-box"
-            />
-          </div>
+              <RelevanceFilter
+                selectedOption={selectedRelevance}
+                handleRelevanceChange={setSelectedRelevance}
+                className="filter-box"
+              />
+              <GenreFilter
+                selectedGenres={selectedGenres}
+                handleGenreChange={setSelectedGenres}
+                className="filter-box"
+              />
+              <PlatformFilter
+                selectedPlatforms={selectedPlatforms}
+                handlePlatformChange={setSelectedPlatforms}
+                className="filter-box"
+              />
+              <ThemeFilter
+                className="filter-box"
+              />
+            </div>
           </div>
           
-          <div>
+          <div className="w-4/5 mx-auto my-16">
             {/* Map through game cards */}
+            <GameCard
+              coverImage="https://example.com/game-cover.jpg"
+              name="Example Game"
+              releaseDate="2023-09-15"
+              genre="Action, RPG"
+              platform="PC, PS5, Xbox"
+              rating="9.5/10"
+              onCreateSession={() => console.log('Create Session Clicked')}
+              onFavourite={() => console.log('Favourite Clicked')}
+              gameInfoUrl="https://example.com/game-info"
+            />
           </div>
         </div>
 
@@ -112,5 +127,5 @@ export default function Page() {
         </div>
       </div>
     </div>
-  )
+  );
 }
