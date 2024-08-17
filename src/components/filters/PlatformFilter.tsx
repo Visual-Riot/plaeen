@@ -23,7 +23,7 @@ const PlatformFilter: React.FC<PlatformFilterProps> = ({ selectedPlatforms, hand
     };
   }, []);
 
-  const platforms = ["Steam", "Twitch", "PlayStation", "Xbox", "Nintendo"];
+  const platforms = ["Steam", "Twitch", "PlayStation", "Xbox", "Nintendo Switch"];
 
   const handleCheckboxChange = (platform: string) => {
     if (selectedPlatforms.includes(platform)) {
