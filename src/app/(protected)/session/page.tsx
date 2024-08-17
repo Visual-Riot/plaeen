@@ -7,10 +7,10 @@ import OutlineButton from "@/components/buttons/OutlineButton";
 import { useRouter } from 'next/navigation';
 import { FaSteamSymbol } from "react-icons/fa";
 import SearchBar from "@/components/ui/SearchBar";
-import RelevanceFilter from '@/components/filters/RelevanceFilter';
-import GenreFilter from '@/components/filters/GenreFilter';
-import ThemeFilter from '@/components/filters/ThemeFilter';
-import PlatformFilter from '@/components/filters/PlatformFilter';
+// import RelevanceFilter from '@/components/filters/RelevanceFilter';
+// import GenreFilter from '@/components/filters/GenreFilter';
+// import ThemeFilter from '@/components/filters/ThemeFilter';
+// import PlatformFilter from '@/components/filters/PlatformFilter';
 import GameCard from "@/components/game/GardCard";
 import Footer from "@/components/layout/Footer";
 import axios from "axios";
@@ -28,11 +28,10 @@ interface Game {
 export default function Page() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [selectedRelevance, setSelectedRelevance] = useState<string>('None');
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
-  const [games, setGames] = useState<Game[]>([]); // State for storing games
+  const [searchTerm, setSearchTerm] = useState<string>(''); // Search term state
+  const [allGames, setAllGames] = useState<Game[]>([]); // State for storing all fetched games
+  const [displayedGames, setDisplayedGames] = useState<Game[]>([]); // State for currently displayed games
+  const [filteredGames, setFilteredGames] = useState<Game[]>([]); // State for filtered games
   const [page, setPage] = useState<number>(1); // State for pagination
   const [hasMoreGames, setHasMoreGames] = useState<boolean>(true); // To check if more games are available
 
@@ -45,31 +44,52 @@ export default function Page() {
     if (savedUsername) {
       setUsername(savedUsername);
     }
-    setSelectedRelevance('None');
 
-    // Fetch the initial set of games
-    fetchGames(page);
+    // Fetch all games initially
+    fetchAllGames();
   }, []);
 
-  const fetchGames = async (pageNumber: number) => {
+  useEffect(() => {
+    // Initially display a subset of games
+    setDisplayedGames(allGames.slice(0, 20));
+  }, [allGames]);
+
+  useEffect(() => {
+    // Filter games based on search term
+    const filtered = allGames.filter((game) =>
+      game.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredGames(filtered);
+  }, [searchTerm, allGames]);
+
+  const fetchAllGames = async () => {
     const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
-    const URL = `https://api.rawg.io/api/games?key=${API_KEY}&page=${pageNumber}&page_size=20`;
+    const URL = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=100`; // Fetch a large number of games initially
 
     try {
       const response = await axios.get(URL);
-      const newGames = response.data.results;
+      const games = response.data.results;
 
-      setGames((prevGames) => [...prevGames, ...newGames]); // Append new games to the existing list
-      setHasMoreGames(newGames.length > 0); // If no games were returned, set hasMoreGames to false
+      console.log("Fetched All Games:", games); // Debugging: Check if all games are fetched
+
+      setAllGames(games); // Store all fetched games
     } catch (error) {
-      console.error("Error fetching games:", error);
+      console.error("Error fetching all games:", error);
     }
   };
 
-  const showMore = () => {
+  const loadMoreGames = () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    fetchGames(nextPage);
+
+    // Append the next set of games to the displayed list
+    const nextSetOfGames = allGames.slice(0, nextPage * 20);
+    setDisplayedGames(nextSetOfGames);
+
+    // Check if there are more games to load
+    if (nextSetOfGames.length >= allGames.length) {
+      setHasMoreGames(false);
+    }
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,58 +136,36 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Filters */}
+        {/* Search Bar */}
         <div>
-          <div>
-            <div>
-              <SearchBar
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="mt-16 mb-8 font-extralight"
-              />
-            </div>
-            <div className="flex flex-row w-4/5 mx-auto gap-10">
-              <RelevanceFilter
-                selectedOption={selectedRelevance}
-                handleRelevanceChange={setSelectedRelevance}
-                className="filter-box"
-              />
-              <GenreFilter
-                selectedGenres={selectedGenres}
-                handleGenreChange={setSelectedGenres}
-                className="filter-box"
-              />
-              <PlatformFilter
-                selectedPlatforms={selectedPlatforms}
-                handlePlatformChange={setSelectedPlatforms}
-                className="filter-box"
-              />
-              <ThemeFilter className="filter-box" />
-            </div>
-          </div>
+          <SearchBar
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="mt-16 mb-8 font-extralight"
+          />
+        </div>
 
-          <div className="w-4/5 mx-auto mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-32 gap-y-12">
-            {/* Map through game cards */}
-            {games.map((game) => (
-              <GameCard
-                key={game.id}
-                coverImage={game.background_image}
-                name={game.name}
-                releaseDate={game.released}
-                genre={game.genres.map((genre) => genre.name).join(", ")}
-                platform={game.platforms.map((p) => p.platform.name).join(", ")}
-                rating={`${game.rating}/5`}
-                onCreateSession={() => console.log('Create Session Clicked')}
-                onFavourite={() => console.log('Favourite Clicked')}
-                gameInfoUrl={`https://rawg.io/games/${game.id}`}
-              />
-            ))}
-          </div>
+        {/* Display Filtered or Initially Displayed Games */}
+        <div className="w-4/5 mx-auto mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-32 gap-y-12">
+          {(searchTerm ? filteredGames : displayedGames).map((game) => (
+            <GameCard
+              key={game.id}
+              coverImage={game.background_image}
+              name={game.name}
+              releaseDate={game.released}
+              genre={game.genres.map((genre) => genre.name).join(", ")}
+              platform={game.platforms.map((p) => p.platform.name).join(", ")}
+              rating={`${game.rating}/5`}
+              onCreateSession={() => console.log('Create Session Clicked')}
+              onFavourite={() => console.log('Favourite Clicked')}
+              gameInfoUrl={`https://rawg.io/games/${game.id}`}
+            />
+          ))}
         </div>
 
         <div className="flex justify-center">
-          {hasMoreGames && (
-            <GreenButton onClick={showMore} className="font-robotoMono uppercase z-10 w-[230px] mt-16">
+          {hasMoreGames && !searchTerm && (
+            <GreenButton onClick={loadMoreGames} className="font-robotoMono uppercase z-10 w-[230px] mt-16">
               Load More
             </GreenButton>
           )}
