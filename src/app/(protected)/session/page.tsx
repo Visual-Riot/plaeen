@@ -34,6 +34,7 @@ export default function Page() {
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]); // Platform filter state
   const [allGames, setAllGames] = useState<Game[]>([]); // State for storing all fetched games
   const [filteredGames, setFilteredGames] = useState<Game[]>([]); // State for filtered games
+  const [displayedGames, setDisplayedGames] = useState<Game[]>([]); // State for games displayed on the page
   const [page, setPage] = useState<number>(1); // State for pagination
   const [hasMoreGames, setHasMoreGames] = useState<boolean>(true); // To check if more games are available
 
@@ -67,6 +68,9 @@ export default function Page() {
     filtered = applySorting(filtered, selectedRelevance);
 
     setFilteredGames(filtered);
+    setDisplayedGames(filtered.slice(0, 18)); // Display the first 18 games initially
+    setPage(1); // Reset pagination
+    setHasMoreGames(filtered.length > 18); // Check if there are more games to load
   }, [searchTerm, selectedGenres, selectedPlatforms, selectedRelevance, allGames]);
 
   const fetchAllGames = async () => {
@@ -84,13 +88,12 @@ export default function Page() {
 
   const loadMoreGames = () => {
     const nextPage = page + 1;
+    const nextSetOfGames = filteredGames.slice(0, nextPage * 18);
+    setDisplayedGames(nextSetOfGames);
     setPage(nextPage);
 
-    const nextSetOfGames = filteredGames.slice(0, nextPage * 18);
-    setFilteredGames(nextSetOfGames);
-
     if (nextSetOfGames.length >= filteredGames.length) {
-      setHasMoreGames(false);
+      setHasMoreGames(false); // No more games to load
     }
   };
 
@@ -120,7 +123,7 @@ export default function Page() {
       default:
         return games; // No sorting or default order
     }
-  };  
+  };
 
   const normalizePlatformName = (platformName: string) => {
     if (platformName.toLowerCase().includes("playstation")) return "PlayStation";
@@ -201,8 +204,8 @@ export default function Page() {
 
         {/* Display Filtered or Initially Displayed Games */}
         <div className="w-4/5 mx-auto mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-32 gap-y-12">
-          {filteredGames.length > 0 ? (
-            filteredGames.map((game) => (
+          {displayedGames.length > 0 ? (
+            displayedGames.map((game) => (
               <GameCard
                 key={game.id}
                 coverImage={game.background_image}
@@ -217,7 +220,9 @@ export default function Page() {
               />
             ))
           ) : (
-            <p className="text-center text-white">No games found.</p>
+            <div className="flex justify-center items-center w-full h-[50vh]">
+              <p className="text-center text-white text-2xl">No games found.</p>
+            </div>
           )}
         </div>
 

@@ -130,7 +130,7 @@ const GameCard: React.FC<GameCardProps> = ({
           Create Session
         </button>
         <button
-          className="flex justify-center items-center bg-pink-purple py-2 px-4 rounded"
+          className="flex justify-center items-center bg-pink-purple p-3 h-[40px] rounded"
           onClick={handleFavouriteClick}
           style={{ width: '15%' }}
         >
@@ -144,7 +144,7 @@ const GameCard: React.FC<GameCardProps> = ({
           href={gameInfoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex justify-center items-center text-blue-500 hover:text-blue-700 bg-pink-purple py-2 px-4 rounded"
+          className="flex justify-center items-center text-blue-500 hover:text-blue-700 bg-pink-purple p-3 h-[40px] rounded"
           style={{ width: '15%' }}
         >
           <FaExternalLinkAlt size={24} />
