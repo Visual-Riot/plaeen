@@ -96,20 +96,23 @@ export default function Page() {
         </div>
 
         {/* Recommended Game */}
-        <div className="bg-black p-16 h-[30rem] flex flex-col justify-center">
-          <p className="text-neonGreen uppercase">Our Recommendation</p>
-          <h2 className="text-7xl text-white font-abolition my-5">Dead By Daylight</h2>
-          <div className="flex xs:flex-col md:flex-row">
-            <GreenButton onClick={() => {}} className="w-[200px] h-[60px] xs:mb-3 md:mb-0 opacity-[1!important] hover:bg-violet hover:text-white">
-              Let's play!
-            </GreenButton>
-            <OutlineButton
-              onClick={() => {}}
-              className="flex ms-3 justify-center items-center w-[200px] h-[60px] bg-transparent"
-            >
-              <FaSteamSymbol />
-              <span>&nbsp; Check on Steam</span>
-            </OutlineButton>
+        <div className="relative bg-black p-16 h-[30rem] flex flex-col justify-center bg-[url('/img/dead-by-daylight.jpg')] bg-cover">
+          <div className="absolute inset-0 opacity-15 z-0" style={{ backgroundColor: 'rgba(102, 6, 227)' }}></div>
+          <div className="relative z-10">
+            <p className="text-neonGreen uppercase">Our Recommendation</p>
+            <h2 className="text-7xl text-white font-abolition my-5">Dead By Daylight</h2>
+            <div className="flex xs:flex-col md:flex-row">
+              <GreenButton onClick={() => {}} className="w-[200px] h-[60px] xs:mb-3 md:mb-0 opacity-[1!important] hover:bg-violet hover:text-white">
+                Let's play!
+              </GreenButton>
+              <OutlineButton
+                onClick={() => {}}
+                className="flex ms-3 justify-center items-center w-[200px] h-[60px] bg-transparent"
+              >
+                <FaSteamSymbol />
+                <span>&nbsp; Check on Steam</span>
+              </OutlineButton>
+            </div>
           </div>
         </div>
 
