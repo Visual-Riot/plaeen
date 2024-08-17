@@ -23,7 +23,7 @@ const RelevanceFilter: React.FC<RelevanceFilterProps> = ({ selectedOption, handl
     };
   }, []);
 
-  const options = ["None", "A-Z", "Z-A", "By Rating", "By Release Date"];
+  const options = ["Reset", "A-Z", "Z-A", "By Rating", "By Release Date"];
 
   return (
     <div
@@ -48,7 +48,7 @@ const RelevanceFilter: React.FC<RelevanceFilterProps> = ({ selectedOption, handl
           }}
         >
           <span className="leading-none text-sm">
-            {selectedOption === "None" ? "Relevance" : selectedOption}
+            {selectedOption === "Reset" ? "Relevance" : selectedOption}
           </span>
           <svg
             className={`ml-2 h-5 w-5 transform ${isOpen ? "rotate-180" : "rotate-0"}`}

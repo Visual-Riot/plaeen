@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import GreenButton from "@/components/buttons/GreenButton";
 import OutlineButton from "@/components/buttons/OutlineButton";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { FaSteamSymbol } from "react-icons/fa";
 import SearchBar from "@/components/ui/SearchBar";
-import RelevanceFilter from '@/components/filters/RelevanceFilter';
-import GenreFilter from '@/components/filters/GenreFilter';
-import PlatformFilter from '@/components/filters/PlatformFilter';
-import ThemeFilter from '@/components/filters/ThemeFilter';
+import RelevanceFilter from "@/components/filters/RelevanceFilter";
+import GenreFilter from "@/components/filters/GenreFilter";
+import PlatformFilter from "@/components/filters/PlatformFilter";
+import ThemeFilter from "@/components/filters/ThemeFilter";
 import GameCard from "@/components/game/GardCard";
 import Footer from "@/components/layout/Footer";
 import axios from "axios";
@@ -52,39 +52,30 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    // Apply filters and search term to the games
-    const filtered = allGames.filter((game) => {
-      // Normalize platform names for the game
+    // Filter the games based on search term, genres, and platforms
+    let filtered = allGames.filter((game) => {
       const normalizedPlatforms = game.platforms.map(p => normalizePlatformName(p.platform.name));
 
-      // Search by name
       const matchesSearchTerm = game.name.toLowerCase().includes(searchTerm.toLowerCase());
-
-      // Filter by genre
       const matchesGenre = selectedGenres.length === 0 || game.genres.some(genre => selectedGenres.includes(genre.name));
-
-      // Filter by platform
       const matchesPlatform = selectedPlatforms.length === 0 || normalizedPlatforms.some(platform => selectedPlatforms.includes(platform));
 
       return matchesSearchTerm && matchesGenre && matchesPlatform;
     });
 
     // Apply sorting based on the relevance filter
-    const sortedGames = applySorting(filtered, selectedRelevance);
+    filtered = applySorting(filtered, selectedRelevance);
 
-    setFilteredGames(sortedGames);
+    setFilteredGames(filtered);
   }, [searchTerm, selectedGenres, selectedPlatforms, selectedRelevance, allGames]);
 
   const fetchAllGames = async () => {
     const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
-    const URL = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=100`; // Fetch a large number of games initially
+    const URL = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=100`;
 
     try {
       const response = await axios.get(URL);
       const games = response.data.results;
-
-      console.log("Fetched Games:", games); // Debugging: Check if games are fetched correctly
-
       setAllGames(games); // Store all fetched games
     } catch (error) {
       console.error("Error fetching all games:", error);
@@ -95,10 +86,9 @@ export default function Page() {
     const nextPage = page + 1;
     setPage(nextPage);
 
-    // Append the next set of games to the displayed list
-    const nextSetOfGames = filteredGames.slice(0, nextPage * 20);
+    const nextSetOfGames = filteredGames.slice(0, nextPage * 18);
+    setFilteredGames(nextSetOfGames);
 
-    // Check if there are more games to load
     if (nextSetOfGames.length >= filteredGames.length) {
       setHasMoreGames(false);
     }
@@ -113,32 +103,30 @@ export default function Page() {
   };
 
   const handlePlatformChange = (platforms: string[]) => {
-    console.log("Selected Platforms:", platforms); // Debugging: Check selected platforms
     setSelectedPlatforms(platforms);
   };
 
-  const applySorting = (games: Game[], sortOption: string) => {
+  const applySorting = (games: Game[], sortOption: string): Game[] => {
     switch (sortOption) {
-      case 'Name A-Z':
+      case 'A-Z':
         return games.sort((a, b) => a.name.localeCompare(b.name));
-      case 'Name Z-A':
+      case 'Z-A':
         return games.sort((a, b) => b.name.localeCompare(a.name));
-      case 'Rating High to Low':
+      case 'By Rating':
         return games.sort((a, b) => b.rating - a.rating);
-      case 'Release Date Newest':
+      case 'By Release Date':
         return games.sort((a, b) => new Date(b.released).getTime() - new Date(a.released).getTime());
-      case 'Release Date Oldest':
-        return games.sort((a, b) => new Date(a.released).getTime() - new Date(b.released).getTime());
+      case 'Reset': // or "Relevance"
       default:
-        return games; // Default is no sorting
+        return games; // No sorting or default order
     }
-  };
+  };  
 
-  // Helper function to normalize platform names
   const normalizePlatformName = (platformName: string) => {
     if (platformName.toLowerCase().includes("playstation")) return "PlayStation";
     if (platformName.toLowerCase().includes("xbox")) return "Xbox";
-    // Add more normalizations as needed
+    if (platformName.toLowerCase().includes("nintendo")) return "Nintendo";
+    // Add other normalization rules as needed
     return platformName;
   };
 

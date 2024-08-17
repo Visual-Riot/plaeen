@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaHeart, FaExternalLinkAlt, FaSteam, FaPlaystation, FaXbox, FaApple, FaWindows, FaLinux, FaAndroid, FaGlobe } from 'react-icons/fa';
 import { BsNintendoSwitch } from "react-icons/bs";
-import { SiPlaystationvita } from "react-icons/si";
+import { SiPlaystationvita, SiWiiu } from "react-icons/si";
 import { FiHeart } from 'react-icons/fi';
 import { format } from 'date-fns';
 
@@ -44,12 +44,15 @@ const GameCard: React.FC<GameCardProps> = ({
     PlayStation: <FaPlaystation size={20} className="text-white" />,
     Xbox: <FaXbox size={20} className="text-white" />,
     macOS: <FaApple size={20} className="text-white" />,
+    iOS: <FaApple size={20} className="text-white" />,
     PC: <FaWindows size={20} className="text-white" />,
     Linux: <FaLinux size={20} className="text-white" />,
     Android: <FaAndroid size={20} className="text-white" />,
     Web: <FaGlobe size={20} className="text-white" />,
     "Nintendo Switch": <BsNintendoSwitch size={20} className="text-white" />,
+    "Nintendo 3DS": <BsNintendoSwitch size={20} className="text-white" />,
     "PS Vita": <SiPlaystationvita size={20} className="text-white" />,
+    "Wii U": <SiWiiu size={20} className="text-white" />,
   };
 
   // Normalize platform name to handle different PlayStation and Xbox models
@@ -62,6 +65,9 @@ const GameCard: React.FC<GameCardProps> = ({
     }
     if (/macOs/i.test(platform) || /iOs/i.test(platform)) {
       return "macOS";
+    }
+    if (/nintendo switch/i.test(platform) || /nintendo 3ds/i.test(platform)) {
+      return "Nintendo Switch";
     }
     return platform;
   };
