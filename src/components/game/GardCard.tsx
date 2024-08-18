@@ -90,17 +90,17 @@ const GameCard: React.FC<GameCardProps> = ({
             
             <div className="flex justify-between text-gray-400 text-base border-b border-b-taupe py-2">
                 <span>Release Date:</span>
-                <span>{formattedDate}</span>
+                <span className='text-right'>{formattedDate}</span>
             </div>
             
             <div className="flex justify-between text-gray-400 text-base border-b border-b-taupe py-2">
                 <span>Genre:</span>
-                <span>{genre}</span>
+                <span className='text-right'>{genre}</span>
             </div>
             
             <div className="flex justify-between text-gray-400 text-base border-b border-b-taupe py-2">
                 <span>Platform:</span>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2 ms-4 justify-end">
                 {platforms.map((plat) => {
                   const iconKey = plat as keyof typeof platformIcons;
                   if (!displayedIcons.has(iconKey)) {
@@ -121,34 +121,34 @@ const GameCard: React.FC<GameCardProps> = ({
                 <span>{rating}</span>
             </div>
         </div>
-      <div className="px-2 pt-4 pb-6 flex justify-between items-center gap-2">
+      <div className="px-2 pt-4 pb-6 flex justify-between items-center gap-2 xxs:flex-col xl:flex-row">
         <button
-          className="bg-violet text-white font-medium font-roboto py-2 px-4 uppercase rounded"
+          className="bg-violet text-white font-medium font-roboto py-2 px-4 uppercase rounded xxs:w-[100%] xl:w-[70%]"
           onClick={onCreateSession}
-          style={{ width: '70%' }}
         >
           Create Session
         </button>
-        <button
-          className="flex justify-center items-center bg-pink-purple p-3 h-[40px] rounded"
-          onClick={handleFavouriteClick}
-          style={{ width: '15%' }}
-        >
-          {isFavourited ? (
-            <FaHeart size={24} />
-          ) : (
-            <FiHeart size={24} />
-          )}
-        </button>
-        <a
-          href={gameInfoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex justify-center items-center text-blue-500 hover:text-blue-700 bg-pink-purple p-3 h-[40px] rounded"
-          style={{ width: '15%' }}
-        >
-          <FaExternalLinkAlt size={24} />
-        </a>
+        <div className='flex xxs:justify-between xxs:w-full xxs:gap-3 xxs:mt-1 xl:justify-normal xl:w-[30%] xl:gap-2 xl:mt-0'>
+          <button
+            className="flex justify-center items-center bg-pink-purple xxs:p-3 xl:p-2 h-[40px] rounded xxs:w-[100%] xl:w-[50%]"
+            onClick={handleFavouriteClick}
+          >
+            {isFavourited ? (
+              <FaHeart size={24} />
+            ) : (
+              <FiHeart size={24} />
+            )}
+          </button>
+          <a
+            href={gameInfoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex justify-center items-center text-blue-500 hover:text-blue-700 bg-pink-purple xxs:p-3 lg:p-2 h-[40px] rounded xxs:w-[100%] lg:w-[50%]"
+          >
+            <FaExternalLinkAlt size={24} />
+          </a>
+        </div>
+        
       </div>
     </div>
   );

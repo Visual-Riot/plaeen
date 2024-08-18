@@ -149,29 +149,29 @@ export default function Page() {
         className="container mx-auto mt-16 rounded-xl py-16"
         style={{ backgroundColor: "rgba(184, 180, 189, 0.15)" }}
       >
-        <div className="flex justify-between items-center pb-16">
-          <h1 className="font-abolition text-neonGreen text-7xl ms-16">CREATE NEW SESSION</h1>
+        <div className="flex justify-between items-center pb-16 xxs:flex-col-reverse md:flex-row">
+          <h1 className="font-abolition text-neonGreen text-7xl xxs:ms-0 xxs:text-center md:ms-16 md:text-left">CREATE NEW SESSION</h1>
           <OutlineButton
             onClick={() => router.back()}
-            className="uppercase me-32 xs:w-[200px] md:w-fit bg-transparent"
+            className="uppercase xxs:me-0 xxs:mb-10 md:me-32 md:mb-0 xs:w-[200px] md:w-fit bg-transparent"
           >
             Go Back
           </OutlineButton>
         </div>
 
         {/* Recommended Game */}
-        <div className="relative bg-black p-16 h-[30rem] flex flex-col justify-center bg-[url('/img/dead-by-daylight.jpg')] bg-cover">
+        <div className="relative bg-black p-16 h-[30rem] flex flex-col justify-center bg-[url('/img/dead-by-daylight.jpg')] bg-cover xxs:bg-left md:bg-center">
           <div className="absolute inset-0 opacity-15 z-0" style={{ backgroundColor: 'rgba(102, 6, 227)' }}></div>
           <div className="relative z-10">
-            <p className="text-neonGreen uppercase">Our Recommendation</p>
-            <h2 className="text-7xl text-white font-abolition my-5">Dead By Daylight</h2>
-            <div className="flex xs:flex-col md:flex-row">
-              <GreenButton onClick={() => {}} className="w-[200px] h-[60px] xs:mb-3 md:mb-0 opacity-[1!important] hover:bg-violet hover:text-white">
+            <p className="text-neonGreen uppercase xxs:text-center md:text-left">Our Recommendation</p>
+            <h2 className="text-7xl text-white font-abolition my-5 xxs:text-center md:text-left">Dead By Daylight</h2>
+            <div className="flex xxs:flex-col md:flex-row">
+              <GreenButton onClick={() => {}} className="xxs:w-auto md:w-[200px] h-[60px] xs:mb-3 md:mb-0 opacity-[1!important] hover:bg-violet hover:text-white">
                 Let's play!
               </GreenButton>
               <OutlineButton
                 onClick={() => {}}
-                className="flex ms-3 justify-center items-center w-[200px] h-[60px] bg-transparent"
+                className="flex xxs:ms-0 md:ms-3 xxs:mt-3 md:mt-0 justify-center items-center xxs:w-auto md:w-[200px] h-[60px] bg-transparent"
               >
                 <FaSteamSymbol />
                 <span>&nbsp; Check on Steam</span>
@@ -190,7 +190,7 @@ export default function Page() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-row w-4/5 mx-auto gap-10">
+        <div className="flex xxs:flex-col lg:flex-row w-4/5 mx-auto gap-10">
           <RelevanceFilter
             selectedOption={selectedRelevance}
             handleRelevanceChange={setSelectedRelevance}
@@ -217,7 +217,7 @@ export default function Page() {
         </div>
 
         {/* Display Filtered or Initially Displayed Games */}
-        <div className="w-4/5 mx-auto mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-32 gap-y-12">
+        <div className="w-4/5 mx-auto mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-32 gap-y-12">
           {displayedGames.length > 0 ? (
             displayedGames.map((game) => (
               <GameCard
