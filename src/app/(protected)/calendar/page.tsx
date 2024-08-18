@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 // import buttons and icons
 import OutlineButton from "@/components/buttons/OutlineButton";
 import GreenButton from "@/components/buttons/GreenButton";
@@ -38,16 +38,24 @@ export default function Page() {
 
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [showMobileCalendar, setShowMobileCalendar] = useState(false);
-  const [showCalendarPrev, setShowCalendarPrev] = useState(false);
+  const [showDesktopCalendarWidget, setshowDesktopCalendarWidget] =
+    useState(false);
+  const [showMobileCalendarWidget, setshowMobileCalendarWidget] =
+    useState(false);
 
   // toggle calendar preview
-  const handleCalendarPrevToggle = () => {
-    setShowCalendarPrev((prev) => !prev);
+  const handleDesktopCalendarPrevToggle = () => {
+    setshowMobileCalendarWidget(false);
+    setshowDesktopCalendarWidget((prev) => !prev);
+  };
+  const handleMobileCalendarPrevToggle = () => {
+    setshowDesktopCalendarWidget(false);
+    setshowMobileCalendarWidget((prev) => !prev);
   };
 
-  const handleCalendarPrevWeekSelect = (weekStart: Date) => {
+  const handleCalendarWidgetWeekSelect = (weekStart: Date) => {
     setCurrentDate(weekStart);
-    setShowCalendarPrev(false);
+    setshowDesktopCalendarWidget(false);
   };
 
   // Reset dayHours state
@@ -105,6 +113,10 @@ export default function Page() {
     startOfWeek(currentDate, { weekStartsOn: 1 }).toDateString() ===
     startOfWeek(new Date(), { weekStartsOn: 1 }).toDateString();
 
+  useEffect(() => {
+    console.log("isMobileWidgetVisible", showMobileCalendarWidget);
+  }, [showMobileCalendarWidget, showDesktopCalendarWidget]);
+
   return (
     // background
     <div className="relative min-h-screen bg-calendar-bg bg-cover bg-center flex justify-center items-center">
@@ -145,22 +157,24 @@ export default function Page() {
                 <span className="mx-2 mt-[-0.2em] text-nowrap">
                   {currentWeekRange}
                 </span>{" "}
-                <button onClick={handleCalendarPrevToggle} className="ml-2">
+                <button
+                  onClick={handleMobileCalendarPrevToggle}
+                  className="ml-2"
+                >
                   <CalendarIcon className="ml-2 align-middle fill-lightPurple opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
                 </button>
               </div>
-              <div
-                className={`absolute top-0 left-0 bottom-0 right-0 z-10 transition-all duration-300 ease-in-out ${
-                  showCalendarPrev
-                    ? "opacity-0 pointer-events-none"
-                    : "opacity-100 pointer-events-auto"
-                }`}
-              >
-                <CalendarMobileWidget
-                  currentDate={currentDate}
-                  onWeekSelect={handleCalendarPrevWeekSelect}
-                />
-              </div>
+              {showMobileCalendarWidget && (
+                <div
+                  className={`absolute top-0 left-0 bottom-0 right-0 z-10 transition-all duration-300 ease-in-out`}
+                >
+                  <CalendarMobileWidget
+                    currentDate={currentDate}
+                    onWeekSelect={handleCalendarWidgetWeekSelect}
+                    onClose={handleMobileCalendarPrevToggle}
+                  />
+                </div>
+              )}
               <button onClick={handleNextWeek}>
                 <RightArrow className="ml-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
@@ -215,21 +229,24 @@ export default function Page() {
                 <span className="mx-2 mt-[-0.2em] text-nowrap">
                   {currentMonth}
                 </span>{" "}
-                <button onClick={handleCalendarPrevToggle} className="ml-2">
+                <button
+                  onClick={handleDesktopCalendarPrevToggle}
+                  className="ml-2"
+                >
                   <CalendarIcon className="ml-2 align-middle fill-lightPurple opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
                 </button>
               </div>
 
               <div
                 className={`absolute top-[220px] z-10 transition-all duration-300 ease-in-out ${
-                  showCalendarPrev
+                  showDesktopCalendarWidget
                     ? "opacity-0 pointer-events-none"
                     : "opacity-100 pointer-events-auto"
                 }`}
               >
                 <CalendarDesktopWidget
                   currentDate={currentDate}
-                  onWeekSelect={handleCalendarPrevWeekSelect}
+                  onWeekSelect={handleCalendarWidgetWeekSelect}
                 />
               </div>
 

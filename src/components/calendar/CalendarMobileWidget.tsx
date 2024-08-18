@@ -15,11 +15,13 @@ import {
 type CalendarMobileWidgetProps = {
   currentDate: Date;
   onWeekSelect: (date: Date) => void;
+  onClose: () => void;
 };
 
 const CalendarMobileWidget: React.FC<CalendarMobileWidgetProps> = ({
   currentDate,
   onWeekSelect,
+  onClose,
 }) => {
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [isMonthPickerVisible, setIsMonthPickerVisible] = useState(false);
@@ -120,6 +122,9 @@ const CalendarMobileWidget: React.FC<CalendarMobileWidgetProps> = ({
         }
       >
         Display
+      </button>
+      <button className="p-4 bg-green-500 text-white" onClick={() => onClose()}>
+        Close
       </button>
     </div>
   );
