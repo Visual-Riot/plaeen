@@ -3,7 +3,7 @@ import React from 'react';
 // Define the prop types for the button
 interface PlusButtonProps {
   isOpen: boolean;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void; // Adjusted type
   className?: string; // Add className prop
 }
 
