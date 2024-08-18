@@ -79,7 +79,14 @@ export default function Page() {
     startOfWeek(currentDate, { weekStartsOn: 1 }),
     "dd.MM"
   )} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), "dd.MM")}`;
+
   const currentMonth = format(currentDate, "MMMM yyyy");
+
+  const handleCurrentWeek = () => {
+    setCurrentDate(new Date());
+  };
+
+  let isCurrentWeek = currentDate.toDateString() === new Date().toDateString();
 
   return (
     // background
@@ -140,7 +147,19 @@ export default function Page() {
               <button onClick={handleNextWeek}>
                 <RightArrow className="ml-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
+              <OutlineButton
+                onClick={handleCurrentWeek}
+                className={`ml-8 text-base h-8 border-mediumGrey text-mediumGrey
+                  ${
+                    isCurrentWeek
+                      ? "opacity-0 pointer-events-none"
+                      : "opacity-100"
+                  }`}
+              >
+                Current Week
+              </OutlineButton>
             </div>
+
             <div className="flex items-center">
               <button onClick={handlePreviousMonth}>
                 <LeftArrow className="mr-2 align-middle fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
