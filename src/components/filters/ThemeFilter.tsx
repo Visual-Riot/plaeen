@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import WhiteArrow from '../icons/WhiteArrow';
 
 interface ThemeFilterProps {
   className?: string;
@@ -44,17 +45,11 @@ const ThemeFilter: React.FC<ThemeFilterProps> = ({ className }) => {
           }}
         >
           <span className="leading-none text-sm">Theme</span>
-          <svg
-            className={`ml-2 h-5 w-5 transform ${isOpen ? "rotate-180" : "rotate-0"}`}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              d="M10 14l-5-5h10l-5 5z"
-              fill="#fff"
-            />
-          </svg>
+          <WhiteArrow
+            className={`mr-2 h-3 w-3 transform ${isOpen ? "rotate-180" : "rotate-0"}`}
+            noAnimation={true} // Disable animation
+            color="text-white" // Set color to white
+          />
         </button>
       </div>
       {isOpen && (
