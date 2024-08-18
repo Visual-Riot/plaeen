@@ -10,14 +10,12 @@ interface PlayerCalendarWrapperProps {
     React.SetStateAction<{ [key: string]: { [key: number]: string } }>
   >;
   currentDate: Date;
-  hasEvents?: (date: Date) => boolean;
 }
 
 const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   dayHours,
   setDayHours,
   currentDate,
-  hasEvents,
 }) => {
   const selectedDay = "Monday";
   const [isMobile, setIsMobile] = useState(false);
@@ -113,7 +111,6 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   };
 
   // ------ Handle select all slots for hours
-
   const selectAllSlotsForHours = (
     hour: number,
     currentStates: { [day: string]: string },

@@ -52,9 +52,9 @@ const CalendarDesktopWidget: React.FC<CalendarDesktopWidgetProps> = ({
   let displayedWeekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   let displayedWeekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
 
-  useEffect(() => {
-    console.log("selectedDate", selectedDate);
-  }, [currentDate, selectedDate]);
+  // useEffect(() => {
+  //   console.log("selectedDate", selectedDate);
+  // }, [currentDate, selectedDate]);
 
   return (
     <div className="bg-black bg-opacity-90 rounded p-4 text-xs">

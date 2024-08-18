@@ -26,6 +26,7 @@ import {
   isBefore,
   addDays,
 } from "date-fns";
+import { start } from "repl";
 
 export default function Page() {
   // *** PLACEHOLDER FOR IMPORT CALENDARS FUNCTIONALITY ***
@@ -53,9 +54,9 @@ export default function Page() {
     setshowMobileCalendarWidget((prev) => !prev);
   };
 
-  const handleCalendarWidgetWeekSelect = (weekStart: Date) => {
-    setCurrentDate(weekStart);
-    setshowDesktopCalendarWidget(false);
+  const handleCalendarWidgetWeekSelect = (date: Date) => {
+    console.log("Selected week", date);
+    setCurrentDate(date);
   };
 
   // Reset dayHours state
@@ -113,43 +114,13 @@ export default function Page() {
     startOfWeek(currentDate, { weekStartsOn: 1 }).toDateString() ===
     startOfWeek(new Date(), { weekStartsOn: 1 }).toDateString();
 
-  // Check each day for events
-  const getCurrentWeekKey = (date: Date) => {
-    const start = startOfWeek(date, { weekStartsOn: 1 });
-    return format(start, "dd.MM.yyyy");
-  };
-
-  const hasEvents = (date: Date): boolean => {
-    const startDate = startOfWeek(currentDate, { weekStartsOn: 1 });
-    const weekKey = getCurrentWeekKey(currentDate);
-
-    for (let i = 0; i < 7; i++) {
-      const day = format(addDays(startDate, i), "EEEE");
-      const storedData = localStorage.getItem(`dayHours-${weekKey}`);
-
-      if (!storedData) {
-        return false;
-      }
-      const parsedData = JSON.parse(storedData);
-
-      if (Object.keys(parsedData).length === 0) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  useEffect(() => {}, [hasEvents]);
-
   return (
     // background
     <div className="relative min-h-screen bg-calendar-bg bg-cover bg-center flex justify-center items-center">
       {/* black overlay on background pic */}
       <div className="absolute inset-0 bg-black opacity-85"></div>
       {/* frosted glass */}
-      <div className="w-full md:w-4/5 min-h-screen md:min-h-4 bg-lightPurple bg-opacity-10 backdrop-filter backdrop-blur brightness-125 rounded-lg py-4 md:py-12 px-2 md:p-14">
+      <div className="w-full lg:w-4/5 min-h-screen lg:min-h-4 bg-lightPurple bg-opacity-10 backdrop-filter backdrop-blur brightness-125 rounded-lg py-4 md:py-12 px-2 md:p-14">
         {/* HEADLINE ROW */}
         {/* <div className="block md:flex md:justify-between"> */}
         <div className="flex justify-start md:justify-between">
@@ -199,11 +170,9 @@ export default function Page() {
                   }`}
                 >
                   <CalendarMobileWidget
-                    dayHours={dayHours}
                     currentDate={currentDate}
                     onWeekSelect={handleCalendarWidgetWeekSelect}
                     onClose={handleMobileCalendarPrevToggle}
-                    hasEvents={hasEvents}
                   />
                 </div>
               )}
@@ -294,7 +263,6 @@ export default function Page() {
           dayHours={dayHours}
           setDayHours={setDayHours}
           currentDate={currentDate}
-          hasEvents={hasEvents}
         />
 
         {/* Bottom Row with legend and submit button */}
