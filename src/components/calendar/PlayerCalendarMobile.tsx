@@ -33,6 +33,12 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
     daysOfWeek.push(format(date, "EEEE"));
   }
 
+  const formatHour = (hour: number) => {
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return { formattedHour, ampm };
+  };
+
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
 
   const [selectedDay, setSelectedDay] = useState<string>("Monday");
@@ -44,6 +50,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   // render player time slots for each day of the week depending on the selected day
   const renderTimeSlots = () => {
     return hoursOfDay.map((hour) => {
+      const { formattedHour, ampm } = formatHour(hour);
       const slotState = dayHours[selectedDay]?.[hour] || "available";
       return (
         <div key={hour} className="flex justify-center">
@@ -51,7 +58,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
             day={selectedDay}
             hour={hour}
             state={slotState as "available" | "single" | "recurring"}
-            displayedHour={hour}
+            displayedHour={{ hour: formattedHour, ampm }}
             onStateChange={onHoursStateChange}
           />
         </div>

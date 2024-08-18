@@ -5,7 +5,7 @@ interface ButtonProps {
   hour: number;
   className?: string;
   state: "available" | "single" | "recurring";
-  displayedHour?: number;
+  displayedHour?: { hour: number; ampm: string };
   onStateChange: (
     day: string,
     hour: number,
@@ -59,7 +59,14 @@ const PlayerTimeSlot: React.FC<ButtonProps> = ({
       className={`${defaultClasses} ${className} ${getButtonColor()}`}
       onClick={handleClick}
     >
-      {displayedHour}
+      {displayedHour ? (
+        <p>
+          <span className="font-bold text-base">{displayedHour.hour}</span>{" "}
+          <span className="opacity-60 text-xs">{displayedHour.ampm}</span>
+        </p>
+      ) : (
+        displayedHour
+      )}
     </button>
   );
 };
