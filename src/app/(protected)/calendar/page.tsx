@@ -24,6 +24,7 @@ import {
   endOfWeek,
   startOfMonth,
   isBefore,
+  addDays,
 } from "date-fns";
 
 export default function Page() {
@@ -37,7 +38,6 @@ export default function Page() {
   }>({});
 
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const [showMobileCalendar, setShowMobileCalendar] = useState(false);
   const [showDesktopCalendarWidget, setshowDesktopCalendarWidget] =
     useState(false);
   const [showMobileCalendarWidget, setshowMobileCalendarWidget] =
@@ -113,9 +113,35 @@ export default function Page() {
     startOfWeek(currentDate, { weekStartsOn: 1 }).toDateString() ===
     startOfWeek(new Date(), { weekStartsOn: 1 }).toDateString();
 
-  useEffect(() => {
-    console.log("isMobileWidgetVisible", showMobileCalendarWidget);
-  }, [showMobileCalendarWidget, showDesktopCalendarWidget]);
+  // Check each day for events
+  const getCurrentWeekKey = (date: Date) => {
+    const start = startOfWeek(date, { weekStartsOn: 1 });
+    return format(start, "dd.MM.yyyy");
+  };
+
+  const hasEvents = (date: Date): boolean => {
+    const startDate = startOfWeek(currentDate, { weekStartsOn: 1 });
+    const weekKey = getCurrentWeekKey(currentDate);
+
+    for (let i = 0; i < 7; i++) {
+      const day = format(addDays(startDate, i), "EEEE");
+      const storedData = localStorage.getItem(`dayHours-${weekKey}`);
+
+      if (!storedData) {
+        return false;
+      }
+      const parsedData = JSON.parse(storedData);
+
+      if (Object.keys(parsedData).length === 0) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  useEffect(() => {}, [hasEvents]);
 
   return (
     // background
@@ -166,12 +192,18 @@ export default function Page() {
               </div>
               {showMobileCalendarWidget && (
                 <div
-                  className={`absolute top-0 left-0 bottom-0 right-0 z-10 transition-all duration-300 ease-in-out`}
+                  className={`absolute top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black z-10 transition-opacity duration-300 ease-in-out ${
+                    showMobileCalendarWidget
+                      ? "opacity-100"
+                      : "opacity-0 pointer-events-none"
+                  }`}
                 >
                   <CalendarMobileWidget
+                    dayHours={dayHours}
                     currentDate={currentDate}
                     onWeekSelect={handleCalendarWidgetWeekSelect}
                     onClose={handleMobileCalendarPrevToggle}
+                    hasEvents={hasEvents}
                   />
                 </div>
               )}
@@ -262,6 +294,7 @@ export default function Page() {
           dayHours={dayHours}
           setDayHours={setDayHours}
           currentDate={currentDate}
+          hasEvents={hasEvents}
         />
 
         {/* Bottom Row with legend and submit button */}

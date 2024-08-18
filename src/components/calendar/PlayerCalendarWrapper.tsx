@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
 import PlayerCalendarMobile from "./PlayerCalendarMobile";
 import { format, startOfWeek } from "date-fns";
+import { date } from "zod";
 
 interface PlayerCalendarWrapperProps {
   dayHours: { [key: string]: { [key: number]: string } };
@@ -9,12 +10,14 @@ interface PlayerCalendarWrapperProps {
     React.SetStateAction<{ [key: string]: { [key: number]: string } }>
   >;
   currentDate: Date;
+  hasEvents?: (date: Date) => boolean;
 }
 
 const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   dayHours,
   setDayHours,
   currentDate,
+  hasEvents,
 }) => {
   const selectedDay = "Monday";
   const [isMobile, setIsMobile] = useState(false);
