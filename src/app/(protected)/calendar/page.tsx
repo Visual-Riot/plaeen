@@ -23,7 +23,7 @@ import {
 } from "date-fns";
 
 export default function Page() {
-  // PLACEHOLDER FOR IMPORT CALENDARS FUNCTIONALITY
+  // *** PLACEHOLDER FOR IMPORT CALENDARS FUNCTIONALITY ***
   const importHandleClick = () => {
     console.log("Import calendars");
   };
@@ -74,7 +74,7 @@ export default function Page() {
     });
   };
 
-  // Current week display
+  // Current week
   const currentWeekRange = `${format(
     startOfWeek(currentDate, { weekStartsOn: 1 }),
     "dd.MM"
@@ -167,7 +167,7 @@ export default function Page() {
           currentDate={currentDate}
         />
 
-        {/* LOW ROW with legend and submit button */}
+        {/* Bottom Row with legend and submit button */}
         <div className="flex items-center w-full justify-between mt-8 px-2">
           <div className="flex flex-col lg:flex-row text-lightGrey font-light text-sm">
             <div className="flex flex-row pr-8 ">
