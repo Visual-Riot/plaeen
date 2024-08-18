@@ -12,7 +12,8 @@ import DoubleRightArrow from "@/components/icons/DoubleRightArrow";
 import CalendarIcon from "@/components/icons/CalendarIcon";
 // import components and packages
 import PlayerCalendarWrapper from "@/components/calendar/PlayerCalendarWrapper";
-import CalendarPreview from "@/components/calendar/CalendarPreview";
+import CalendarDesktopWidget from "@/components/calendar/CalendarDesktopWidget";
+import CalendarMobileWidget from "@/components/calendar/CalendarMobileWidget";
 import {
   format,
   addWeeks,
@@ -148,7 +149,18 @@ export default function Page() {
                   <CalendarIcon className="ml-2 align-middle fill-lightPurple opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
                 </button>
               </div>
-
+              <div
+                className={`absolute top-0 left-0 bottom-0 right-0 z-10 transition-all duration-300 ease-in-out ${
+                  showCalendarPrev
+                    ? "opacity-0 pointer-events-none"
+                    : "opacity-100 pointer-events-auto"
+                }`}
+              >
+                <CalendarMobileWidget
+                  currentDate={currentDate}
+                  onWeekSelect={handleCalendarPrevWeekSelect}
+                />
+              </div>
               <button onClick={handleNextWeek}>
                 <RightArrow className="ml-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
@@ -215,7 +227,7 @@ export default function Page() {
                     : "opacity-100 pointer-events-auto"
                 }`}
               >
-                <CalendarPreview
+                <CalendarDesktopWidget
                   currentDate={currentDate}
                   onWeekSelect={handleCalendarPrevWeekSelect}
                 />

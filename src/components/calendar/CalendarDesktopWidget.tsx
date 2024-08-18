@@ -13,12 +13,12 @@ import {
   addMonths,
 } from "date-fns";
 
-type CalendarPreviewProps = {
+type CalendarDesktopWidgetProps = {
   currentDate: Date;
   onWeekSelect: (date: Date) => void;
 };
 
-const CalendarPreview: React.FC<CalendarPreviewProps> = ({
+const CalendarDesktopWidget: React.FC<CalendarDesktopWidgetProps> = ({
   currentDate,
   onWeekSelect,
 }) => {
@@ -113,4 +113,4 @@ const CalendarPreview: React.FC<CalendarPreviewProps> = ({
   );
 };
 
-export default CalendarPreview;
+export default CalendarDesktopWidget;
