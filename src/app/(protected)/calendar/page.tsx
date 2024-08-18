@@ -94,21 +94,27 @@ export default function Page() {
       {/* black overlay on background pic */}
       <div className="absolute inset-0 bg-black opacity-85"></div>
       {/* frosted glass */}
-      <div className="w-full md:w-4/5 min-h-screen md:min-h-4 bg-lightPurple bg-opacity-10 backdrop-filter backdrop-blur brightness-125 rounded-lg py-12 px-2 md:p-14">
+      <div className="w-full md:w-4/5 min-h-screen md:min-h-4 bg-lightPurple bg-opacity-10 backdrop-filter backdrop-blur brightness-125 rounded-lg py-4 md:py-12 px-2 md:p-14">
         {/* HEADLINE ROW */}
-        <div className="block md:flex md:justify-between">
-          <h1 className="text-8xl md:text-6xl text-green font-abolition text-center">
+        {/* <div className="block md:flex md:justify-between"> */}
+        <div className="flex justify-start md:justify-between">
+          <h1 className="pl-2 md:pl-0 text-7xl md:text-6xl text-green font-abolition text-center">
             Calendar
           </h1>
-          <div className="flex justify-center md:justify-end">
-            <OutlineButton onClick={importHandleClick} className="mt-7 md:mt-0">
-              Import Calendars
+          <div className="ml-4 md:ml-0 flex justify-center md:justify-end">
+            <OutlineButton
+              onClick={importHandleClick}
+              className="mt-4 md:mt-0 text-sm"
+              color="lightPurple"
+              hoverColor="lightGrey"
+            >
+              Sync Calendars
             </OutlineButton>
           </div>
         </div>
 
         {/* CALENDAR NAVIGATION ROW */}
-        <div className="flex justify-between items-center mt-16 md:mb-12 text-lightPurple text-2xl font-semibold">
+        <div className="flex justify-between items-center mt-8 md:mt-16 md:mb-12 text-lightPurple text-2xl font-semibold">
           {/* Mobile view */}
           <div className="flex flex-col lg:hidden w-full items-center">
             <div className="flex items-center">
@@ -133,6 +139,18 @@ export default function Page() {
                 <DoubleRightArrow className="ml-4 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
             </div>
+            <OutlineButton
+              onClick={handleCurrentWeek}
+              className={`text-sm h-8 border-0 underline
+                  ${
+                    isCurrentWeek
+                      ? "mt-[-24px] opacity-0 pointer-events-none"
+                      : "mt-4 opacity-100"
+                  }`}
+              color="lightGrey"
+            >
+              Back to current week
+            </OutlineButton>
           </div>
 
           {/* Desktop view */}
@@ -149,14 +167,14 @@ export default function Page() {
               </button>
               <OutlineButton
                 onClick={handleCurrentWeek}
-                className={`ml-8 text-base h-8 border-mediumGrey text-mediumGrey
+                className={`ml-4 text-base h-8 border-0 text-lightGrey text-sm
                   ${
                     isCurrentWeek
                       ? "opacity-0 pointer-events-none"
                       : "opacity-100"
                   }`}
               >
-                Current Week
+                ◄ <span className="underline">Back to current week</span>
               </OutlineButton>
             </div>
 
@@ -187,7 +205,7 @@ export default function Page() {
         />
 
         {/* Bottom Row with legend and submit button */}
-        <div className="flex items-center w-full justify-between mt-8 px-2">
+        <div className="flex items-start md:items-center w-full justify-between md:mt-8 px-2 md:px-0">
           <div className="flex flex-col lg:flex-row text-lightGrey font-light text-sm">
             <div className="flex flex-row pr-8 ">
               <div className="w-5 h-5 bg-green opacity-50 rounded mb-4 lg:mb-0 mr-2"></div>{" "}
@@ -203,9 +221,11 @@ export default function Page() {
             </div>
           </div>
 
+          {/* Buttons */}
           <div className="flex-col items-end lg:items-center flex lg:flex-row">
+            {/* save button on mobile */}
             <GreenButton
-              className="align-middle flex lg:hidden"
+              className="text-sm flex lg:hidden"
               onClick={() => console.log("Submit")}
             >
               Save and continue
@@ -220,6 +240,7 @@ export default function Page() {
               <ResetIcon className="mr-2 fill-current align-middle" />
               Reset
             </TertiaryButton>
+            {/* save button on desktop */}
             <GreenButton
               className="align-middle hidden lg:flex"
               onClick={() => console.log("Submit")}

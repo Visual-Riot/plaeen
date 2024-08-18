@@ -60,7 +60,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   };
 
   return (
-    <div className={`my-10 ${className}`}>
+    <div className={`mt-2 mb-10 ${className}`}>
       <div className="w-full">
         {/* Days Names Column */}
         <div className="grid grid-cols-7 gap-1 md:gap-1 px-2 mt-4">
