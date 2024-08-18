@@ -2,9 +2,9 @@ import React from "react";
 
 // Define the prop types for the button
 type ButtonProps = {
-  children: React.ReactNode; // Accept any valid React node
-  onClick: () => void; // Function to call on button click
-  className?: string; // Optional prop to allow custom styling
+  children: React.ReactNode;
+  onClick: () => void;
+  className?: string;
   color?: string;
   hoverColor?: string;
 };

@@ -26,13 +26,16 @@ import {
   isBefore,
   addDays,
 } from "date-fns";
-import { start } from "repl";
 
 export default function Page() {
   // *** PLACEHOLDER FOR IMPORT CALENDARS FUNCTIONALITY ***
   const importHandleClick = () => {
     console.log("Import calendars");
   };
+
+  // useEffect(() => {
+  //   console.log(showDesktopCalendarWidget);
+  // }, []);
 
   const [dayHours, setDayHours] = useState<{
     [key: string]: { [key: number]: string };
@@ -122,7 +125,6 @@ export default function Page() {
       {/* frosted glass */}
       <div className="w-full lg:w-4/5 min-h-screen lg:min-h-4 bg-lightPurple bg-opacity-10 backdrop-filter backdrop-blur brightness-125 rounded-lg py-4 md:py-12 px-2 md:p-14">
         {/* HEADLINE ROW */}
-        {/* <div className="block md:flex md:justify-between"> */}
         <div className="flex justify-start md:justify-between">
           <h1 className="pl-2 md:pl-0 text-7xl md:text-6xl text-green font-abolition text-center">
             Calendar
@@ -132,7 +134,7 @@ export default function Page() {
               onClick={importHandleClick}
               className="mt-4 md:mt-0 text-sm"
               color="lightPurple"
-              hoverColor="lightGrey"
+              hoverColor="neonGreen"
             >
               Sync Calendars
             </OutlineButton>
@@ -211,7 +213,7 @@ export default function Page() {
               </button>
               <OutlineButton
                 onClick={handleCurrentWeek}
-                className={`ml-4 text-base h-8 border-0 text-lightGrey text-sm
+                className={`ml-4 text-base h-8 border-none text-lightGrey text-sm
                   ${
                     isCurrentWeek
                       ? "opacity-0 pointer-events-none"
@@ -239,10 +241,10 @@ export default function Page() {
               </div>
 
               <div
-                className={`absolute top-[220px] z-10 transition-all duration-300 ease-in-out ${
+                className={`absolute opacity-0 top-[220px] right-[38px] z-10 transition-all duration-300 ease-in-out ${
                   showDesktopCalendarWidget
-                    ? "opacity-0 pointer-events-none"
-                    : "opacity-100 pointer-events-auto"
+                    ? "opacity-100 pointer-events-auto"
+                    : "opacity-0 pointer-events-none"
                 }`}
               >
                 <CalendarDesktopWidget

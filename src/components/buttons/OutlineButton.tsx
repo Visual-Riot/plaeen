@@ -1,15 +1,13 @@
 import React from "react";
 
-// Define the prop types for the button
 type ButtonProps = {
-  children: React.ReactNode; // Accept any valid React node
-  onClick: () => void; // Function to call on button click
-  className?: string; // Optional prop to allow custom styling
-  color?: string; // Optional prop to allow custom color
-  hoverColor?: string; // Optional prop to allow custom hover color
+  children: React.ReactNode;
+  onClick: () => void;
+  className?: string;
+  color?: string;
+  hoverColor?: string;
 };
 
-// Button component
 const OutlineButton: React.FC<ButtonProps> = ({
   children,
   onClick,
@@ -17,9 +15,14 @@ const OutlineButton: React.FC<ButtonProps> = ({
   color = "lightGrey",
   hoverColor = "lightPurple",
 }) => {
+  const borderColor = `border-${color}`;
+  const hoverBorderColor = `hover:border-${hoverColor}`;
+  const textColor = `text-${color}`;
+  const hoverTextColor = `hover:text-${hoverColor}`;
+
   return (
     <button
-      className={`btn bg-transparent border-${color} hover:border-${hoverColor} text-${color} hover:text-${hoverColor} border-2 rounded-lg h-12 pb-1 px-3 ease-in-out duration-300 ${className}`}
+      className={`btn bg-transparent ${borderColor} ${hoverBorderColor} ${textColor} ${hoverTextColor} border-2 rounded-lg h-12 pb-1 px-3 ease-in-out duration-300 ${className}`}
       onClick={onClick}
     >
       {children}

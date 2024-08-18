@@ -52,12 +52,8 @@ const CalendarDesktopWidget: React.FC<CalendarDesktopWidgetProps> = ({
   let displayedWeekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   let displayedWeekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
 
-  // useEffect(() => {
-  //   console.log("selectedDate", selectedDate);
-  // }, [currentDate, selectedDate]);
-
   return (
-    <div className="bg-black bg-opacity-90 rounded p-4 text-xs">
+    <div className="bg-gray-950 shadow-xl rounded-lg p-4 text-xs">
       {/* month row */}
       <div className="flex justify-between items-center mb-4">
         <button onClick={handlePrevMonthClick} className="text-white">
@@ -70,7 +66,7 @@ const CalendarDesktopWidget: React.FC<CalendarDesktopWidgetProps> = ({
       </div>
       <div className="flex text-lightPurple justify-between">
         {/* Render days of the week header */}
-        <div className="flex justify-between w-full mb-4 mx-2">
+        <div className="flex justify-between w-full mb-4 mx-2 text-base">
           {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
             <div key={day} className="text-center font-light">
               {day}
@@ -91,14 +87,14 @@ const CalendarDesktopWidget: React.FC<CalendarDesktopWidgetProps> = ({
               }).map((day) => (
                 <div
                   key={day.toString()}
-                  className={`cursor-pointer p-2 text-center rounded ${
+                  className={`cursor-pointer p-2 text-center text-base rounded ${
                     isSameMonth(day, selectedDate)
                       ? `  ${
                           isCurrentWeek
-                            ? "bg-lightPurple bg-opacity-70 text-black"
-                            : "bg-darkPurple bg-opacity-50 text-lightPurple"
+                            ? "bg-opacity-70 text-neonGreen"
+                            : "bg-opacity-50 text-lightGrey"
                         }`
-                      : "bg-darkPurple bg-opacity-20 text-grey"
+                      : "text-gray-700"
                   }`}
                   onClick={() => handleDayClick(day)}
                 >
