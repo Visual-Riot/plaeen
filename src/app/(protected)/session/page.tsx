@@ -133,6 +133,13 @@ export default function Page() {
     return platformName;
   };
 
+  const resetFilters = () => {
+    setSearchTerm(''); // Reset search term
+    setSelectedRelevance('Relevance'); // Reset relevance filter
+    setSelectedGenres([]); // Reset genre filter
+    setSelectedPlatforms([]); // Reset platform filter
+  };
+
   const router = useRouter();
 
   return (
@@ -200,6 +207,13 @@ export default function Page() {
             className="filter-box"
           />
           <ThemeFilter className="filter-box" />
+        </div>
+
+        {/* Reset filters */}
+        <div className="text-center">
+          <button onClick={resetFilters} className="h-12 mt-3">
+            Reset Filters
+          </button>
         </div>
 
         {/* Display Filtered or Initially Displayed Games */}
