@@ -28,10 +28,13 @@ const CalendarPreview: React.FC<CalendarPreviewProps> = ({
     setSelectedDate(currentDate);
   }, [currentDate]);
 
-  const weeks = eachWeekOfInterval({
-    start: startOfMonth(selectedDate),
-    end: endOfMonth(selectedDate),
-  }).map((weekStart) => startOfWeek(weekStart, { weekStartsOn: 1 }));
+  const weeks = eachWeekOfInterval(
+    {
+      start: startOfWeek(startOfMonth(selectedDate), { weekStartsOn: 1 }),
+      end: endOfWeek(endOfMonth(selectedDate), { weekStartsOn: 1 }),
+    },
+    { weekStartsOn: 1 }
+  );
 
   const handleDayClick = (date: Date) => {
     const weekStart = startOfWeek(date, { weekStartsOn: 1 });
@@ -46,8 +49,12 @@ const CalendarPreview: React.FC<CalendarPreviewProps> = ({
     setSelectedDate(addMonths(selectedDate, 1));
   };
 
-  const displayedWeekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
-  const displayedWeekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
+  let displayedWeekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
+  let displayedWeekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
+
+  useEffect(() => {
+    console.log("selectedDate", selectedDate);
+  }, [currentDate, selectedDate]);
 
   return (
     <div className="bg-black bg-opacity-90 rounded p-4 text-xs">
@@ -73,14 +80,14 @@ const CalendarPreview: React.FC<CalendarPreviewProps> = ({
       </div>
       <div className="grid grid-cols-7 gap-2 text-white">
         {/* Render days in each week */}
-        {weeks.map((weekStart) => {
+        {weeks.map((week) => {
           const isCurrentWeek =
-            weekStart >= displayedWeekStart && weekStart <= displayedWeekEnd;
+            week >= displayedWeekStart && week <= displayedWeekEnd;
           return (
-            <React.Fragment key={weekStart.toString()}>
+            <React.Fragment key={week.toString()}>
               {eachDayOfInterval({
-                start: weekStart,
-                end: endOfWeek(weekStart, { weekStartsOn: 1 }),
+                start: startOfWeek(week, { weekStartsOn: 1 }),
+                end: endOfWeek(week, { weekStartsOn: 1 }),
               }).map((day) => (
                 <div
                   key={day.toString()}
