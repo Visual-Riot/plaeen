@@ -27,6 +27,7 @@ const PlayerTimeSlot: React.FC<ButtonProps> = ({
     setState(initialState);
   }, [initialState]);
 
+  // handle click on the button
   const handleClick = () => {
     const newState =
       state === "available"

@@ -50,8 +50,8 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   // render player time slots for each day of the week depending on the selected day
   const renderTimeSlots = () => {
     return hoursOfDay.map((hour) => {
-      const { formattedHour, ampm } = formatHour(hour);
       const slotState = dayHours[selectedDay]?.[hour] || "available";
+      const { formattedHour, ampm } = formatHour(hour);
       return (
         <div key={hour} className="flex justify-center">
           <PlayerTimeSlot
@@ -97,3 +97,52 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
 };
 
 export default PlayerCalendarMobile;
+
+// return backup:
+// return (
+//   <div className={`mt-2 mb-10 ${className}`}>
+//     <div className="w-full">
+//       {/* Days Names Column */}
+//       <div className="grid grid-cols-7 gap-1 md:gap-1 px-2 mt-4">
+//         {daysOfWeek.map((day) => (
+//           <div key={day} className="flex justify-center">
+//             <DayButton
+//               // key={day}
+//               state={selectedDay === day ? "selected" : "unselected"}
+//               onClick={() => {
+//                 handleDayChange(day);
+//               }}
+//             >
+//               {day.slice(0, 3)}
+//             </DayButton>
+//           </div>
+//         ))}
+//       </div>
+
+//       {/* Render time slots for the selected day */}
+//       <div className="grid grid-cols-6 gap-2 md:gap-4 px-2 mt-4">
+//         {renderTimeSlots()}
+//       </div>
+//       {/* end of render time slots */}
+//     </div>
+//   </div>
+// );
+
+// renderTimeSlots backup:
+// const renderTimeSlots = () => {
+//   return hoursOfDay.map((hour) => {
+//     const { formattedHour, ampm } = formatHour(hour);
+//     const slotState = dayHours[selectedDay]?.[hour] || "available";
+//     return (
+//       <div key={hour} className="flex justify-center">
+//         <PlayerTimeSlot
+//           day={selectedDay}
+//           hour={hour}
+//           state={slotState as "available" | "single" | "recurring"}
+//           displayedHour={{ hour: formattedHour, ampm }}
+//           onStateChange={onHoursStateChange}
+//         />
+//       </div>
+//     );
+//   });
+// };

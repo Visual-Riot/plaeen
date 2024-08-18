@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
 import PlayerCalendarMobile from "./PlayerCalendarMobile";
 import { format, startOfWeek } from "date-fns";
@@ -16,9 +16,10 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   setDayHours,
   currentDate,
 }) => {
+  const selectedDay = "Monday";
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<string>("Monday");
 
+  // Get the current week key
   const getCurrentWeekKey = (date: Date) => {
     const start = startOfWeek(date, { weekStartsOn: 1 });
     return format(start, "dd.MM.yyyy");

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+// import buttons and icons
 import OutlineButton from "@/components/buttons/OutlineButton";
 import GreenButton from "@/components/buttons/GreenButton";
 import TertiaryButton from "@/components/buttons/TertiaryButton";
@@ -9,7 +10,9 @@ import RightArrow from "@/components/icons/RightArrow";
 import DoubleLeftArrow from "@/components/icons/DoubleLeftArrow";
 import DoubleRightArrow from "@/components/icons/DoubleRightArrow";
 import CalendarIcon from "@/components/icons/CalendarIcon";
+// import components and packages
 import PlayerCalendarWrapper from "@/components/calendar/PlayerCalendarWrapper";
+import CalendarPreview from "@/components/calendar/CalendarPreview";
 import {
   format,
   addWeeks,
@@ -34,6 +37,17 @@ export default function Page() {
 
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [showMobileCalendar, setShowMobileCalendar] = useState(false);
+  const [showCalendarPrev, setShowCalendarPrev] = useState(false);
+
+  // toggle calendar preview
+  const handleCalendarPrevToggle = () => {
+    setShowCalendarPrev((prev) => !prev);
+  };
+
+  const handleCalendarPrevWeekSelect = (weekStart: Date) => {
+    setCurrentDate(weekStart);
+    setShowCalendarPrev(false);
+  };
 
   // Reset dayHours state
   const resetDayHours = () => {
@@ -86,7 +100,9 @@ export default function Page() {
     setCurrentDate(new Date());
   };
 
-  let isCurrentWeek = currentDate.toDateString() === new Date().toDateString();
+  let isCurrentWeek =
+    startOfWeek(currentDate, { weekStartsOn: 1 }).toDateString() ===
+    startOfWeek(new Date(), { weekStartsOn: 1 }).toDateString();
 
   return (
     // background
@@ -128,10 +144,11 @@ export default function Page() {
                 <span className="mx-2 mt-[-0.2em] text-nowrap">
                   {currentWeekRange}
                 </span>{" "}
-                <button className="ml-2">
+                <button onClick={handleCalendarPrevToggle} className="ml-2">
                   <CalendarIcon className="ml-2 align-middle fill-lightPurple opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
                 </button>
               </div>
+
               <button onClick={handleNextWeek}>
                 <RightArrow className="ml-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
@@ -186,10 +203,24 @@ export default function Page() {
                 <span className="mx-2 mt-[-0.2em] text-nowrap">
                   {currentMonth}
                 </span>{" "}
-                <button className="ml-2">
+                <button onClick={handleCalendarPrevToggle} className="ml-2">
                   <CalendarIcon className="ml-2 align-middle fill-lightPurple opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
                 </button>
               </div>
+
+              <div
+                className={`absolute top-[220px] z-10 transition-all duration-300 ease-in-out ${
+                  showCalendarPrev
+                    ? "opacity-0 pointer-events-none"
+                    : "opacity-100 pointer-events-auto"
+                }`}
+              >
+                <CalendarPreview
+                  currentDate={currentDate}
+                  onWeekSelect={handleCalendarPrevWeekSelect}
+                />
+              </div>
+
               <button onClick={handleNextMonth}>
                 <RightArrow className="ml-2 align-middle fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
