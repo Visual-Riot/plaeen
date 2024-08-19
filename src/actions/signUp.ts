@@ -1,8 +1,13 @@
+"use server";
 import { SignUpSchema } from "@/schemas";
 import * as z from "zod";
 
+export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
+  const validatedFields = SignUpSchema.safeParse(values);
 
-export const signUp =  async (values: z.infer<typeof SignUpSchema>) => {
-    // TODO: add sign up action logic
-    return null
+  if(!validatedFields.success) {
+    return {error: "Invalid fields!"}
   }
+
+  return "Registered successfully! Verification email sent.";
+};
