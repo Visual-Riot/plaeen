@@ -1,32 +1,43 @@
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import DayButton from "../buttons/DayButton";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { startOfWeek, endOfWeek, format } from "date-fns";
 
-interface Props {
-  className?: string;
+interface PlayerCalendarMobileProps {
   dayHours: { [key: string]: { [key: number]: string } };
   selectedDay: string;
+  currentDate: Date;
   onHoursStateChange: (
     day: string,
     hour: number,
     newState: "available" | "single" | "recurring"
   ) => void;
+  className?: string;
 }
 
-const PlayerCalendarMobile: React.FC<Props> = ({
-  className,
+const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   dayHours,
+  currentDate,
   onHoursStateChange,
+  className,
 }) => {
-  const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  const daysOfWeek: string[] = [];
+  const start = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const end = endOfWeek(currentDate, { weekStartsOn: 1 });
+
+  for (
+    let date = start;
+    date <= end;
+    date = new Date(date.setDate(date.getDate() + 1))
+  ) {
+    daysOfWeek.push(format(date, "EEEE"));
+  }
+
+  const formatHour = (hour: number) => {
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return { formattedHour, ampm };
+  };
 
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
 
@@ -40,13 +51,14 @@ const PlayerCalendarMobile: React.FC<Props> = ({
   const renderTimeSlots = () => {
     return hoursOfDay.map((hour) => {
       const slotState = dayHours[selectedDay]?.[hour] || "available";
+      const { formattedHour, ampm } = formatHour(hour);
       return (
         <div key={hour} className="flex justify-center">
           <PlayerTimeSlot
             day={selectedDay}
             hour={hour}
             state={slotState as "available" | "single" | "recurring"}
-            displayedHour={hour}
+            displayedHour={{ hour: formattedHour, ampm }}
             onStateChange={onHoursStateChange}
           />
         </div>
@@ -55,7 +67,7 @@ const PlayerCalendarMobile: React.FC<Props> = ({
   };
 
   return (
-    <div className={`my-10 ${className}`}>
+    <div className={`mt-2 mb-10 ${className}`}>
       <div className="w-full">
         {/* Days Names Column */}
         <div className="grid grid-cols-7 gap-1 md:gap-1 px-2 mt-4">

@@ -2,8 +2,9 @@
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import React, { useState } from "react";
 import HoverInstruction from "./HoverInstruction";
+import { startOfWeek, endOfWeek, format } from "date-fns";
 
-interface Props {
+interface PlayerCalendarDesktopProps {
   dayHours: { [key: string]: { [key: number]: string } };
 
   onHoursStateChange: (
@@ -22,27 +23,32 @@ interface Props {
     currentStates: { [day: string]: string },
     daysOfWeek: string[]
   ) => void;
+  currentDate: Date;
   className?: string;
 }
 
-const PlayerCalendarDesktop: React.FC<Props> = ({
+const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
   dayHours,
   onHoursStateChange,
   onSelectAllSlotsForDays,
   onSelectAllSlotsForHours,
+  currentDate,
   className = "",
 }) => {
-  const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  const daysOfWeek: string[] = [];
 
-  const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
+  const start = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const end = endOfWeek(currentDate, { weekStartsOn: 1 });
+
+  for (
+    let date = start;
+    date <= end;
+    date = new Date(date.setDate(date.getDate() + 1))
+  ) {
+    daysOfWeek.push(format(date, "EEEE"));
+  }
+
+  const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1); // ?
 
   const [hoveredElement, setHoveredElement] = useState<string | null>(null);
   const [hoverPosition, setHoverPosition] = useState<{ x: number; y: number }>({

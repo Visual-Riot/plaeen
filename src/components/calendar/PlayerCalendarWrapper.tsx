@@ -1,44 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
 import PlayerCalendarMobile from "./PlayerCalendarMobile";
+import { format, startOfWeek } from "date-fns";
+import { date } from "zod";
 
 interface PlayerCalendarWrapperProps {
   dayHours: { [key: string]: { [key: number]: string } };
   setDayHours: React.Dispatch<
     React.SetStateAction<{ [key: string]: { [key: number]: string } }>
   >;
+  currentDate: Date;
 }
 
 const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   dayHours,
   setDayHours,
+  currentDate,
 }) => {
+  const selectedDay = "Monday";
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<string>("Monday");
-  const [selectedState, setSelectedState] = useState<string>("available");
 
-  // window.innerWidth can only be referenced after component mounts
-  useEffect(() => {
-    setIsMobile(window.innerWidth <= 1024);
-  }, []);
+  // Get the current week key
+  const getCurrentWeekKey = (date: Date) => {
+    const start = startOfWeek(date, { weekStartsOn: 1 });
+    return format(start, "dd.MM.yyyy");
+  };
+
+  const weekKey = getCurrentWeekKey(currentDate);
 
   // handle local storage to get and set days and hours states
   useEffect(() => {
-    const storedState = localStorage.getItem("dayHours");
+    const storedState = localStorage.getItem(`dayHours-${weekKey}`);
     if (storedState) {
-      setDayHours(JSON.parse(storedState));
+      try {
+        setDayHours(JSON.parse(storedState));
+      } catch (error) {
+        console.error("Error parsing stored state", error);
+        localStorage.removeItem(`dayHours-${weekKey}`);
+      }
+    } else {
+      setDayHours({});
     }
-  }, [isMobile]);
+  }, [weekKey, setDayHours]);
 
   useEffect(() => {
-    localStorage.setItem("dayHours", JSON.stringify(dayHours));
-  }, [dayHours]);
+    localStorage.setItem(`dayHours-${weekKey}`, JSON.stringify(dayHours));
+  }, [dayHours, weekKey]);
 
   // Handle screen resize to display mobile or desktop version of the calendar
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 1024);
     };
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -97,7 +111,6 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   };
 
   // ------ Handle select all slots for hours
-
   const selectAllSlotsForHours = (
     hour: number,
     currentStates: { [day: string]: string },
@@ -129,6 +142,7 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
           dayHours={dayHours}
           onHoursStateChange={handleHourStateChange}
           selectedDay={selectedDay}
+          currentDate={currentDate}
         />
       ) : (
         <PlayerCalendarDesktop
@@ -137,6 +151,7 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
           onHoursStateChange={handleHourStateChange}
           onSelectAllSlotsForHours={selectAllSlotsForHours}
           onSelectAllSlotsForDays={selectAllSlotsForDays}
+          currentDate={currentDate}
         />
       )}
     </div>
