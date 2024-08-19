@@ -167,7 +167,7 @@ export default function Page() {
             <h2 className="text-7xl text-white font-abolition my-5 xxs:text-center md:text-left">Dead By Daylight</h2>
             <div className="flex xxs:flex-col md:flex-row">
               <GreenButton onClick={() => {}} className="xxs:w-auto md:w-[200px] h-[60px] xs:mb-3 md:mb-0 opacity-[1!important] hover:bg-violet hover:text-white">
-                Let's play!
+                {"Let's play!"}
               </GreenButton>
               <OutlineButton
                 onClick={() => {}}
