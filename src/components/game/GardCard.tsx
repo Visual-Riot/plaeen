@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaHeart, FaExternalLinkAlt, FaSteam, FaPlaystation, FaXbox, FaApple, FaWindows, FaLinux, FaAndroid, FaGlobe } from 'react-icons/fa';
 import { BsNintendoSwitch } from "react-icons/bs";
 import { SiPlaystationvita, SiWiiu } from "react-icons/si";
 import { FiHeart } from 'react-icons/fi';
 import { format } from 'date-fns';
+import { useRouter } from 'next/navigation';
 
 interface GameCardProps {
   coverImage: string;
@@ -29,11 +30,47 @@ const GameCard: React.FC<GameCardProps> = ({
   gameInfoUrl
 }) => {
   const [isFavourited, setIsFavourited] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if the game is already favourited
+    const favouritedGames = JSON.parse(localStorage.getItem('favouritedGames') || '[]');
+    const isAlreadyFavorited = favouritedGames.some((game: { name: string }) => game.name === name);
+    setIsFavourited(isAlreadyFavorited);
+  }, [name]);
+  
 
   const handleFavouriteClick = () => {
+    let favouritedGames = JSON.parse(localStorage.getItem('favouritedGames') || '[]');
+    
+    if (isFavourited) {
+      // Remove the game from favourites
+      favouritedGames = favouritedGames.filter((game: { name: string }) => game.name !== name);
+      localStorage.setItem('favouritedGames', JSON.stringify(favouritedGames));
+    } else {
+      // Add the game to favourites
+      const favouriteGameDetails = {
+        name,
+        releaseDate: formattedDate,
+        genre,
+        platform,
+        rating,
+        coverImage,
+      };
+      favouritedGames.push(favouriteGameDetails);
+      localStorage.setItem('favouritedGames', JSON.stringify(favouritedGames));
+    }
+  
+    // Store the user details (for example, username) in local storage
+    const username = localStorage.getItem('plaeenUsername');
+    if (username) {
+      localStorage.setItem('favouriteUser', username);
+    }
+  
     setIsFavourited(!isFavourited);
     onFavourite();
   };
+  
 
   // Format the release date
   const formattedDate = format(new Date(releaseDate), 'dd MMMM yyyy');
@@ -77,6 +114,33 @@ const GameCard: React.FC<GameCardProps> = ({
 
   // Track displayed icons to avoid duplicates
   const displayedIcons = new Set<string>();
+
+  const handleCreateSessionClick = () => {
+    const gameDetails = {
+      name,
+      releaseDate: formattedDate,
+      genre,
+      platform,
+      rating,
+      coverImage,
+    };
+  
+    // Store the game details in local storage
+    localStorage.setItem('selectedGame', JSON.stringify(gameDetails));
+  
+    // Store the user details (for example, username) in local storage
+    const username = localStorage.getItem('plaeenUsername');
+    if (username) {
+      localStorage.setItem('sessionUser', username);
+    }
+  
+    // Call the parent component's onCreateSession if needed
+    onCreateSession();
+  
+    // Redirect to the select-team page
+    router.push('/select-team');
+  };
+  
 
   return (
     <div className="max-w-[20rem] mx-auto rounded overflow-hidden bg-transparent text-white">
@@ -124,7 +188,7 @@ const GameCard: React.FC<GameCardProps> = ({
       <div className="px-2 pt-4 pb-6 flex justify-between items-center gap-2 xxs:flex-col xl:flex-row">
         <button
           className="bg-violet text-white font-medium font-roboto py-2 px-4 uppercase rounded xxs:w-[100%] xl:w-[70%]"
-          onClick={onCreateSession}
+          onClick={handleCreateSessionClick}
         >
           Create Session
         </button>
