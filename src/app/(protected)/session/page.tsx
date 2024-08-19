@@ -68,14 +68,14 @@ export default function Page() {
     filtered = applySorting(filtered, selectedRelevance);
 
     setFilteredGames(filtered);
-    setDisplayedGames(filtered.slice(0, 18)); // Display the first 18 games initially
+    setDisplayedGames(filtered.slice(0, 40)); // Display the first 40 games initially
     setPage(1); // Reset pagination
-    setHasMoreGames(filtered.length > 18); // Check if there are more games to load
+    setHasMoreGames(filtered.length > 40); // Check if there are more games to load
   }, [searchTerm, selectedGenres, selectedPlatforms, selectedRelevance, allGames]);
 
   const fetchAllGames = async () => {
     const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
-    const URL = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=100`;
+    const URL = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=40`;
 
     try {
       const response = await axios.get(URL);
@@ -88,7 +88,7 @@ export default function Page() {
 
   const loadMoreGames = () => {
     const nextPage = page + 1;
-    const nextSetOfGames = filteredGames.slice(0, nextPage * 18);
+    const nextSetOfGames = filteredGames.slice(0, nextPage * 40);
     setDisplayedGames(nextSetOfGames);
     setPage(nextPage);
 
