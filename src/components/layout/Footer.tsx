@@ -48,13 +48,15 @@ const Footer: React.FC<FooterProps> = ({ useBackgroundImage = true, className })
       <footer className={footerClass}>
         <div className="text-center">
           <div className="flex justify-center mb-12">
-            <Image
-              src="/logo/logo-text.svg"
-              alt="Plaeen Logo"
-              width={100}
-              height={100}
-              className="mt-[60px] 2xl:mt-[80px]"
-            />
+            <Link href="/" passHref>
+              <Image
+                src="/logo/logo-text.svg"
+                alt="Plaeen Logo"
+                width={100}
+                height={100}
+                className="mt-[60px] 2xl:mt-[80px]"
+              />
+            </Link>
           </div>
           <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-16 mb-10 text-sm font-sofia font-light justify-center items-center">
             <Link href="#" legacyBehavior>
