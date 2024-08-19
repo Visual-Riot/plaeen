@@ -39,8 +39,8 @@ export default function Page() {
   const [hasMoreGames, setHasMoreGames] = useState<boolean>(true); // To check if more games are available
 
   useEffect(() => {
-    const savedImage = localStorage.getItem("userAvatar");
-    const savedUsername = localStorage.getItem("username");
+    const savedImage = localStorage.getItem("plaeenUserAvatar");
+    const savedUsername = localStorage.getItem("plaeenUsername");
     if (savedImage) {
       setSelectedImage(savedImage);
     }
