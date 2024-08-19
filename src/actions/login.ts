@@ -37,7 +37,7 @@ export const login =  async (values: z.infer<typeof LoginSchema>) => {
     }
   } finally {
     if (!errorOccurred) {
-      redirect('/calendar')
+      redirect(DEFAULT_LOGIN_REDIRECT)
     }
   }
 };

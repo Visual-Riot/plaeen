@@ -13,6 +13,7 @@ export const options: NextAuthConfig = {
         }),
         Credentials({
             async authorize(credentials) {
+                //* test user code *//
             //   const user={id:"42", email: "test@gmail.com", password: "plaeen2024"}
             //     if (credentials?.email === user.email && credentials?.password === user.password) {
             //         console.log(user)
@@ -21,7 +22,6 @@ export const options: NextAuthConfig = {
             //         return null
             //     }
 
-              // TODO connect to db to use bcrypt and safeParse
               const validatedFields = LoginSchema.safeParse(credentials);
               if (validatedFields.success) {
                 const { email, password } = validatedFields.data;

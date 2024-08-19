@@ -8,7 +8,8 @@ export const publicRoutes = [
     "/privacy",
     "/tos",
     "/contact-us",
-    "/cookie-policy"
+    "/cookie-policy",
+    '/testpage'
   ];
   
   /**
@@ -33,4 +34,4 @@ export const publicRoutes = [
    * The default redirect path after logging in
    * @type {string}
    */
-  export const DEFAULT_LOGIN_REDIRECT = "/calendar"
+  export const DEFAULT_LOGIN_REDIRECT = "/create-avatar"
