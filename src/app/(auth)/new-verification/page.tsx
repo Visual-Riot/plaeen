@@ -1,15 +1,33 @@
 "use client";
 import { CardWrapper } from "@/components/auth/CardWrapper";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect } from "react";
-import { PacmanLoader, BarLoader } from "react-spinners";
+import { useCallback, useEffect, useState } from "react";
+import { PacmanLoader } from "react-spinners";
+import { newVerification } from "@/actions/new-verification";
+import { FormError } from "@/components/forms/FormError";
+import { FormSuccess } from "@/components/forms/FormSuccess";
+
 const NewVerificationPage = () => {
+  const [error, setError] = useState<string | undefined>();
+  const [success, setSuccess] = useState<string | undefined>();
   const searchParams = useSearchParams();
 
   const token = searchParams.get("token");
 
   const onSubmit = useCallback(() => {
-    console.log(token);
+    if (!token) {
+      setError("Missing token!");
+      return;
+    }
+
+    newVerification(token)
+      .then((data) => {
+        setSuccess(data.success);
+        setError(data.error);
+      })
+      .catch(() => {
+        setError("Something went wrong!");
+      });
   }, [token]);
 
   useEffect(() => {
@@ -23,8 +41,16 @@ const NewVerificationPage = () => {
       backButtonLabel="Back to Login"
       backButtonHref="/login"
     >
-      <div className="flex items-center w-full px-14 py-4">
-        <PacmanLoader color="#5AE307" size={50} />
+      <div className="flex items-center w-full justify-center py-4">
+        {!success && !error && (
+          <PacmanLoader
+            color="#5AE307"
+            size={50}
+            cssOverride={{ marginRight: "30%" }}
+          />
+        )}
+        <FormSuccess message={success} />
+        <FormError message={error} />
       </div>
     </CardWrapper>
   );
