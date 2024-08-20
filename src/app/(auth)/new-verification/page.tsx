@@ -50,7 +50,7 @@ const NewVerificationPage = () => {
           />
         )}
         <FormSuccess message={success} />
-        <FormError message={error} />
+        {!success && <FormError message={error} />}
       </div>
     </CardWrapper>
   );
