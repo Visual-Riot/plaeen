@@ -9,6 +9,7 @@ export const publicRoutes = [
   "/tos",
   "/contact-us",
   "/cookie-policy",
+  "/new-verification"
 ];
 
 /**
