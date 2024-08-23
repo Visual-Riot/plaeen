@@ -13,7 +13,7 @@ import PlatformFilter from "@/components/filters/PlatformFilter";
 import ThemeFilter from "@/components/filters/ThemeFilter";
 import GameCard from "@/components/game/GardCard";
 import Footer from "@/components/layout/Footer";
-import axios from "axios";
+import gamesData from "../../../lib/data/rawgGames.json"; // Adjust the path based on where your JSON file is located
 
 interface Game {
   id: number;
@@ -24,6 +24,8 @@ interface Game {
   platforms: { platform: { name: string } }[];
   rating: number;
 }
+
+const gamesDataTyped: Game[] = gamesData as Game[];
 
 export default function Page() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -73,14 +75,10 @@ export default function Page() {
     setHasMoreGames(filtered.length > 18); // Check if there are more games to load
   }, [searchTerm, selectedGenres, selectedPlatforms, selectedRelevance, allGames]);
 
-  const fetchAllGames = async () => {
-    const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
-    const URL = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=40`;
-
+  const fetchAllGames = () => {
     try {
-      const response = await axios.get(URL);
-      const games = response.data.results;
-      setAllGames(games); // Store all fetched games
+      // Set all games using imported JSON data
+      setAllGames(gamesDataTyped); // Replace this with the actual data variable from the JSON import
     } catch (error) {
       console.error("Error fetching all games:", error);
     }
