@@ -53,9 +53,9 @@ const CalendarDesktopWidget: React.FC<CalendarDesktopWidgetProps> = ({
   let displayedWeekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
 
   return (
-    <div className="bg-gray-950 shadow-xl rounded-lg p-4 text-xs">
+    <div className="bg-gray-950 shadow-xl rounded-lg p-4">
       {/* month row */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 text-base">
         <button onClick={handlePrevMonthClick} className="text-white">
           ◄
         </button>

@@ -7,8 +7,6 @@ import TertiaryButton from "@/components/buttons/TertiaryButton";
 import ResetIcon from "@/components/icons/ResetIcon";
 import LeftArrow from "@/components/icons/LeftArrow";
 import RightArrow from "@/components/icons/RightArrow";
-import DoubleLeftArrow from "@/components/icons/DoubleLeftArrow";
-import DoubleRightArrow from "@/components/icons/DoubleRightArrow";
 import CalendarIcon from "@/components/icons/CalendarIcon";
 // import components and packages
 import PlayerCalendarWrapper from "@/components/calendar/PlayerCalendarWrapper";
@@ -24,7 +22,6 @@ import {
   endOfWeek,
   startOfMonth,
   isBefore,
-  addDays,
 } from "date-fns";
 
 export default function Page() {
@@ -32,10 +29,6 @@ export default function Page() {
   const importHandleClick = () => {
     console.log("Import calendars");
   };
-
-  // useEffect(() => {
-  //   console.log(showDesktopCalendarWidget);
-  // }, []);
 
   const [dayHours, setDayHours] = useState<{
     [key: string]: { [key: number]: string };
@@ -102,7 +95,12 @@ export default function Page() {
   };
 
   // Current week
-  const currentWeekRange = `${format(
+  const currentWeekRangeMobile = `${format(
+    startOfWeek(currentDate, { weekStartsOn: 1 }),
+    "dd MMM"
+  )} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), "dd MMM")}`;
+
+  const currentWeekRangeDesktop = `${format(
     startOfWeek(currentDate, { weekStartsOn: 1 }),
     "dd.MM"
   )} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), "dd.MM")}`;
@@ -146,15 +144,12 @@ export default function Page() {
           {/* Mobile view */}
           <div className="flex flex-col lg:hidden w-full items-center">
             <div className="flex items-center">
-              <button onClick={handlePreviousMonth}>
-                <DoubleLeftArrow className="mr-4 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
-              </button>
               <button onClick={handlePreviousWeek}>
-                <LeftArrow className="mr-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+                <LeftArrow className="mr-2 h-8 w-auto fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
               <div className="w-[240px] flex justify-center items-center">
-                <span className="mx-2 mt-[-0.2em] text-nowrap">
-                  {currentWeekRange}
+                <span className="mx-2 mt-[-0.2em] text-xl text-nowrap">
+                  {currentWeekRangeMobile}
                 </span>{" "}
                 <button
                   onClick={handleMobileCalendarPrevToggle}
@@ -179,13 +174,10 @@ export default function Page() {
                 </div>
               )}
               <button onClick={handleNextWeek}>
-                <RightArrow className="ml-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
-              </button>
-              <button onClick={handleNextMonth}>
-                <DoubleRightArrow className="ml-4 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+                <RightArrow className="ml-2 h-8 w-auto fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
             </div>
-            <OutlineButton
+            <TertiaryButton
               onClick={handleCurrentWeek}
               className={`text-sm h-8 border-0 underline
                   ${
@@ -196,7 +188,7 @@ export default function Page() {
               color="lightGrey"
             >
               Back to current week
-            </OutlineButton>
+            </TertiaryButton>
           </div>
 
           {/* Desktop view */}
@@ -206,7 +198,7 @@ export default function Page() {
                 <LeftArrow className="mr-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
               <span className="mx-2 mt-[-0.2em] w-[150px] flex justify-center items-center text-nowrap">
-                {currentWeekRange}
+                {currentWeekRangeDesktop}
               </span>
               <button onClick={handleNextWeek}>
                 <RightArrow className="ml-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
