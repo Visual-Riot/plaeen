@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, use } from "react";
+import React, { useEffect, useState } from "react";
 // import buttons and icons
 import OutlineButton from "@/components/buttons/OutlineButton";
 import GreenButton from "@/components/buttons/GreenButton";
@@ -69,11 +69,6 @@ export default function Page() {
   const handleMobileCalendarPrevToggle = () => {
     setshowDesktopCalendarWidget(false);
     setshowMobileCalendarWidget((prev) => !prev);
-  };
-
-  const handleCalendarWidgetWeekSelect = (date: Date) => {
-    console.log("Selected week", date);
-    setCurrentDate(date);
   };
 
   // Reset dayHours state
@@ -271,7 +266,8 @@ export default function Page() {
                 >
                   <CalendarMobileWidget
                     currentDate={currentDate}
-                    onWeekSelect={handleCalendarWidgetWeekSelect}
+                    // onWeekSelect={handleCalendarWidgetWeekSelect}
+                    onWeekSelect={setCurrentDate}
                     onClose={handleMobileCalendarPrevToggle}
                   />
                 </div>
@@ -344,7 +340,7 @@ export default function Page() {
               >
                 <CalendarDesktopWidget
                   currentDate={currentDate}
-                  onWeekSelect={handleCalendarWidgetWeekSelect}
+                  onWeekSelect={setCurrentDate}
                 />
               </div>
 

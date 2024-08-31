@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
 import PlayerCalendarMobile from "./PlayerCalendarMobile";
-import { format, startOfWeek } from "date-fns";
+import { format, set, startOfWeek } from "date-fns";
 import { date } from "zod";
 
 interface PlayerCalendarWrapperProps {
@@ -37,6 +37,7 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
       } catch (error) {
         console.error("Error parsing stored state", error);
         localStorage.removeItem(`dayHours-${weekKey}`);
+        setDayHours({});
       }
     } else {
       setDayHours({});
