@@ -51,6 +51,7 @@ export default function Page() {
 
   // toggle help modal
   const toggleHelpModal = () => {
+    setHelpBtnState("available");
     setIsHelpOpen(!isHelpOpen);
   };
 
@@ -130,27 +131,27 @@ export default function Page() {
     startOfWeek(new Date(), { weekStartsOn: 1 }).toDateString();
 
   const handleSlotClick = () => {
-    const colors = ["green", "accentOne", "accentTwo"];
     if (helpBtnState === "available") {
       setHelpBtnState("single");
-      return colors[1];
     } else if (helpBtnState === "single") {
       setHelpBtnState("recurring");
-      return colors[2];
     } else {
       setHelpBtnState("available");
-      return colors[0];
     }
   };
 
-  const getSlotColor = () => {
-    const colors = ["green", "accentOne", "accentTwo"];
+  const getSlotStyle = () => {
+    const styles = [
+      "border-2 border-solid bg-black border-green border-opacity-20 bg-opacity-15 lg:bg-opacity-20",
+      "bg-accentThree border-solid border-accentThree border-2",
+      "bg-accentOne border-solid border-accentOne border-2",
+    ];
     if (helpBtnState === "available") {
-      return colors[0];
+      return styles[0];
     } else if (helpBtnState === "single") {
-      return colors[1];
+      return styles[1];
     } else {
-      return colors[2];
+      return styles[2];
     }
   };
 
@@ -193,7 +194,7 @@ export default function Page() {
                   <p>Click on the slot to see how it works: </p>
                   <button
                     onClick={() => handleSlotClick()}
-                    className={`ml-4 grow w-12 h-12 lg:w-5 lg:h-5 font-semibold hover:scale-90 ease-in-out duration-300 rounded bg-${getSlotColor()}`}
+                    className={`ml-4 grow w-12 h-12 lg:w-5 lg:h-5 font-semibold hover:scale-90 ease-in-out duration-300 rounded ${getSlotStyle()}`}
                   ></button>
                   <p>{helpBtnState}</p>
                 </div>
@@ -358,15 +359,15 @@ export default function Page() {
         <div className="flex items-start md:items-center w-full justify-between md:mt-8 px-2 md:px-0">
           <div className="flex flex-col lg:flex-row text-lightGrey font-light text-sm">
             <div className="flex flex-row pr-8 ">
-              <div className="w-5 h-5 bg-green opacity-50 rounded mb-4 lg:mb-0 mr-2"></div>{" "}
+              <div className="w-5 h-5 border-2 border-solid bg-black border-green border-opacity-20 bg-opacity-15 rounded mb-4 lg:mb-0 mr-2"></div>{" "}
               <p>Available</p>
             </div>
             <div className="flex flex-row pr-8">
-              <div className="w-5 h-5 bg-accentTwo opacity-50 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
+              <div className="w-5 h-5 bg-accentThree border-solid border-accentThree border-2 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
               <p className="text-nowrap">Single event</p>
             </div>
             <div className="flex flex-row pr-8">
-              <div className="w-5 h-5 bg-accentOne opacity-50 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
+              <div className="w-5 h-5 bg-accentOne border-solid border-accentOne border-2 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
               <p className="text-nowrap">Recurring event</p>
             </div>
           </div>
