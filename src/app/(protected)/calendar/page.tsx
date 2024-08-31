@@ -10,10 +10,12 @@ import RightArrow from "@/components/icons/RightArrow";
 import CalendarIcon from "@/components/icons/CalendarIcon";
 import HelpIcon from "@/components/icons/HelpIcon";
 import SyncCalendarsIcon from "@/components/icons/SyncCalendarsIcon";
+import PurpleButton from "@/components/buttons/PurpleButton";
 // import components and packages
 import PlayerCalendarWrapper from "@/components/calendar/PlayerCalendarWrapper";
 import CalendarDesktopWidget from "@/components/calendar/CalendarDesktopWidget";
 import CalendarMobileWidget from "@/components/calendar/CalendarMobileWidget";
+
 import {
   format,
   addWeeks,
@@ -24,6 +26,7 @@ import {
   endOfWeek,
   startOfMonth,
   isBefore,
+  set,
 } from "date-fns";
 
 export default function Page() {
@@ -41,6 +44,15 @@ export default function Page() {
     useState(false);
   const [showMobileCalendarWidget, setshowMobileCalendarWidget] =
     useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [helpBtnState, setHelpBtnState] = useState<string>(
+    "available" || "single" || "recurring"
+  );
+
+  // toggle help modal
+  const toggleHelpModal = () => {
+    setIsHelpOpen(!isHelpOpen);
+  };
 
   // toggle calendar preview
   const handleDesktopCalendarPrevToggle = () => {
@@ -117,11 +129,88 @@ export default function Page() {
     startOfWeek(currentDate, { weekStartsOn: 1 }).toDateString() ===
     startOfWeek(new Date(), { weekStartsOn: 1 }).toDateString();
 
+  const handleSlotClick = () => {
+    const colors = ["green", "accentOne", "accentTwo"];
+    if (helpBtnState === "available") {
+      setHelpBtnState("single");
+      return colors[1];
+    } else if (helpBtnState === "single") {
+      setHelpBtnState("recurring");
+      return colors[2];
+    } else {
+      setHelpBtnState("available");
+      return colors[0];
+    }
+  };
+
+  const getSlotColor = () => {
+    const colors = ["green", "accentOne", "accentTwo"];
+    if (helpBtnState === "available") {
+      return colors[0];
+    } else if (helpBtnState === "single") {
+      return colors[1];
+    } else {
+      return colors[2];
+    }
+  };
+
   return (
     // background
     <div className="relative min-h-screen bg-calendar-bg bg-cover bg-center flex justify-center items-center">
       {/* black overlay on background pic */}
       <div className="absolute inset-0 bg-black opacity-85"></div>
+      {/* HELP MODAL */}
+      {isHelpOpen && (
+        <div className="z-[1000]">
+          <div className="fixed inset-0 bg-black opacity-30 backdrop-blur"></div>
+          <div className="fixed inset-0 flex justify-center items-center mx-[15%]">
+            <div className="bg-black bg-opacity-80 rounded-lg py-6 px-8 drop-shadow-2xl backdrop-blur-lg">
+              <div className="w-full justify-end flex">
+                <button
+                  onClick={() => toggleHelpModal()}
+                  className="text-lightGrey text-2xl"
+                >
+                  ✖
+                </button>
+              </div>
+              <h3 className="text-lg text-lightPurple">To mark an event</h3>
+              <ul className="text-lightGrey text-sm mt-4 list-disc ml-4">
+                <li className="py-2">
+                  Click on the desired time slot to mark a single event.
+                </li>
+                <li className="py-2">
+                  If the event repeats weekly, click the slot again to set it as
+                  a recurring event.
+                </li>
+                <li className="py-2">
+                  To clear the slot, click it once more to reset it to
+                  available.
+                </li>
+              </ul>
+              {/* try it out */}
+              <div className="w-full flex flex-col items-start justify-center gap-y-2">
+                <div className="flex flex-row text-lightGrey gap-x-2 items-center mt-6">
+                  <p>Click on the slot to see how it works: </p>
+                  <button
+                    onClick={() => handleSlotClick()}
+                    className={`ml-4 grow w-12 h-12 lg:w-5 lg:h-5 font-semibold hover:scale-90 ease-in-out duration-300 rounded bg-${getSlotColor()}`}
+                  ></button>
+                  <p>{helpBtnState}</p>
+                </div>
+              </div>
+              {/* close button */}
+              <div className="flex w-full justify-center mt-8 mb-4">
+                <PurpleButton
+                  onClick={() => toggleHelpModal()}
+                  className="text-lg"
+                >
+                  Got it!
+                </PurpleButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {/* frosted glass */}
       <div className="w-full lg:w-4/5 min-h-screen lg:min-h-4 bg-lightPurple bg-opacity-10 backdrop-filter backdrop-blur brightness-125 rounded-lg py-4 md:py-12 px-2 md:p-14">
         {/* HEADLINE ROW */}
@@ -130,7 +219,7 @@ export default function Page() {
             <h1 className="pl-2 md:pl-0 text-7xl md:text-6xl text-green font-abolition text-center">
               Your Calendar
             </h1>
-            <button>
+            <button onClick={() => toggleHelpModal()}>
               <HelpIcon className="w-6 h-6 fill-lightPurple opacity-60 hover:opacity-100 transform-all duration-300 ease-in-out" />
             </button>
           </div>

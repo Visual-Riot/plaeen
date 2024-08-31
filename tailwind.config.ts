@@ -54,9 +54,9 @@ const config: Config = {
         info: "#1B5CDF",
 
         // accents
-        accentOne: "#ff1ef0", // pink "#ef0c67"
-        accentTwo: "#f79b31", // orange "#f79b31"
-        accentThree: "#3be1e1", // cyan
+        accentOne: "#FF5E57", // coral
+        accentTwo: "#FF8A00", // orange
+        accentThree: "#00C8A0", // turquoise
         accentFour: "#bce339", // lemon
       },
       fontFamily: {
