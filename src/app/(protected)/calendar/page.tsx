@@ -8,6 +8,8 @@ import ResetIcon from "@/components/icons/ResetIcon";
 import LeftArrow from "@/components/icons/LeftArrow";
 import RightArrow from "@/components/icons/RightArrow";
 import CalendarIcon from "@/components/icons/CalendarIcon";
+import HelpIcon from "@/components/icons/HelpIcon";
+import SyncCalendarsIcon from "@/components/icons/SyncCalendarsIcon";
 // import components and packages
 import PlayerCalendarWrapper from "@/components/calendar/PlayerCalendarWrapper";
 import CalendarDesktopWidget from "@/components/calendar/CalendarDesktopWidget";
@@ -123,19 +125,23 @@ export default function Page() {
       {/* frosted glass */}
       <div className="w-full lg:w-4/5 min-h-screen lg:min-h-4 bg-lightPurple bg-opacity-10 backdrop-filter backdrop-blur brightness-125 rounded-lg py-4 md:py-12 px-2 md:p-14">
         {/* HEADLINE ROW */}
-        <div className="flex justify-start md:justify-between">
-          <h1 className="pl-2 md:pl-0 text-7xl md:text-6xl text-green font-abolition text-center">
-            Calendar
-          </h1>
-          <div className="ml-4 md:ml-0 flex justify-center md:justify-end">
-            <OutlineButton
+        <div className="flex flex-col md:flex-row items-center md:items-baseline md:justify-between">
+          <div className="flex flex-row items-baseline gap-x-4">
+            <h1 className="pl-2 md:pl-0 text-7xl md:text-6xl text-green font-abolition text-center">
+              Your Calendar
+            </h1>
+            <button>
+              <HelpIcon className="w-6 h-6 fill-lightPurple opacity-60 hover:opacity-100 transform-all duration-300 ease-in-out" />
+            </button>
+          </div>
+          <div className="flex justify-center md:justify-end">
+            <TertiaryButton
               onClick={importHandleClick}
-              className="mt-4 md:mt-0 text-sm"
-              color="lightPurple"
-              hoverColor="neonGreen"
+              className="mt-6 md:mt-0 text-sm underline text-lightPurple"
             >
               Sync Calendars
-            </OutlineButton>
+              <SyncCalendarsIcon className="w-4 h-4 ml-2" />
+            </TertiaryButton>
           </div>
         </div>
 
