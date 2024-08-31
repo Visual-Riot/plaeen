@@ -1,7 +1,7 @@
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import DayButton from "../buttons/DayButton";
 import React, { useState } from "react";
-import { startOfWeek, endOfWeek, format } from "date-fns";
+import { startOfWeek, format, addDays } from "date-fns";
 
 interface PlayerCalendarMobileProps {
   dayHours: { [key: string]: { [key: number]: string } };
@@ -21,17 +21,16 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   onHoursStateChange,
   className,
 }) => {
-  const daysOfWeek: string[] = [];
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
-  const end = endOfWeek(currentDate, { weekStartsOn: 1 });
 
-  for (
-    let date = start;
-    date <= end;
-    date = new Date(date.setDate(date.getDate() + 1))
-  ) {
-    daysOfWeek.push(format(date, "EEEE"));
-  }
+  const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
+    const date = addDays(start, i);
+    return {
+      dayName: format(date, "EEEE"),
+      shortDayName: format(date, "EEE"),
+      dayDate: format(date, "dd"),
+    };
+  });
 
   const formatHour = (hour: number) => {
     const ampm = hour >= 12 ? "PM" : "AM";
@@ -71,16 +70,19 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
       <div className="w-full">
         {/* Days Names Column */}
         <div className="grid grid-cols-7 gap-1 md:gap-1 px-2 mt-4">
-          {daysOfWeek.map((day) => (
-            <div key={day} className="flex justify-center">
+          {daysOfWeek.map(({ shortDayName, dayName, dayDate }) => (
+            <div key={dayName} className="flex justify-center">
               <DayButton
-                // key={day}
-                state={selectedDay === day ? "selected" : "unselected"}
+                state={selectedDay === dayName ? "selected" : "unselected"}
                 onClick={() => {
-                  handleDayChange(day);
+                  handleDayChange(dayName);
                 }}
+                className="h-[4rem]"
               >
-                {day.slice(0, 3)}
+                <div className="flex flex-col items-center">
+                  <p className="text-sm">{shortDayName}</p>
+                  <p className="text-xl font-bold">{dayDate}</p>
+                </div>
               </DayButton>
             </div>
           ))}

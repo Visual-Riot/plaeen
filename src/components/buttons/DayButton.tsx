@@ -31,7 +31,7 @@ const DayButton: React.FC<ButtonProps> = ({
 
   return (
     <button
-      className={`${defaultClasses} ${getButtonColor()}`}
+      className={`${defaultClasses} ${getButtonColor()} ${className}`}
       onClick={onClick}
     >
       {children}

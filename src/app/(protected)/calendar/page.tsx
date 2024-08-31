@@ -53,6 +53,12 @@ export default function Page() {
   const toggleHelpModal = () => {
     setHelpBtnState("available");
     setIsHelpOpen(!isHelpOpen);
+
+    if (!isHelpOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
   };
 
   // toggle calendar preview
@@ -157,24 +163,21 @@ export default function Page() {
 
   return (
     // background
-    <div className="relative min-h-screen bg-calendar-bg bg-cover bg-center flex justify-center items-center">
+    <div
+      className={`relative min-h-screen bg-calendar-bg bg-cover bg-center flex justify-center items-center`}
+    >
       {/* black overlay on background pic */}
       <div className="absolute inset-0 bg-black opacity-85"></div>
       {/* HELP MODAL */}
       {isHelpOpen && (
         <div className="z-[1000]">
-          <div className="fixed inset-0 bg-black opacity-30 backdrop-blur"></div>
-          <div className="fixed inset-0 flex justify-center items-center mx-[15%]">
-            <div className="bg-black bg-opacity-80 rounded-lg py-6 px-8 drop-shadow-2xl backdrop-blur-lg">
-              <div className="w-full justify-end flex">
-                <button
-                  onClick={() => toggleHelpModal()}
-                  className="text-lightGrey text-2xl"
-                >
-                  ✖
-                </button>
-              </div>
-              <h3 className="text-lg text-lightPurple">To mark an event</h3>
+          <div className="fixed inset-0 bg-black opacity-80"></div>
+          <div className="fixed inset-0 flex justify-center items-center mx-4 lg:mx-[15%]">
+            <div className="bg-lightPurple bg-opacity-20 rounded-lg p-8 drop-shadow-2xl backdrop-blur">
+              <h3 className="text-xl font-semibold text-white">
+                To mark an event
+              </h3>
+              <hr className="opacity-10 mt-4 border-[1px]"></hr>
               <ul className="text-lightGrey text-sm mt-4 list-disc ml-4">
                 <li className="py-2">
                   Click on the desired time slot to mark a single event.
@@ -189,18 +192,21 @@ export default function Page() {
                 </li>
               </ul>
               {/* try it out */}
-              <div className="w-full flex flex-col items-start justify-center gap-y-2">
-                <div className="flex flex-row text-lightGrey gap-x-2 items-center mt-6">
-                  <p>Click on the slot to see how it works: </p>
+              <div className="w-full flex flex-col items-start justify-center mt-8 lg:mt-8">
+                <p className="text-lightGrey">
+                  Click on the slot to see how it works:{" "}
+                </p>
+                <div className="flex text-lightGrey gap-x-2 items-center mt-6">
                   <button
                     onClick={() => handleSlotClick()}
-                    className={`ml-4 grow w-12 h-12 lg:w-5 lg:h-5 font-semibold hover:scale-90 ease-in-out duration-300 rounded ${getSlotStyle()}`}
+                    className={`ml-0 lg:ml-4 grow w-12 h-12 lg:w-5 lg:h-5 font-semibold hover:scale-90 ease-in-out duration-300 rounded ${getSlotStyle()}`}
                   ></button>
                   <p>{helpBtnState}</p>
                 </div>
               </div>
+              <hr className="opacity-10 mt-6 border-[1px]"></hr>
               {/* close button */}
-              <div className="flex w-full justify-center mt-8 mb-4">
+              <div className="flex w-full justify-end lg:justify-center mt-6">
                 <PurpleButton
                   onClick={() => toggleHelpModal()}
                   className="text-lg"
