@@ -22,6 +22,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   className,
 }) => {
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const [animationTrigger, setAnimationTrigger] = useState(false);
 
   const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
     const date = addDays(start, i);
@@ -44,6 +45,10 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
 
   const handleDayChange = (day: string) => {
     setSelectedDay(day);
+    setAnimationTrigger(true);
+    setTimeout(() => {
+      setAnimationTrigger(false);
+    }, 300);
   };
 
   // render player time slots for each day of the week depending on the selected day
@@ -52,7 +57,12 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
       const slotState = dayHours[selectedDay]?.[hour] || "available";
       const { formattedHour, ampm } = formatHour(hour);
       return (
-        <div key={hour} className="flex justify-center">
+        <div
+          key={hour}
+          className={`flex justify-center ${
+            animationTrigger ? "animate-flash" : ""
+          }`}
+        >
           <PlayerTimeSlot
             day={selectedDay}
             hour={hour}
@@ -77,7 +87,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
                 onClick={() => {
                   handleDayChange(dayName);
                 }}
-                className="h-[4rem]"
+                className="h-[5rem]"
               >
                 <div className="flex flex-col items-center">
                   <p className="text-sm">{shortDayName}</p>

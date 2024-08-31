@@ -46,12 +46,12 @@ export default function Page() {
     useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [helpBtnState, setHelpBtnState] = useState<string>(
-    "available" || "single" || "recurring"
+    "Available" || "Unavailable This Week" || "Never Available"
   );
 
   // toggle help modal
   const toggleHelpModal = () => {
-    setHelpBtnState("available");
+    setHelpBtnState("Available");
     setIsHelpOpen(!isHelpOpen);
 
     if (!isHelpOpen) {
@@ -137,12 +137,12 @@ export default function Page() {
     startOfWeek(new Date(), { weekStartsOn: 1 }).toDateString();
 
   const handleSlotClick = () => {
-    if (helpBtnState === "available") {
-      setHelpBtnState("single");
-    } else if (helpBtnState === "single") {
-      setHelpBtnState("recurring");
+    if (helpBtnState === "Available") {
+      setHelpBtnState("Unavailable This Week");
+    } else if (helpBtnState === "Unavailable This Week") {
+      setHelpBtnState("Never Available");
     } else {
-      setHelpBtnState("available");
+      setHelpBtnState("Available");
     }
   };
 
@@ -152,9 +152,9 @@ export default function Page() {
       "bg-accentThree border-solid border-accentThree border-2",
       "bg-accentOne border-solid border-accentOne border-2",
     ];
-    if (helpBtnState === "available") {
+    if (helpBtnState === "Available") {
       return styles[0];
-    } else if (helpBtnState === "single") {
+    } else if (helpBtnState === "Unavailable This Week") {
       return styles[1];
     } else {
       return styles[2];
@@ -175,20 +175,21 @@ export default function Page() {
           <div className="fixed inset-0 flex justify-center items-center mx-4 lg:mx-[15%]">
             <div className="bg-lightPurple bg-opacity-20 rounded-lg p-8 drop-shadow-2xl backdrop-blur">
               <h3 className="text-xl font-semibold text-white">
-                To mark an event
+                To mark availability
               </h3>
               <hr className="opacity-10 mt-4 border-[1px]"></hr>
-              <ul className="text-lightGrey text-sm mt-4 list-disc ml-4">
+              <ul className="text-lightGrey font-light mt-4 list-disc ml-4">
                 <li className="py-2">
-                  Click on the desired time slot to mark a single event.
+                  Click on the desired time slot to mark it as unavailable for
+                  this week.
                 </li>
                 <li className="py-2">
-                  If the event repeats weekly, click the slot again to set it as
-                  a recurring event.
+                  If the time slot is never available, click the slot again to
+                  set it as never available.
                 </li>
                 <li className="py-2">
-                  To clear the slot, click it once more to reset it to
-                  available.
+                  To clear the slot and make it available again, click it once
+                  more to reset it to available.
                 </li>
               </ul>
               {/* try it out */}
@@ -370,11 +371,11 @@ export default function Page() {
             </div>
             <div className="flex flex-row pr-8">
               <div className="w-5 h-5 bg-accentThree border-solid border-accentThree border-2 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
-              <p className="text-nowrap">Single event</p>
+              <p className="text-nowrap">Not available this week</p>
             </div>
             <div className="flex flex-row pr-8">
               <div className="w-5 h-5 bg-accentOne border-solid border-accentOne border-2 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
-              <p className="text-nowrap">Recurring event</p>
+              <p className="text-nowrap">Never available</p>
             </div>
           </div>
 
