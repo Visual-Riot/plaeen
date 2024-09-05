@@ -138,10 +138,7 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
                 </div>
                 <div className="flex flex-col">
                   {daysOfWeek.map((day) => (
-                    <div
-                      key={`${day}-${hour}`}
-                      className="h-10 flex flex-shrink"
-                    >
+                    <div key={`${day}-${hour}`} className="h-10 flex">
                       <PlayerTimeSlot
                         day={day}
                         hour={hour}
