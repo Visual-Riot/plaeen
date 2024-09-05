@@ -45,10 +45,11 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
     date <= end;
     date = new Date(date.setDate(date.getDate() + 1))
   ) {
-    daysOfWeek.push(format(date, "EEEE"));
+    const formattedDay = format(date, "EEE d.MM");
+    daysOfWeek.push(formattedDay);
   }
 
-  const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1); // ?
+  const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
 
   const [hoveredElement, setHoveredElement] = useState<string | null>(null);
   const [hoverPosition, setHoverPosition] = useState<{ x: number; y: number }>({
@@ -73,23 +74,33 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
     <div className={`my-5 w-full flex ${className}`}>
       {/* Days Names Column */}
       <div className="flex flex-col">
-        <div className="h-10"></div>
-        {daysOfWeek.map((day, index) => (
-          <div key={day} className="h-10 flex items-center relative">
+        <div className="h-[30px]"></div>
+        {daysOfWeek.map((formattedDay, index) => (
+          <div key={formattedDay} className="h-10 flex items-center relative">
             <button
-              className="hidden md:inline text-lightPurple font-robotoMono font-regular uppercase"
+              className="hidden md:inline text-lightPurple font-robotoMono font-regular uppercase text-nowrap"
               onClick={() =>
-                onSelectAllSlotsForDays(day, dayHours[day] || {}, hoursOfDay)
+                onSelectAllSlotsForDays(
+                  formattedDay,
+                  dayHours[formattedDay] || {},
+                  hoursOfDay
+                )
               }
               onMouseMove={handleMouseMove}
-              onMouseEnter={() => handleHover(`day-${day}`)}
+              onMouseEnter={() => handleHover(`day-${formattedDay}`)}
               onMouseLeave={() => handleHover(null)}
             >
-              {day}
+              {/* {formattedDay} */}
+              <div className="flex items-center gap-x-3">
+                <span className="text-base">{formattedDay.split(" ")[0]}</span>
+                <span className="text-sm opacity-50">
+                  {`${formattedDay.split(" ")[1]}`}
+                </span>
+              </div>
             </button>
             <HoverInstruction
               text={`Select all`}
-              isVisible={hoveredElement === `day-${day}`}
+              isVisible={hoveredElement === `day-${formattedDay}`}
               offsetX={hoverPosition.x}
               offsetY={hoverPosition.y}
             />
@@ -108,6 +119,7 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
                 className="text-center justify-center items-center"
               >
                 <div className="h-10 flex items-center relative">
+                  {/* Display Hours */}
                   <button
                     className="text-lightPurple font-robotoMono font-regular uppercase text-center w-full h-10 pb-2"
                     onClick={() =>

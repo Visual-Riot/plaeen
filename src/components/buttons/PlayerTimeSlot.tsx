@@ -53,7 +53,7 @@ const PlayerTimeSlot: React.FC<ButtonProps> = ({
   };
 
   const defaultClasses =
-    "grow lg:grow-0 w-12 h-12 lg:w-4 lg:h-4 xl:h-5 xl:w-5 font-semibold hover:scale-90 transition-all ease-in-out duration-300 rounded";
+    "grow lg:grow-0 w-12 h-12 lg:w-5 lg:h-5 font-semibold hover:scale-90 transition-all ease-in-out duration-300 rounded";
 
   return (
     <button
