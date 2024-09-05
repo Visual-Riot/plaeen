@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 // import buttons and icons
 import OutlineButton from "@/components/buttons/OutlineButton";
 import GreenButton from "@/components/buttons/GreenButton";
@@ -44,10 +44,27 @@ export default function Page() {
     useState(false);
   const [showMobileCalendarWidget, setshowMobileCalendarWidget] =
     useState(false);
+
+  const desktopCalendarRef = useRef<HTMLDivElement>(null);
+
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [helpBtnState, setHelpBtnState] = useState<string>(
     "Available" || "Unavailable This Week" || "Never Available"
   );
+
+  // close calendar widget on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        desktopCalendarRef.current &&
+        !desktopCalendarRef.current.contains(event.target as Node)
+      ) {
+        setshowDesktopCalendarWidget(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [desktopCalendarRef]);
 
   // toggle help modal
   const toggleHelpModal = () => {
@@ -349,7 +366,7 @@ export default function Page() {
               </OutlineButton>
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center" ref={desktopCalendarRef}>
               <button onClick={handlePreviousMonth}>
                 <LeftArrow className="mr-2 align-middle fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
