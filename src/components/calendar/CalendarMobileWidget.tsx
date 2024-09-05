@@ -8,8 +8,6 @@ import {
   endOfWeek,
   isSameMonth,
   eachDayOfInterval,
-  subMonths,
-  addMonths,
   addYears,
   subYears,
   isSameWeek,
@@ -24,12 +22,18 @@ import RightArrow from "../icons/RightArrow";
 type CalendarMobileWidgetProps = {
   currentDate: Date;
   onWeekSelect: (date: Date) => void;
+  hasDayEvents: (date: Date) => boolean;
+  handlePrevMonthClick: () => void;
+  handleNextMonthClick: () => void;
   onClose: () => void;
 };
 
 const CalendarMobileWidget: React.FC<CalendarMobileWidgetProps> = ({
   currentDate,
   onWeekSelect,
+  hasDayEvents,
+  handlePrevMonthClick,
+  handleNextMonthClick,
   onClose,
 }) => {
   const [selectedDate, setSelectedDate] = useState(currentDate);
@@ -46,14 +50,6 @@ const CalendarMobileWidget: React.FC<CalendarMobileWidgetProps> = ({
     { weekStartsOn: 1 }
   );
 
-  const handlePrevMonthClick = () => {
-    setSelectedDate(subMonths(selectedDate, 1));
-  };
-
-  const handleNextMonthClick = () => {
-    setSelectedDate(addMonths(selectedDate, 1));
-  };
-
   const handlePrevYearClick = () => {
     setSelectedDate(subYears(selectedDate, 1));
   };
@@ -65,26 +61,6 @@ const CalendarMobileWidget: React.FC<CalendarMobileWidgetProps> = ({
   const handleDisplayClick = () => {
     onWeekSelect(startOfWeek(selectedDate, { weekStartsOn: 1 }));
     onClose();
-  };
-
-  // HAS EVENTS
-  const hasDayEvents = (date: Date): boolean => {
-    const weekKey = format(
-      startOfWeek(date, { weekStartsOn: 1 }),
-      "dd.MM.yyyy"
-    );
-    const storedData = localStorage.getItem(`dayHours-${weekKey}`);
-
-    if (!storedData) {
-      return false;
-    }
-
-    const parsedData = JSON.parse(storedData);
-    const dayOfWeek = format(date, "EEEE");
-
-    return (
-      parsedData[dayOfWeek] && Object.keys(parsedData[dayOfWeek]).length > 0
-    );
   };
 
   // Is this week selected?

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 // import buttons and icons
 import OutlineButton from "@/components/buttons/OutlineButton";
 import GreenButton from "@/components/buttons/GreenButton";
@@ -110,6 +110,11 @@ export default function Page() {
     });
   };
 
+  // display current week
+  const handleWeekSelect = (date: Date) => {
+    setCurrentDate(date);
+  };
+
   // Current week
   const currentWeekRangeMobile = `${format(
     startOfWeek(currentDate, { weekStartsOn: 1 }),
@@ -131,6 +136,32 @@ export default function Page() {
     startOfWeek(currentDate, { weekStartsOn: 1 }).toDateString() ===
     startOfWeek(new Date(), { weekStartsOn: 1 }).toDateString();
 
+  // CHECK FOR EVENTS
+  const hasDayEvents = (date: Date): boolean => {
+    const weekKey = format(
+      startOfWeek(date, { weekStartsOn: 1 }),
+      "dd.MM.yyyy"
+    );
+    const storedData = localStorage.getItem(`dayHours-${weekKey}`);
+
+    if (!storedData) {
+      return false;
+    }
+
+    try {
+      const parsedData = JSON.parse(storedData);
+      const dayOfWeek = format(date, "EEEE");
+
+      return (
+        parsedData[dayOfWeek] && Object.keys(parsedData[dayOfWeek]).length > 0
+      );
+    } catch (e) {
+      console.error("Error parsing dayHours data:", e);
+      return false;
+    }
+  };
+
+  // Button in tutorial help modal
   const handleSlotClick = () => {
     if (helpBtnState === "Available") {
       setHelpBtnState("Unavailable This Week");
@@ -141,6 +172,7 @@ export default function Page() {
     }
   };
 
+  // update slot style in help modal
   const getSlotStyle = () => {
     const styles = [
       "border-2 border-solid bg-black border-green border-opacity-20 bg-opacity-15 lg:bg-opacity-20",
@@ -266,9 +298,11 @@ export default function Page() {
                 >
                   <CalendarMobileWidget
                     currentDate={currentDate}
-                    // onWeekSelect={handleCalendarWidgetWeekSelect}
-                    onWeekSelect={setCurrentDate}
+                    handlePrevMonthClick={handlePreviousMonth}
+                    handleNextMonthClick={handleNextMonth}
                     onClose={handleMobileCalendarPrevToggle}
+                    hasDayEvents={hasDayEvents}
+                    onWeekSelect={handleWeekSelect}
                   />
                 </div>
               )}
@@ -340,7 +374,10 @@ export default function Page() {
               >
                 <CalendarDesktopWidget
                   currentDate={currentDate}
-                  onWeekSelect={setCurrentDate}
+                  handlePrevMonthClick={handlePreviousMonth}
+                  handleNextMonthClick={handleNextMonth}
+                  hasDayEvents={hasDayEvents}
+                  onWeekSelect={handleWeekSelect}
                 />
               </div>
 
