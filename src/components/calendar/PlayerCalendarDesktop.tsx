@@ -2,7 +2,7 @@
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import React, { useState } from "react";
 import HoverInstruction from "./HoverInstruction";
-import { startOfWeek, endOfWeek, format } from "date-fns";
+import { startOfWeek, format, addDays } from "date-fns";
 
 interface PlayerCalendarDesktopProps {
   dayHours: { [key: string]: { [key: number]: string } };
@@ -35,21 +35,16 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
   currentDate,
   className = "",
 }) => {
-  const daysOfWeek: string[] = [];
-  const displayedDaysOfWeek: string[] = [];
-
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
-  const end = endOfWeek(currentDate, { weekStartsOn: 1 });
 
-  for (
-    let date = start;
-    date <= end;
-    date = new Date(date.setDate(date.getDate() + 1))
-  ) {
-    const formattedDay = format(date, "EEEE dd");
-    daysOfWeek.push(format(date, "EEEE"));
-    displayedDaysOfWeek.push(formattedDay);
-  }
+  const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
+    const date = addDays(start, i);
+    return {
+      dayName: format(date, "EEEE"),
+      shortDayName: format(date, "EEE"),
+      dayDate: format(date, "EEEE dd"),
+    };
+  });
 
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
 
@@ -77,31 +72,32 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
       {/* Days Names Column */}
       <div className="flex flex-col">
         <div className="h-[30px]"></div>
-        {displayedDaysOfWeek.map((formattedDay, index) => (
-          <div key={formattedDay} className="h-10 flex items-center relative">
+
+        {daysOfWeek.map(({ dayName, dayDate }) => (
+          <div key={dayName} className="h-10 flex items-center relative">
             <button
               className="hidden md:inline text-lightPurple font-robotoMono font-regular uppercase text-nowrap"
               onClick={() =>
                 onSelectAllSlotsForDays(
-                  formattedDay,
-                  dayHours[formattedDay] || {},
+                  dayName,
+                  dayHours[dayName] || {},
                   hoursOfDay
                 )
               }
               onMouseMove={handleMouseMove}
-              onMouseEnter={() => handleHover(`day-${formattedDay}`)}
+              onMouseEnter={() => handleHover(`day-${dayDate}`)}
               onMouseLeave={() => handleHover(null)}
             >
               <div className="flex items-center gap-x-3">
-                <span className="text-base">{formattedDay.split(" ")[0]}</span>
+                <span className="text-base">{dayDate.split(" ")[0]}</span>
                 <span className="text-sm opacity-50">
-                  {`${formattedDay.split(" ")[1]}`}
+                  {`${dayDate.split(" ")[1]}`}
                 </span>
               </div>
             </button>
             <HoverInstruction
               text={`Select all`}
-              isVisible={hoveredElement === `day-${formattedDay}`}
+              isVisible={hoveredElement === `day-${dayDate}`}
               offsetX={hoverPosition.x}
               offsetY={hoverPosition.y}
             />
@@ -127,13 +123,13 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
                       onSelectAllSlotsForHours(
                         hour,
                         daysOfWeek.reduce(
-                          (states, day) => ({
+                          (states, { dayName }) => ({
                             ...states,
-                            [day]: dayHours[day]?.[hour] || "available",
+                            [dayName]: dayHours[dayName]?.[hour] || "available",
                           }),
                           {}
                         ),
-                        daysOfWeek
+                        daysOfWeek.map(({ dayName }) => dayName)
                       )
                     }
                     onMouseMove={handleMouseMove}
@@ -150,13 +146,13 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
                   />
                 </div>
                 <div className="flex flex-col">
-                  {daysOfWeek.map((day) => (
-                    <div key={`${day}-${hour}`} className="h-10 flex">
+                  {daysOfWeek.map(({ dayName }) => (
+                    <div key={`${dayName}-${hour}`} className="h-10 flex">
                       <PlayerTimeSlot
-                        day={day}
+                        day={dayName}
                         hour={hour}
                         state={
-                          (dayHours[day]?.[hour] as
+                          (dayHours[dayName]?.[hour] as
                             | "available"
                             | "single"
                             | "recurring") || "available"

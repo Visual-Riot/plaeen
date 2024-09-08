@@ -15,7 +15,6 @@ import PurpleButton from "@/components/buttons/PurpleButton";
 import PlayerCalendarWrapper from "@/components/calendar/PlayerCalendarWrapper";
 import CalendarDesktopWidget from "@/components/calendar/CalendarDesktopWidget";
 import CalendarMobileWidget from "@/components/calendar/CalendarMobileWidget";
-import Navbar from "@/components/layout/Navbar";
 
 import {
   format,
