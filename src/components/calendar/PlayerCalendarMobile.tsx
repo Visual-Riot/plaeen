@@ -1,6 +1,6 @@
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import DayButton from "../buttons/DayButton";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { startOfWeek, format, addDays } from "date-fns";
 
 interface PlayerCalendarMobileProps {
@@ -23,6 +23,10 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
 }) => {
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
   const [animationTrigger, setAnimationTrigger] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [touchedSlots, setTouchedSlots] = useState<{ [key: string]: boolean }>(
+    {}
+  );
 
   const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
     const date = addDays(start, i);
@@ -43,6 +47,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
 
   const [selectedDay, setSelectedDay] = useState<string>("Monday");
 
+  // Flash animation when changing the selected day
   const handleDayChange = (day: string) => {
     setSelectedDay(day);
     setAnimationTrigger(true);
@@ -51,11 +56,75 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
     }, 300);
   };
 
+  // HANDLE TOUCH EVENTS : FOR DRAGGING & SELECTING ON GESTURE
+  const handleTouchStart = (e: TouchEvent) => {
+    setIsDragging(true);
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    // touch coordinates
+    const touch = e.touches[0];
+    const x = touch.clientX;
+    const y = touch.clientY;
+
+    // get the element at the touch coordinates
+    const elementAtPoint = document.elementFromPoint(x, y) as HTMLElement;
+
+    if (
+      elementAtPoint &&
+      elementAtPoint.classList.contains("player-time-slot")
+    ) {
+      const day = elementAtPoint.getAttribute("data-day") as string;
+      const hour = parseInt(elementAtPoint.getAttribute("data-hour") as string);
+
+      if (day && hour) {
+        const slotKey = `${day}-${hour}`;
+
+        if (!touchedSlots[slotKey]) {
+          setTouchedSlots((prev) => ({ ...prev, [slotKey]: true }));
+
+          const currentState = dayHours[day]?.[hour] || "available";
+
+          const newState =
+            currentState === "available"
+              ? "single"
+              : currentState === "single"
+              ? "recurring"
+              : "available";
+          onHoursStateChange(day, hour, newState);
+        }
+      }
+    }
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    setIsDragging(false);
+    setTouchedSlots({});
+  };
+
+  useEffect(() => {
+    const handleTouchStartListener = (e: TouchEvent) => handleTouchStart(e);
+    const handleTouchMoveListener = (e: TouchEvent) => handleTouchMove(e);
+    const handleTouchEndListener = (e: TouchEvent) => handleTouchEnd(e);
+
+    document.addEventListener("touchstart", handleTouchStartListener, false);
+    document.addEventListener("touchmove", handleTouchMoveListener, false);
+    document.addEventListener("touchend", handleTouchEndListener, false);
+
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStartListener);
+      document.removeEventListener("touchmove", handleTouchMoveListener);
+      document.removeEventListener("touchend", handleTouchEndListener);
+    };
+  }, [touchedSlots, isDragging]);
+
   // render player time slots for each day of the week depending on the selected day
   const renderTimeSlots = () => {
     return hoursOfDay.map((hour) => {
       const slotState = dayHours[selectedDay]?.[hour] || "available";
       const { formattedHour, ampm } = formatHour(hour);
+
+      const slotKey = `${selectedDay}-${hour}`;
       return (
         <div
           key={hour}
@@ -69,6 +138,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
             state={slotState as "available" | "single" | "recurring"}
             displayedHour={{ hour: formattedHour, ampm }}
             onStateChange={onHoursStateChange}
+            isDragging={isDragging}
           />
         </div>
       );
@@ -99,7 +169,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
         </div>
 
         {/* Render time slots for the selected day */}
-        <div className="grid grid-cols-6 gap-2 md:gap-4 px-2 mt-4">
+        <div className="grid grid-cols-6 gap-2 md:gap-4 px-2 mt-4 touch-none test">
           {renderTimeSlots()}
         </div>
         {/* end of render time slots */}

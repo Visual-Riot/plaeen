@@ -136,7 +136,7 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
 
   // RENDER VISUALS -----------------------------------------------------------------------
   return (
-    <div>
+    <div className="player-calendar-wrapper">
       {isMobile ? (
         <PlayerCalendarMobile
           className="flex lg:hidden"
