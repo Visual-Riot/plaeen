@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
 import PlayerCalendarMobile from "./PlayerCalendarMobile";
 import { format, set, startOfWeek } from "date-fns";
-import { date } from "zod";
 
 interface PlayerCalendarWrapperProps {
   dayHours: { [key: string]: { [key: number]: string } };
@@ -30,10 +29,12 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
 
   // handle local storage to get and set days and hours states
   useEffect(() => {
+    console.log("fetching stored state");
     const storedState = localStorage.getItem(`dayHours-${weekKey}`);
     if (storedState) {
       try {
         setDayHours(JSON.parse(storedState));
+        console.log("storedState", storedState);
       } catch (error) {
         console.error("Error parsing stored state", error);
         localStorage.removeItem(`dayHours-${weekKey}`);
@@ -42,10 +43,12 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
     } else {
       setDayHours({});
     }
-  }, [weekKey, setDayHours]);
+  }, [weekKey]);
 
   useEffect(() => {
+    console.log("storing state");
     localStorage.setItem(`dayHours-${weekKey}`, JSON.stringify(dayHours));
+    console.log("stored data: ", localStorage.getItem(`dayHours-${weekKey}`));
   }, [dayHours, weekKey]);
 
   // Handle screen resize to display mobile or desktop version of the calendar
