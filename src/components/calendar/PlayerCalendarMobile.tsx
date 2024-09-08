@@ -5,7 +5,6 @@ import { startOfWeek, format, addDays } from "date-fns";
 
 interface PlayerCalendarMobileProps {
   dayHours: { [key: string]: { [key: number]: string } };
-  selectedDay: string;
   currentDate: Date;
   onHoursStateChange: (
     day: string,
