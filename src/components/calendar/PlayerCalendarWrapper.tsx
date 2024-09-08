@@ -19,7 +19,6 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
 }) => {
   // const selectedDay = "Monday";
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<string>("Monday");
 
   // Get the current week key
   const getCurrentWeekKey = (date: Date) => {
@@ -143,8 +142,6 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
           className="flex lg:hidden"
           dayHours={dayHours}
           onHoursStateChange={handleHourStateChange}
-          selectedDay={selectedDay}
-          setSelectedDay={setSelectedDay}
           currentDate={currentDate}
         />
       ) : (
