@@ -36,6 +36,7 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
   className = "",
 }) => {
   const daysOfWeek: string[] = [];
+  const displayedDaysOfWeek: string[] = [];
 
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
   const end = endOfWeek(currentDate, { weekStartsOn: 1 });
@@ -45,8 +46,9 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
     date <= end;
     date = new Date(date.setDate(date.getDate() + 1))
   ) {
-    const formattedDay = format(date, "EEE d.MM");
-    daysOfWeek.push(formattedDay);
+    const formattedDay = format(date, "EEEE dd");
+    daysOfWeek.push(format(date, "EEEE"));
+    displayedDaysOfWeek.push(formattedDay);
   }
 
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
@@ -75,7 +77,7 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
       {/* Days Names Column */}
       <div className="flex flex-col">
         <div className="h-[30px]"></div>
-        {daysOfWeek.map((formattedDay, index) => (
+        {displayedDaysOfWeek.map((formattedDay, index) => (
           <div key={formattedDay} className="h-10 flex items-center relative">
             <button
               className="hidden md:inline text-lightPurple font-robotoMono font-regular uppercase text-nowrap"
@@ -90,7 +92,6 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
               onMouseEnter={() => handleHover(`day-${formattedDay}`)}
               onMouseLeave={() => handleHover(null)}
             >
-              {/* {formattedDay} */}
               <div className="flex items-center gap-x-3">
                 <span className="text-base">{formattedDay.split(" ")[0]}</span>
                 <span className="text-sm opacity-50">

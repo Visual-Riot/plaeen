@@ -16,7 +16,6 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   setDayHours,
   currentDate,
 }) => {
-  // const selectedDay = "Monday";
   const [isMobile, setIsMobile] = useState(false);
 
   // Get the current week key
@@ -29,12 +28,10 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
 
   // handle local storage to get and set days and hours states
   useEffect(() => {
-    console.log("fetching stored state");
     const storedState = localStorage.getItem(`dayHours-${weekKey}`);
     if (storedState) {
       try {
         setDayHours(JSON.parse(storedState));
-        console.log("storedState", storedState);
       } catch (error) {
         console.error("Error parsing stored state", error);
         localStorage.removeItem(`dayHours-${weekKey}`);
@@ -46,9 +43,7 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   }, [weekKey]);
 
   useEffect(() => {
-    console.log("storing state");
     localStorage.setItem(`dayHours-${weekKey}`, JSON.stringify(dayHours));
-    console.log("stored data: ", localStorage.getItem(`dayHours-${weekKey}`));
   }, [dayHours, weekKey]);
 
   // Handle screen resize to display mobile or desktop version of the calendar

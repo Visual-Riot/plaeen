@@ -23,7 +23,6 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
   className = "",
   isDragging,
 }) => {
-  // const [state, setState] = useState(initialState);
   const [state, setState] = useState(initialState);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
