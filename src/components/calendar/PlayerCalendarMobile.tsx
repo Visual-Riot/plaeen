@@ -123,7 +123,6 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
       const slotState = dayHours[selectedDay]?.[hour] || "available";
       const { formattedHour, ampm } = formatHour(hour);
 
-      const slotKey = `${selectedDay}-${hour}`;
       return (
         <div
           key={hour}
