@@ -9,7 +9,7 @@ import USPsSection from "@/components/layout/USPsSection";
 
 export default function Home() {
   return (
-    <main>
+    <main className="flex flex-col items-center justify-center w-full">
       <LandingPage />
       <DownArrow />
       <USPsSection />

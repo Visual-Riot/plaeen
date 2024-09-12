@@ -6,7 +6,7 @@ import GreenButton from "../buttons/GreenButton";
 
 const HomeNavbar: React.FC = () => {
   return (
-    <nav className="bg-transparent relative py-6 md:py-10 px-6 md:px-16 w-full">
+    <nav className="bg-transparent relative py-6 md:py-10 w-full">
       <div className="flex w-full justify-between">
         <Link href="/" passHref>
           <div className="cursor-pointer flex justify-start items-start">
