@@ -14,20 +14,20 @@ export const options: NextAuthConfig = {
     Credentials({
       async authorize(credentials) {
         //* test user code *//
-        const user = {
-          id: "42",
-          email: "test@gmail.com",
-          password: "plaeen2024",
-        };
-        if (
-          credentials?.email === user.email &&
-          credentials?.password === user.password
-        ) {
-          console.log(user);
-          return user;
-        } else {
-          return null;
-        }
+        // const user = {
+        //   id: "42",
+        //   email: "test@gmail.com",
+        //   password: "plaeen2024",
+        // };
+        // if (
+        //   credentials?.email === user.email &&
+        //   credentials?.password === user.password
+        // ) {
+        //   console.log(user);
+        //   return user;
+        // } else {
+        //   return null;
+        // }
         //* end of user code *//
 
         const validatedFields = LoginSchema.safeParse(credentials);
