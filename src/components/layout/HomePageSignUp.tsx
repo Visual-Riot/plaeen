@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const HomePageSignUp = () => {
   return (
-    <div className="x-main-paddings flex flex-col w-full mt-28 justify-center items-center">
+    <div className="x-main-paddings flex flex-col w-full mt-16 justify-center items-center">
       <div className="md:w-full flex justify-center flex-col items-center gap-2">
         <p className="text-lg md:text-xl md:mb-5 text-lightGrey font-sofia font-extralight landing-paragraph">
           <span className="font-medium">

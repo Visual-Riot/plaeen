@@ -18,13 +18,12 @@ export default function Home() {
     }
   };
   return (
-    <main className="flex flex-col items-center justify-center w-full">
+    <main className="flex flex-col items-center justify-center w-full gap-8">
       <LandingPage />
       <DownArrow scrollTo={scrollToUSPs} />
       <div ref={uspsRef}>
         <USPsSection />
       </div>
-
       <FAQsSection />
       <HomePageSignUp />
       <Footer />

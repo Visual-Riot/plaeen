@@ -37,7 +37,7 @@ export default function FAQsSection() {
   ];
 
   return (
-    <div className="x-main-paddings mt-28 flex w-full flex-col">
+    <div className="x-main-paddings mt-16 flex w-full flex-col">
       <h2 className="responsive-header mb-10 font-sofia font-semibold text-neonGreen text-left xs:top-[100px] sm:top-[80px]">
         Frequently Asked Questions
       </h2>
