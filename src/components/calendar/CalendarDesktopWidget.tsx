@@ -15,7 +15,7 @@ interface CalendarDesktopWidgetProps {
   currentDate: Date;
   handlePrevMonthClick: () => void;
   handleNextMonthClick: () => void;
-  hasDayEvents: (date: Date) => boolean;
+  hasDayEvents?: (date: Date) => boolean;
   onWeekSelect: (date: Date) => void;
 }
 
@@ -81,15 +81,21 @@ const CalendarDesktopWidget: React.FC<CalendarDesktopWidgetProps> = ({
             }).map((day) => (
               <div
                 key={day.toString()}
-                className={`relative cursor-pointer p-3 text-center font-normal text-base transition-all duration-500 ease-in-out ${
-                  isSelectedWeek(week) ? "text-neonGreen" : "text-lightGrey"
-                } ${isSameMonth(day, selectedDate) ? "" : "text-gray-800"}`}
+                className={`relative cursor-pointer py-2 px-3 text-center font-normal text-base transition-all duration-500 ease-in-out ${
+                  isSelectedWeek(week) && isSameMonth(day, selectedDate)
+                    ? "text-neonGreen"
+                    : ""
+                } ${
+                  isSameMonth(day, selectedDate)
+                    ? "text-lightGrey"
+                    : "text-darkGrey"
+                }`}
                 onClick={() => handleDayClick(day)}
               >
                 <span className="relative">{format(day, "d")}</span>
-                {hasDayEvents(day) && (
+                {/* {hasDayEvents(day) && (
                   <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-[6px] h-[6px] bg-purple-500 rounded-full"></div>
-                )}
+                )} */}
               </div>
             ))}
           </React.Fragment>

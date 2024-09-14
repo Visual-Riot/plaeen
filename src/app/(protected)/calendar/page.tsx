@@ -396,7 +396,7 @@ export default function Page() {
                   currentDate={currentDate}
                   handlePrevMonthClick={handlePreviousMonth}
                   handleNextMonthClick={handleNextMonth}
-                  hasDayEvents={hasDayEvents}
+                  // hasDayEvents={hasDayEvents}
                   onWeekSelect={handleWeekSelect}
                 />
               </div>
