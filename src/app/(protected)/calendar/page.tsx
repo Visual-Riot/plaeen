@@ -154,6 +154,10 @@ export default function Page() {
 
   // CHECK FOR EVENTS
   const hasDayEvents = (date: Date): boolean => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
     const weekKey = format(
       startOfWeek(date, { weekStartsOn: 1 }),
       "dd.MM.yyyy"
@@ -459,6 +463,6 @@ export default function Page() {
 
         {/* closing tags for main containers */}
       </div>
-    </div> // closing tag for the main div
+    </div>
   );
 }
