@@ -1,9 +1,11 @@
 import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const ResetPasswordPage = () => {
   return (
-    <ResetPasswordForm/>
+    <Suspense>
+      <ResetPasswordForm/>
+    </Suspense>
   )
 }
 

@@ -8,13 +8,13 @@ export const newVerification = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token);
 
   if (!existingToken) {
-    return { error: "Token does not exist! Try with a new verification link" };
+    return { error: "Token does not exist! Try verifying with a new link" };
   }
 
   const hasExpired = new Date(existingToken.expires) < new Date();
 
   if (hasExpired) {
-    return { error: "Token has expired! Login again to get a new token" };
+    return { error: "Token has expired! Login again to get a new link" };
   }
 
   const existingUser = await getUserByEmail(existingToken.email);

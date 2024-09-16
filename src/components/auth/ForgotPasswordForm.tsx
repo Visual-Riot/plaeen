@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { FormError } from "@/components/forms/FormError";
 import { FormSuccess } from "@/components/forms/FormSuccess";
-import { forgotPassword } from "@/actions/reset";
+import { forgotPassword } from "@/actions/forgot-password";
 
 export const ForgotPasswordForm = () => {
   const [error, setError] = useState<string | undefined>("");

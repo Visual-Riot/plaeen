@@ -18,11 +18,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { FormError } from "@/components/forms/FormError";
 import { FormSuccess } from "@/components/forms/FormSuccess";
+import { useSearchParams } from "next/navigation";
+import { newPassword } from "@/actions/new-password";
 
 export const ResetPasswordForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+
+  const token = searchParams.get("token");
 
   const form = useForm<z.infer<typeof ResetPasswordSchema>>({
     resolver: zodResolver(ResetPasswordSchema),
@@ -35,20 +40,20 @@ export const ResetPasswordForm = () => {
     setError("");
     setSuccess("");
 
-    // startTransition(() => {
-    //   reset(values).then((data) => {
-    //     if (data) {
-    //       setError(data.error);
-    //       setSuccess(data.success);
-    //     }
-    //   });
-    // });
+    startTransition(() => {
+      newPassword(token, values).then((data) => {
+        if (data) {
+          setError(data.error);
+          setSuccess(data.success);
+        }
+      });
+    });
   };
 
   return (
     <CardWrapper
-      header="Forgot your password?"
-      headerLabel="We'll help you recover your account "
+      header="Reset Password"
+      headerLabel="Create a new password for your account"
       backButtonHref="/login"
       backButtonLabel="Back to login"
     >
@@ -80,7 +85,7 @@ export const ResetPasswordForm = () => {
             type="submit"
             disabled={isPending}
           >
-            Send Recovery Email
+            Create new password
           </Button>
           <FormSuccess message={success} />
           <FormError message={error} />
