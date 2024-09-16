@@ -47,6 +47,7 @@ const VerificationWidget = () => {
             color="#5AE307"
             size={50}
             cssOverride={{ marginRight: "30%" }}
+            speedMultiplier={2}
           />
         )}
         <FormSuccess message={success} />

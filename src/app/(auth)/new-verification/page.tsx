@@ -1,8 +1,11 @@
 import VerificationWidget from "@/components/auth/VerificationWidget";
+import { Suspense } from "react";
 
 const NewVerificationPage = () => {
  return (
-  <VerificationWidget/>
+  <Suspense>
+    <VerificationWidget/>
+  </Suspense>
  )
 };
 
