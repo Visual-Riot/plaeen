@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ForgotPasswordSchema } from "@/schemas";
+import { ResetPasswordSchema } from "@/schemas";
 import {
   Form,
   FormControl,
@@ -18,32 +18,31 @@ import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { FormError } from "@/components/forms/FormError";
 import { FormSuccess } from "@/components/forms/FormSuccess";
-import { forgotPassword } from "@/actions/reset";
 
-export const ForgotPasswordForm = () => {
+export const ResetPasswordForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof ForgotPasswordSchema>>({
-    resolver: zodResolver(ForgotPasswordSchema),
+  const form = useForm<z.infer<typeof ResetPasswordSchema>>({
+    resolver: zodResolver(ResetPasswordSchema),
     defaultValues: {
-      email: "",
+      password: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof ForgotPasswordSchema>) => {
+  const onSubmit = (values: z.infer<typeof ResetPasswordSchema>) => {
     setError("");
     setSuccess("");
 
-    startTransition(() => {
-      forgotPassword(values).then((data) => {
-        if (data) {
-          setError(data.error);
-          setSuccess(data.success);
-        }
-      });
-    });
+    // startTransition(() => {
+    //   reset(values).then((data) => {
+    //     if (data) {
+    //       setError(data.error);
+    //       setSuccess(data.success);
+    //     }
+    //   });
+    // });
   };
 
   return (
@@ -58,16 +57,16 @@ export const ForgotPasswordForm = () => {
           <div className="space-y-5">
             <FormField
               control={form.control}
-              name="email"
+              name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Address</FormLabel>
+                  <FormLabel>New password</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
                       {...field}
-                      placeholder="zelda_hyrule@live.com"
-                      type="email"
+                      placeholder="••••••••"
+                      type="password"
                     />
                   </FormControl>
                   <FormMessage />
