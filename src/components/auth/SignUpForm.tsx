@@ -38,14 +38,14 @@ export const SignUpForm = () => {
     setSuccess("");
 
     // TODO add sign up logic
-    // startTransition(() => {
-    //   signUp(values).then((data) => {
-    //     if (data) {
-    //       setError(data.error);
-    //       setSuccess(data.success);
-    //     }
-    //   });
-    // });
+    startTransition(() => {
+      signUp(values).then((data) => {
+        if (data) {
+          setError(data.error);
+          setSuccess(data.success);
+        }
+      });
+    });
   };
 
   return (

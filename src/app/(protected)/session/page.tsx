@@ -13,7 +13,7 @@ import PlatformFilter from "@/components/filters/PlatformFilter";
 import ThemeFilter from "@/components/filters/ThemeFilter";
 import GameCard from "@/components/game/GardCard";
 import Footer from "@/components/layout/Footer";
-import gamesData from "../../../lib/data/rawgGames.json"; // Adjust the path based on where your JSON file is located
+import gamesData from "../../../lib/data/rawgGames.json";
 
 interface Game {
   id: number;

@@ -5,7 +5,7 @@ import {
   apiAuthPrefix,
   authRoutes,
   publicRoutes,
-} from "@/routes"
+} from "@/routes";
 const { auth } = NextAuth(options);
 
 export default auth((req) => {
@@ -30,7 +30,7 @@ export default auth((req) => {
   if (!isLoggedIn && !isPublicRoute) {
     return Response.redirect(new URL("/login", nextUrl));
   }
-  return ;
+  return;
 });
 
 export const config = {
