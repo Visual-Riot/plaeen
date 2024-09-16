@@ -9,6 +9,7 @@ import * as z from "zod";
 import { LoginSchema } from "@/schemas";
 import {
   Form,
+  FormLabel,
   FormControl,
   FormField,
   FormItem,
@@ -65,11 +66,12 @@ export const LoginForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Email Address</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
                       {...field}
-                      placeholder="Email Address"
+                      placeholder="mario_bros@gmail.com"
                       type="email"
                     />
                   </FormControl>
@@ -83,11 +85,12 @@ export const LoginForm = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
                         disabled={isPending}
                         {...field}
-                        placeholder="Password"
+                        placeholder="••••••••"
                         type="password"
                       />
                     </FormControl>
