@@ -11,6 +11,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -37,7 +38,6 @@ export const SignUpForm = () => {
     setError("");
     setSuccess("");
 
-    // TODO add sign up logic
     startTransition(() => {
       signUp(values).then((data) => {
         if (data) {
@@ -59,33 +59,17 @@ export const SignUpForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="space-y-5">
-          <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      disabled={isPending}
-                      {...field}
-                      placeholder="Display Name"
-                      type="name"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel className="">Email Address</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
                       {...field}
-                      placeholder="Email Address"
+                      placeholder="spiderman@gmail.com"
                       type="email"
                     />
                   </FormControl>
@@ -98,11 +82,12 @@ export const SignUpForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
                       {...field}
-                      placeholder="Password"
+                      placeholder="••••••••"
                       type="password"
                     />
                   </FormControl>
