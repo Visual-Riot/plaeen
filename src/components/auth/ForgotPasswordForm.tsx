@@ -12,6 +12,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -50,11 +51,9 @@ export const ForgotPasswordForm = () => {
   return (
     <CardWrapper
       header="Forgot your password?"
-      headerLabel="asdd"
+      headerLabel="We'll help you recover your account "
       backButtonHref="/login"
       backButtonLabel="Back to login"
-      showSocial
-      showTerms
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -64,11 +63,12 @@ export const ForgotPasswordForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Email Address</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
                       {...field}
-                      placeholder="Email Address"
+                      placeholder="zelda_hyrule@live.com"
                       type="email"
                     />
                   </FormControl>
@@ -76,33 +76,6 @@ export const ForgotPasswordForm = () => {
                 </FormItem>
               )}
             />
-            <div>
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        disabled={isPending}
-                        {...field}
-                        placeholder="Password"
-                        type="password"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                variant="link"
-                className="font-light pl-0"
-                size="sm"
-                asChild
-              >
-                <Link href="/forgot-password">change text here</Link>
-              </Button>
-            </div>
           </div>
           <Button
             size="full"
@@ -110,7 +83,7 @@ export const ForgotPasswordForm = () => {
             type="submit"
             disabled={isPending}
           >
-            Login
+            Send Recovery Email
           </Button>
           <FormSuccess message={success} />
           <FormError message={error} />
