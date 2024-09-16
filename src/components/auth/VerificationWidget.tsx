@@ -16,7 +16,7 @@ const VerificationWidget = () => {
 
   const onSubmit = useCallback(() => {
     if (!token) {
-      setError("Missing token! Try again with a new verification email");
+      setError("Missing token! Try with a new verification link");
       return;
     }
 

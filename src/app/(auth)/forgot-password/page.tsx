@@ -1,8 +1,9 @@
+import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm'
 import React from 'react'
 
 const ForgotPasswordPage = () => {
   return (
-    <div>forgotPasswordPage</div>
+    <ForgotPasswordForm/>
   )
 }
 
