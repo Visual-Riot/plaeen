@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { CardWrapper } from "@/components/auth/CardWrapper";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -17,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
-import { login } from "@/actions/login";
 import { FormError } from "@/components/forms/FormError";
 import { FormSuccess } from "@/components/forms/FormSuccess";
 import { reset } from "@/actions/reset";
