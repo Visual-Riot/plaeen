@@ -1,5 +1,4 @@
-// Calendar.js
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   format,
   startOfMonth,
@@ -8,26 +7,32 @@ import {
   startOfWeek,
   endOfWeek,
   isSameMonth,
+  isSameWeek,
   eachDayOfInterval,
-  subMonths,
-  addMonths,
 } from "date-fns";
 
-type CalendarDesktopWidgetProps = {
+interface CalendarDesktopWidgetProps {
   currentDate: Date;
+  handlePrevMonthClick: () => void;
+  handleNextMonthClick: () => void;
+  hasDayEvents?: (date: Date) => boolean;
   onWeekSelect: (date: Date) => void;
-};
+}
 
 const CalendarDesktopWidget: React.FC<CalendarDesktopWidgetProps> = ({
   currentDate,
+  handlePrevMonthClick,
+  handleNextMonthClick,
+  hasDayEvents,
   onWeekSelect,
 }) => {
   const [selectedDate, setSelectedDate] = useState(currentDate);
 
   useEffect(() => {
-    setSelectedDate(currentDate);
+    setSelectedDate(currentDate); // Sync selectedDate with currentDate
   }, [currentDate]);
 
+  // display weeks of the month
   const weeks = eachWeekOfInterval(
     {
       start: startOfWeek(startOfMonth(selectedDate), { weekStartsOn: 1 }),
@@ -36,26 +41,20 @@ const CalendarDesktopWidget: React.FC<CalendarDesktopWidgetProps> = ({
     { weekStartsOn: 1 }
   );
 
-  const handleDayClick = (date: Date) => {
-    const weekStart = startOfWeek(date, { weekStartsOn: 1 });
-    onWeekSelect(weekStart);
+  // Is this week selected?
+  const isSelectedWeek = (week: Date): boolean => {
+    return isSameWeek(week, selectedDate, { weekStartsOn: 1 });
   };
 
-  const handlePrevMonthClick = () => {
-    setSelectedDate(subMonths(selectedDate, 1));
+  const handleDayClick = (day: Date) => {
+    setSelectedDate(day);
+    onWeekSelect(day);
   };
-
-  const handleNextMonthClick = () => {
-    setSelectedDate(addMonths(selectedDate, 1));
-  };
-
-  let displayedWeekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
-  let displayedWeekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
 
   return (
-    <div className="bg-gray-950 shadow-xl rounded-lg p-4 text-xs">
-      {/* month row */}
-      <div className="flex justify-between items-center mb-4">
+    <div className="bg-gray-950 shadow-xl rounded-lg p-4">
+      {/* Month row */}
+      <div className="flex justify-between items-center mb-4 text-base">
         <button onClick={handlePrevMonthClick} className="text-white">
           ◄
         </button>
@@ -64,46 +63,43 @@ const CalendarDesktopWidget: React.FC<CalendarDesktopWidgetProps> = ({
           ►
         </button>
       </div>
-      <div className="flex text-lightPurple justify-between">
-        {/* Render days of the week header */}
-        <div className="flex justify-between w-full mb-4 mx-2 text-base">
-          {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
-            <div key={day} className="text-center font-light">
-              {day}
-            </div>
-          ))}
-        </div>
+      {/* Render names of days */}
+      <div className="grid grid-cols-7 gap-2 mt-6 mb-2 text-base text-center text-lightPurple">
+        {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
+          <div key={day} className="font-light">
+            {day}
+          </div>
+        ))}
       </div>
-      <div className="grid grid-cols-7 gap-2 text-white">
-        {/* Render days in each week */}
-        {weeks.map((week) => {
-          const isCurrentWeek =
-            week >= displayedWeekStart && week <= displayedWeekEnd;
-          return (
-            <React.Fragment key={week.toString()}>
-              {eachDayOfInterval({
-                start: startOfWeek(week, { weekStartsOn: 1 }),
-                end: endOfWeek(week, { weekStartsOn: 1 }),
-              }).map((day) => (
-                <div
-                  key={day.toString()}
-                  className={`cursor-pointer p-2 text-center text-base rounded ${
-                    isSameMonth(day, selectedDate)
-                      ? `  ${
-                          isCurrentWeek
-                            ? "bg-opacity-70 text-neonGreen"
-                            : "bg-opacity-50 text-lightGrey"
-                        }`
-                      : "text-gray-700"
-                  }`}
-                  onClick={() => handleDayClick(day)}
-                >
-                  {format(day, "d")}
-                </div>
-              ))}
-            </React.Fragment>
-          );
-        })}
+      {/* Render dates */}
+      <div className="flex-grow grid grid-cols-7 text-lg mb-6">
+        {weeks.map((week) => (
+          <React.Fragment key={week.toString()}>
+            {eachDayOfInterval({
+              start: startOfWeek(week, { weekStartsOn: 1 }),
+              end: endOfWeek(week, { weekStartsOn: 1 }),
+            }).map((day) => (
+              <div
+                key={day.toString()}
+                className={`relative cursor-pointer py-2 px-3 text-center font-normal text-base transition-all duration-500 ease-in-out ${
+                  isSelectedWeek(week) && isSameMonth(day, selectedDate)
+                    ? "text-neonGreen"
+                    : ""
+                } ${
+                  isSameMonth(day, selectedDate)
+                    ? "text-lightGrey"
+                    : "text-darkGrey"
+                }`}
+                onClick={() => handleDayClick(day)}
+              >
+                <span className="relative">{format(day, "d")}</span>
+                {/* {hasDayEvents(day) && (
+                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-[6px] h-[6px] bg-purple-500 rounded-full"></div>
+                )} */}
+              </div>
+            ))}
+          </React.Fragment>
+        ))}
       </div>
     </div>
   );

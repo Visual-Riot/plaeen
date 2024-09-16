@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { NextUIProvider } from "@nextui-org/system";
 
 export const metadata: Metadata = {
   title: "Plaeen",
@@ -18,7 +19,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/qor3xoj.css" />
       </head>
       <body>
-        {children}
+        <NextUIProvider>{children}</NextUIProvider>
       </body>
     </html>
   );

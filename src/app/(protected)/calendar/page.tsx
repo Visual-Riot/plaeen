@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect, useRef } from "react";
 // import buttons and icons
 import OutlineButton from "@/components/buttons/OutlineButton";
 import GreenButton from "@/components/buttons/GreenButton";
@@ -7,13 +7,15 @@ import TertiaryButton from "@/components/buttons/TertiaryButton";
 import ResetIcon from "@/components/icons/ResetIcon";
 import LeftArrow from "@/components/icons/LeftArrow";
 import RightArrow from "@/components/icons/RightArrow";
-import DoubleLeftArrow from "@/components/icons/DoubleLeftArrow";
-import DoubleRightArrow from "@/components/icons/DoubleRightArrow";
 import CalendarIcon from "@/components/icons/CalendarIcon";
+import HelpIcon from "@/components/icons/HelpIcon";
+import SyncCalendarsIcon from "@/components/icons/SyncCalendarsIcon";
+import PurpleButton from "@/components/buttons/PurpleButton";
 // import components and packages
 import PlayerCalendarWrapper from "@/components/calendar/PlayerCalendarWrapper";
 import CalendarDesktopWidget from "@/components/calendar/CalendarDesktopWidget";
 import CalendarMobileWidget from "@/components/calendar/CalendarMobileWidget";
+
 import {
   format,
   addWeeks,
@@ -24,7 +26,6 @@ import {
   endOfWeek,
   startOfMonth,
   isBefore,
-  addDays,
 } from "date-fns";
 
 export default function Page() {
@@ -32,10 +33,6 @@ export default function Page() {
   const importHandleClick = () => {
     console.log("Import calendars");
   };
-
-  // useEffect(() => {
-  //   console.log(showDesktopCalendarWidget);
-  // }, []);
 
   const [dayHours, setDayHours] = useState<{
     [key: string]: { [key: number]: string };
@@ -47,6 +44,39 @@ export default function Page() {
   const [showMobileCalendarWidget, setshowMobileCalendarWidget] =
     useState(false);
 
+  const desktopCalendarRef = useRef<HTMLDivElement>(null);
+
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [helpBtnState, setHelpBtnState] = useState<string>(
+    "Available" || "Unavailable This Week" || "Never Available"
+  );
+
+  // close calendar widget on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        desktopCalendarRef.current &&
+        !desktopCalendarRef.current.contains(event.target as Node)
+      ) {
+        setshowDesktopCalendarWidget(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [desktopCalendarRef]);
+
+  // toggle help modal
+  const toggleHelpModal = () => {
+    setHelpBtnState("Available");
+    setIsHelpOpen(!isHelpOpen);
+
+    if (!isHelpOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  };
+
   // toggle calendar preview
   const handleDesktopCalendarPrevToggle = () => {
     setshowMobileCalendarWidget(false);
@@ -55,11 +85,6 @@ export default function Page() {
   const handleMobileCalendarPrevToggle = () => {
     setshowDesktopCalendarWidget(false);
     setshowMobileCalendarWidget((prev) => !prev);
-  };
-
-  const handleCalendarWidgetWeekSelect = (date: Date) => {
-    console.log("Selected week", date);
-    setCurrentDate(date);
   };
 
   // Reset dayHours state
@@ -101,8 +126,18 @@ export default function Page() {
     });
   };
 
+  // display current week
+  const handleWeekSelect = (date: Date) => {
+    setCurrentDate(date);
+  };
+
   // Current week
-  const currentWeekRange = `${format(
+  const currentWeekRangeMobile = `${format(
+    startOfWeek(currentDate, { weekStartsOn: 1 }),
+    "dd MMM"
+  )} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), "dd MMM")}`;
+
+  const currentWeekRangeDesktop = `${format(
     startOfWeek(currentDate, { weekStartsOn: 1 }),
     "dd.MM"
   )} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), "dd.MM")}`;
@@ -117,27 +152,140 @@ export default function Page() {
     startOfWeek(currentDate, { weekStartsOn: 1 }).toDateString() ===
     startOfWeek(new Date(), { weekStartsOn: 1 }).toDateString();
 
+  // CHECK FOR EVENTS
+  const hasDayEvents = (date: Date): boolean => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    const weekKey = format(
+      startOfWeek(date, { weekStartsOn: 1 }),
+      "dd.MM.yyyy"
+    );
+    const storedData = localStorage.getItem(`dayHours-${weekKey}`);
+
+    if (!storedData) {
+      return false;
+    }
+
+    try {
+      const parsedData = JSON.parse(storedData);
+      const dayOfWeek = format(date, "EEEE");
+
+      return (
+        parsedData[dayOfWeek] && Object.keys(parsedData[dayOfWeek]).length > 0
+      );
+    } catch (e) {
+      console.error("Error parsing dayHours data:", e);
+      return false;
+    }
+  };
+
+  // Button in tutorial help modal
+  const handleSlotClick = () => {
+    if (helpBtnState === "Available") {
+      setHelpBtnState("Unavailable This Week");
+    } else if (helpBtnState === "Unavailable This Week") {
+      setHelpBtnState("Never Available");
+    } else {
+      setHelpBtnState("Available");
+    }
+  };
+
+  // update slot style in help modal
+  const getSlotStyle = () => {
+    const styles = [
+      "border-2 border-solid bg-black border-green border-opacity-20 bg-opacity-15 lg:bg-opacity-20",
+      "bg-accentThree border-solid border-accentThree border-2",
+      "bg-accentOne border-solid border-accentOne border-2",
+    ];
+    if (helpBtnState === "Available") {
+      return styles[0];
+    } else if (helpBtnState === "Unavailable This Week") {
+      return styles[1];
+    } else {
+      return styles[2];
+    }
+  };
+
   return (
     // background
-    <div className="relative min-h-screen bg-calendar-bg bg-cover bg-center flex justify-center items-center">
+    <div
+      className={`relative min-h-screen bg-calendar-bg bg-cover bg-center flex justify-center items-center`}
+    >
       {/* black overlay on background pic */}
       <div className="absolute inset-0 bg-black opacity-85"></div>
+      {/* HELP MODAL */}
+      {isHelpOpen && (
+        <div className="z-[1000]">
+          <div className="fixed inset-0 bg-black opacity-80"></div>
+          <div className="fixed inset-0 flex justify-center items-center mx-4 lg:mx-[15%]">
+            <div className="bg-lightPurple bg-opacity-20 rounded-lg p-8 drop-shadow-2xl backdrop-blur">
+              <h3 className="text-xl font-semibold text-white">
+                To mark availability
+              </h3>
+              <hr className="opacity-10 mt-4 border-[1px]"></hr>
+              <ul className="text-lightGrey font-light mt-4 list-disc ml-4">
+                <li className="py-2">
+                  Click on the desired time slot to mark it as unavailable for
+                  this week.
+                </li>
+                <li className="py-2">
+                  If the time slot is never available, click the slot again to
+                  set it as never available.
+                </li>
+                <li className="py-2">
+                  To clear the slot and make it available again, click it once
+                  more to reset it to available.
+                </li>
+              </ul>
+              {/* try it out */}
+              <div className="w-full flex flex-col items-start justify-center mt-8 lg:mt-8">
+                <p className="text-lightGrey">
+                  Click on the slot to see how it works:{" "}
+                </p>
+                <div className="flex text-lightGrey gap-x-2 items-center mt-6">
+                  <button
+                    onClick={() => handleSlotClick()}
+                    className={`ml-0 lg:ml-4 grow w-12 h-12 lg:w-5 lg:h-5 font-semibold hover:scale-90 ease-in-out duration-300 rounded ${getSlotStyle()}`}
+                  ></button>
+                  <p>{helpBtnState}</p>
+                </div>
+              </div>
+              <hr className="opacity-10 mt-6 border-[1px]"></hr>
+              {/* close button */}
+              <div className="flex w-full justify-end lg:justify-center mt-6">
+                <PurpleButton
+                  onClick={() => toggleHelpModal()}
+                  className="text-lg"
+                >
+                  Got it!
+                </PurpleButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {/* frosted glass */}
       <div className="w-full lg:w-4/5 min-h-screen lg:min-h-4 bg-lightPurple bg-opacity-10 backdrop-filter backdrop-blur brightness-125 rounded-lg py-4 md:py-12 px-2 md:p-14">
         {/* HEADLINE ROW */}
-        <div className="flex justify-start md:justify-between">
-          <h1 className="pl-2 md:pl-0 text-7xl md:text-6xl text-green font-abolition text-center">
-            Calendar
-          </h1>
-          <div className="ml-4 md:ml-0 flex justify-center md:justify-end">
-            <OutlineButton
+        <div className="flex flex-col md:flex-row items-center md:items-baseline md:justify-between">
+          <div className="flex flex-row items-baseline gap-x-4">
+            <h1 className="pl-2 md:pl-0 text-7xl md:text-6xl text-green font-abolition text-center">
+              Your Calendar
+            </h1>
+            <button onClick={() => toggleHelpModal()}>
+              <HelpIcon className="w-6 h-6 fill-lightPurple opacity-60 hover:opacity-100 transform-all duration-300 ease-in-out" />
+            </button>
+          </div>
+          <div className="flex justify-center md:justify-end">
+            <TertiaryButton
               onClick={importHandleClick}
-              className="mt-4 md:mt-0 text-sm"
-              color="lightPurple"
-              hoverColor="neonGreen"
+              className="mt-6 md:mt-0 text-sm underline text-lightPurple"
             >
               Sync Calendars
-            </OutlineButton>
+              <SyncCalendarsIcon className="w-4 h-4 ml-2" />
+            </TertiaryButton>
           </div>
         </div>
 
@@ -146,15 +294,12 @@ export default function Page() {
           {/* Mobile view */}
           <div className="flex flex-col lg:hidden w-full items-center">
             <div className="flex items-center">
-              <button onClick={handlePreviousMonth}>
-                <DoubleLeftArrow className="mr-4 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
-              </button>
               <button onClick={handlePreviousWeek}>
-                <LeftArrow className="mr-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+                <LeftArrow className="mr-2 h-8 w-auto fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
               <div className="w-[240px] flex justify-center items-center">
-                <span className="mx-2 mt-[-0.2em] text-nowrap">
-                  {currentWeekRange}
+                <span className="mx-2 mt-[-0.2em] text-xl text-nowrap">
+                  {currentWeekRangeMobile}
                 </span>{" "}
                 <button
                   onClick={handleMobileCalendarPrevToggle}
@@ -173,19 +318,19 @@ export default function Page() {
                 >
                   <CalendarMobileWidget
                     currentDate={currentDate}
-                    onWeekSelect={handleCalendarWidgetWeekSelect}
+                    handlePrevMonthClick={handlePreviousMonth}
+                    handleNextMonthClick={handleNextMonth}
                     onClose={handleMobileCalendarPrevToggle}
+                    hasDayEvents={hasDayEvents}
+                    onWeekSelect={handleWeekSelect}
                   />
                 </div>
               )}
               <button onClick={handleNextWeek}>
-                <RightArrow className="ml-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
-              </button>
-              <button onClick={handleNextMonth}>
-                <DoubleRightArrow className="ml-4 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+                <RightArrow className="ml-2 h-8 w-auto fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
             </div>
-            <OutlineButton
+            <TertiaryButton
               onClick={handleCurrentWeek}
               className={`text-sm h-8 border-0 underline
                   ${
@@ -196,7 +341,7 @@ export default function Page() {
               color="lightGrey"
             >
               Back to current week
-            </OutlineButton>
+            </TertiaryButton>
           </div>
 
           {/* Desktop view */}
@@ -206,7 +351,7 @@ export default function Page() {
                 <LeftArrow className="mr-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
               <span className="mx-2 mt-[-0.2em] w-[150px] flex justify-center items-center text-nowrap">
-                {currentWeekRange}
+                {currentWeekRangeDesktop}
               </span>
               <button onClick={handleNextWeek}>
                 <RightArrow className="ml-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
@@ -224,7 +369,7 @@ export default function Page() {
               </OutlineButton>
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center" ref={desktopCalendarRef}>
               <button onClick={handlePreviousMonth}>
                 <LeftArrow className="mr-2 align-middle fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
               </button>
@@ -249,7 +394,10 @@ export default function Page() {
               >
                 <CalendarDesktopWidget
                   currentDate={currentDate}
-                  onWeekSelect={handleCalendarWidgetWeekSelect}
+                  handlePrevMonthClick={handlePreviousMonth}
+                  handleNextMonthClick={handleNextMonth}
+                  // hasDayEvents={hasDayEvents}
+                  onWeekSelect={handleWeekSelect}
                 />
               </div>
 
@@ -271,16 +419,16 @@ export default function Page() {
         <div className="flex items-start md:items-center w-full justify-between md:mt-8 px-2 md:px-0">
           <div className="flex flex-col lg:flex-row text-lightGrey font-light text-sm">
             <div className="flex flex-row pr-8 ">
-              <div className="w-5 h-5 bg-green opacity-50 rounded mb-4 lg:mb-0 mr-2"></div>{" "}
+              <div className="w-5 h-5 border-2 border-solid bg-black border-green border-opacity-20 bg-opacity-15 rounded mb-4 lg:mb-0 mr-2"></div>{" "}
               <p>Available</p>
             </div>
             <div className="flex flex-row pr-8">
-              <div className="w-5 h-5 bg-accentTwo opacity-50 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
-              <p className="text-nowrap">Single event</p>
+              <div className="w-5 h-5 bg-accentThree border-solid border-accentThree border-2 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
+              <p className="text-nowrap">Not available this week</p>
             </div>
             <div className="flex flex-row pr-8">
-              <div className="w-5 h-5 bg-accentOne opacity-50 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
-              <p className="text-nowrap">Recurring event</p>
+              <div className="w-5 h-5 bg-accentOne border-solid border-accentOne border-2 rounded mb-4 lg:mb-0  mr-2"></div>{" "}
+              <p className="text-nowrap">Never available</p>
             </div>
           </div>
 
@@ -315,6 +463,6 @@ export default function Page() {
 
         {/* closing tags for main containers */}
       </div>
-    </div> // closing tag for the main div
+    </div>
   );
 }
