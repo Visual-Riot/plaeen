@@ -1,11 +1,10 @@
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import DayButton from "../buttons/DayButton";
-import React, { useState } from "react";
-import { startOfWeek, endOfWeek, format } from "date-fns";
+import React, { useState, useEffect } from "react";
+import { startOfWeek, format, addDays } from "date-fns";
 
 interface PlayerCalendarMobileProps {
   dayHours: { [key: string]: { [key: number]: string } };
-  selectedDay: string;
   currentDate: Date;
   onHoursStateChange: (
     day: string,
@@ -21,17 +20,21 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   onHoursStateChange,
   className,
 }) => {
-  const daysOfWeek: string[] = [];
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
-  const end = endOfWeek(currentDate, { weekStartsOn: 1 });
+  const [animationTrigger, setAnimationTrigger] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [touchedSlots, setTouchedSlots] = useState<{ [key: string]: boolean }>(
+    {}
+  );
 
-  for (
-    let date = start;
-    date <= end;
-    date = new Date(date.setDate(date.getDate() + 1))
-  ) {
-    daysOfWeek.push(format(date, "EEEE"));
-  }
+  const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
+    const date = addDays(start, i);
+    return {
+      dayName: format(date, "EEEE"),
+      shortDayName: format(date, "EEE"),
+      dayDate: format(date, "dd"),
+    };
+  });
 
   const formatHour = (hour: number) => {
     const ampm = hour >= 12 ? "PM" : "AM";
@@ -43,23 +46,97 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
 
   const [selectedDay, setSelectedDay] = useState<string>("Monday");
 
+  // Flash animation when changing the selected day
   const handleDayChange = (day: string) => {
     setSelectedDay(day);
+    setAnimationTrigger(true);
+    setTimeout(() => {
+      setAnimationTrigger(false);
+    }, 300);
   };
+
+  // HANDLE TOUCH EVENTS : FOR DRAGGING & SELECTING ON GESTURE
+  const handleTouchStart = (e: TouchEvent) => {
+    setIsDragging(true);
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    // touch coordinates
+    const touch = e.touches[0];
+    const x = touch.clientX;
+    const y = touch.clientY;
+
+    // get the element at the touch coordinates
+    const elementAtPoint = document.elementFromPoint(x, y) as HTMLElement;
+
+    if (
+      elementAtPoint &&
+      elementAtPoint.classList.contains("player-time-slot")
+    ) {
+      const day = elementAtPoint.getAttribute("data-day") as string;
+      const hour = parseInt(elementAtPoint.getAttribute("data-hour") as string);
+
+      if (day && hour) {
+        const slotKey = `${day}-${hour}`;
+
+        if (!touchedSlots[slotKey]) {
+          setTouchedSlots((prev) => ({ ...prev, [slotKey]: true }));
+
+          const currentState = dayHours[day]?.[hour] || "available";
+
+          const newState =
+            currentState === "available"
+              ? "single"
+              : currentState === "single"
+              ? "recurring"
+              : "available";
+          onHoursStateChange(day, hour, newState);
+        }
+      }
+    }
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    setIsDragging(false);
+    setTouchedSlots({});
+  };
+
+  useEffect(() => {
+    const handleTouchStartListener = (e: TouchEvent) => handleTouchStart(e);
+    const handleTouchMoveListener = (e: TouchEvent) => handleTouchMove(e);
+    const handleTouchEndListener = (e: TouchEvent) => handleTouchEnd(e);
+
+    document.addEventListener("touchstart", handleTouchStartListener, false);
+    document.addEventListener("touchmove", handleTouchMoveListener, false);
+    document.addEventListener("touchend", handleTouchEndListener, false);
+
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStartListener);
+      document.removeEventListener("touchmove", handleTouchMoveListener);
+      document.removeEventListener("touchend", handleTouchEndListener);
+    };
+  }, [touchedSlots, isDragging]);
 
   // render player time slots for each day of the week depending on the selected day
   const renderTimeSlots = () => {
     return hoursOfDay.map((hour) => {
       const slotState = dayHours[selectedDay]?.[hour] || "available";
       const { formattedHour, ampm } = formatHour(hour);
+
       return (
-        <div key={hour} className="flex justify-center">
+        <div
+          key={hour}
+          className={`flex justify-center ${
+            animationTrigger ? "animate-flash" : ""
+          }`}
+        >
           <PlayerTimeSlot
             day={selectedDay}
             hour={hour}
             state={slotState as "available" | "single" | "recurring"}
             displayedHour={{ hour: formattedHour, ampm }}
             onStateChange={onHoursStateChange}
+            isDragging={isDragging}
           />
         </div>
       );
@@ -71,23 +148,26 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
       <div className="w-full">
         {/* Days Names Column */}
         <div className="grid grid-cols-7 gap-1 md:gap-1 px-2 mt-4">
-          {daysOfWeek.map((day) => (
-            <div key={day} className="flex justify-center">
+          {daysOfWeek.map(({ shortDayName, dayName, dayDate }) => (
+            <div key={dayName} className="flex justify-center">
               <DayButton
-                // key={day}
-                state={selectedDay === day ? "selected" : "unselected"}
+                state={selectedDay === dayName ? "selected" : "unselected"}
                 onClick={() => {
-                  handleDayChange(day);
+                  handleDayChange(dayName);
                 }}
+                className="h-[5rem]"
               >
-                {day.slice(0, 3)}
+                <div className="flex flex-col items-center">
+                  <p className="text-sm">{shortDayName}</p>
+                  <p className="text-xl font-bold">{dayDate}</p>
+                </div>
               </DayButton>
             </div>
           ))}
         </div>
 
         {/* Render time slots for the selected day */}
-        <div className="grid grid-cols-6 gap-2 md:gap-4 px-2 mt-4">
+        <div className="grid grid-cols-6 gap-2 md:gap-4 px-2 mt-4 touch-none test">
           {renderTimeSlots()}
         </div>
         {/* end of render time slots */}

@@ -18,6 +18,8 @@ const config: Config = {
         usp3: "linear-gradient(157deg, #6606E3 0%, #330372 100%)",
         "pink-purple": "linear-gradient(319deg, #FF37DF 0%, #6E00FF 100%)",
         "calendar-bg": "url('/img/bg-img_01.webp')",
+        "main-gradient":
+          "radial-gradient(50% 40% at 50% 50%, #6606E3 0%, transparent 100%)",
       },
       colors: {
         // Tailwind default colors
@@ -54,9 +56,9 @@ const config: Config = {
         info: "#1B5CDF",
 
         // accents
-        accentOne: "#ff1ef0", // pink "#ef0c67"
-        accentTwo: "#f79b31", // orange "#f79b31"
-        accentThree: "#3be1e1", // cyan
+        accentOne: "#FF5E57", // coral
+        accentTwo: "#FF8A00", // orange
+        accentThree: "#00C8A0", // turquoise
         accentFour: "#bce339", // lemon
       },
       fontFamily: {
@@ -93,13 +95,14 @@ const config: Config = {
       },
     },
     screens: {
-      xxs: "320px", // Example width for extra small screens
-      xs: "480px", // Example min-width for common mobile devices
-      sm: "640px",
-      md: "768px",
-      lg: "1024px",
-      xl: "1280px",
-      "2xl": "1536px",
+      xxs: "320px", // main paddings: 16px (px-4)
+      xs: "480px", // main paddings: 24px (px-6)
+      sm: "640px", // main paddings: 32px (px-8)
+      md: "960px", // main paddings: 80px (px-20)
+      lg: "1024px", // main paddings: 80px (px-20)
+      xl: "1280px", // main paddings: 144px (px-36)
+      "2xl": "1536px", // main paddings: 144px (px-36)
+      "3xl": "1920px", // main paddings: 384px (px-96)
     },
   },
   plugins: [require("tailwindcss-animate")],

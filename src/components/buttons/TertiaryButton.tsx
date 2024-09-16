@@ -1,6 +1,5 @@
 import React from "react";
 
-// Define the prop types for the button
 type ButtonProps = {
   children: React.ReactNode;
   onClick: () => void;
@@ -9,7 +8,6 @@ type ButtonProps = {
   hoverColor?: string;
 };
 
-// Button component
 const TertiaryButton: React.FC<ButtonProps> = ({
   children,
   onClick,
@@ -19,7 +17,7 @@ const TertiaryButton: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className={`btn text-${color} hover:text-${hoverColor} py-1 px-2 inline-flex items-center justify-center ease-in-out duration-300 ${className}`}
+      className={`btn text-${color} hover:text-${hoverColor} hover:fill-${hoverColor} py-1 px-2 inline-flex items-center justify-center ease-in-out duration-300 ${className}`}
       onClick={onClick}
     >
       {children}

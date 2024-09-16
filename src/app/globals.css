@@ -21,6 +21,14 @@
   .leading-trim {
     @apply font-sofia align-middle;
   }
+
+  .x-main-paddings {
+    @apply max-w-[120rem] px-4 xxs:px-4 sm:px-8 md:px-20 xl:px-32 3xl:px-96;
+  }
+
+  .responsive-header {
+    @apply text-2xl md:text-4xl 2xl:text-5xl;
+  }
 }
 
 * {
@@ -32,4 +40,21 @@
 body {
   background-color: black;
   overflow-x: hidden;
+}
+
+/* ANIMATIONS */
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-flash {
+  animation: flash 0.3s ease-in-out;
 }

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
 import PlayerCalendarMobile from "./PlayerCalendarMobile";
-import { format, startOfWeek } from "date-fns";
-import { date } from "zod";
+import { format, set, startOfWeek } from "date-fns";
 
 interface PlayerCalendarWrapperProps {
   dayHours: { [key: string]: { [key: number]: string } };
@@ -17,7 +16,6 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   setDayHours,
   currentDate,
 }) => {
-  const selectedDay = "Monday";
   const [isMobile, setIsMobile] = useState(false);
 
   // Get the current week key
@@ -37,11 +35,12 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
       } catch (error) {
         console.error("Error parsing stored state", error);
         localStorage.removeItem(`dayHours-${weekKey}`);
+        setDayHours({});
       }
     } else {
       setDayHours({});
     }
-  }, [weekKey, setDayHours]);
+  }, [weekKey]);
 
   useEffect(() => {
     localStorage.setItem(`dayHours-${weekKey}`, JSON.stringify(dayHours));
@@ -135,13 +134,12 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
 
   // RENDER VISUALS -----------------------------------------------------------------------
   return (
-    <div>
+    <div className="player-calendar-wrapper">
       {isMobile ? (
         <PlayerCalendarMobile
           className="flex lg:hidden"
           dayHours={dayHours}
           onHoursStateChange={handleHourStateChange}
-          selectedDay={selectedDay}
           currentDate={currentDate}
         />
       ) : (
