@@ -13,10 +13,10 @@ export const Social = () => {
 
   return (
     <>
-      <div className="my-8 flex basis-full text-lightGrey font-thin before:bg-[#707070] before:h-px before:grow before:mr-4 before:mt-2 after:bg-[#707070] after:h-px after:grow items-center after:ml-4 after:mt-2">
+      <div className="my-4 flex basis-full text-lightGrey font-thin before:bg-[#707070] before:h-px before:grow before:mr-4 before:mt-2 after:bg-[#707070] after:h-px after:grow items-center after:ml-4 after:mt-2">
         or
       </div>
-      <div className="flex flex-col items-center w-full gap-y-2 mt-8 ">
+      <div className="flex flex-col items-center w-full gap-y-2 mt-4 ">
         <Button
           size="full"
           className="gap-7"

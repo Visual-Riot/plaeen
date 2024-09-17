@@ -11,10 +11,10 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
               alt="Plaeen logo"
               width={70}
               height={52}
-              className="py-11"
+              className="py-6"
             />
           </div>
-          <div className="flex justify-center pb-16">
+          <div className="flex justify-center pb-14">
             
           {children}
           </div>
