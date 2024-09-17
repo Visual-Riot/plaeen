@@ -35,7 +35,7 @@ export const CardWrapper = ({
       <CardHeader>
         <Header header={header} label={headerLabel} />
       </CardHeader>
-      <CardContent className="mt-4">
+      <CardContent className="my-8">
         {children}
         <BackButton href={backButtonHref} label={backButtonLabel} />
       </CardContent>
