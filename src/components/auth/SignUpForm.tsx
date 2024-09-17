@@ -53,6 +53,7 @@ export const SignUpForm = () => {
       headerLabel="Get started for free"
       backButtonHref="/login"
       backButtonLabel="Already have an account?"
+      showSocial
       showTerms
     >
       <Form {...form}>

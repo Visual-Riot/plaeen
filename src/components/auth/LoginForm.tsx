@@ -21,8 +21,12 @@ import { login } from "@/actions/login";
 import { FormError } from "@/components/forms/FormError";
 import { FormSuccess } from "@/components/forms/FormSuccess";
 import { BackButton } from "./BackButton";
+import { useSearchParams } from "next/navigation";
 
 export const LoginForm = () => {
+  const searchParams = useSearchParams()
+  const urlOAuthError = searchParams.get('error') === "OAuthAccountNotLinked" ? "Email already in use with different provider!" : ""
+
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -117,7 +121,7 @@ export const LoginForm = () => {
             Login
           </Button>
           <FormSuccess message={success} />
-          <FormError message={error} />
+          <FormError message={error || urlOAuthError} />
         </form>
       </Form>
     </CardWrapper>
