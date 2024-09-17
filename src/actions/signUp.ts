@@ -4,8 +4,6 @@ import * as z from "zod";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 import { getUserByEmail } from "@/lib/data/user";
-import { sendVerificationEmail } from "@/lib/mail";
-import { generateVerificationToken } from "@/lib/tokens"
 
 export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
   const validatedFields = SignUpSchema.safeParse(values);
@@ -14,7 +12,7 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
     return { error: "Invalid fields!" };
   }
 
-  const { email, password} = validatedFields.data;
+  const { email, password, name } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await getUserByEmail(email);
@@ -25,16 +23,13 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
 
   await db.user.create({
     data: {
+      name,
       email,
       password: hashedPassword,
     },
   });
 
-  const verificationToken = await generateVerificationToken(email)
-  await sendVerificationEmail(
-    verificationToken.email,
-    verificationToken.token,
-  )
+  // TODO: send verification token email
 
   return { success: "Registered successfully! Verification email sent." };
 };

@@ -11,7 +11,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -28,6 +27,7 @@ export const SignUpForm = () => {
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
@@ -37,6 +37,7 @@ export const SignUpForm = () => {
     setError("");
     setSuccess("");
 
+    // TODO add sign up logic
     startTransition(() => {
       signUp(values).then((data) => {
         if (data) {
@@ -53,23 +54,38 @@ export const SignUpForm = () => {
       headerLabel="Get started for free"
       backButtonHref="/login"
       backButtonLabel="Already have an account?"
-      showSocial
       showTerms
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-12">
-          <div className="space-y-2">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="space-y-5">
+          <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      disabled={isPending}
+                      {...field}
+                      placeholder="Display Name"
+                      type="name"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="">Email Address</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
                       {...field}
-                      placeholder="spiderman@gmail.com"
+                      placeholder="Email Address"
                       type="email"
                     />
                   </FormControl>
@@ -82,12 +98,11 @@ export const SignUpForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
                       {...field}
-                      placeholder="••••••••"
+                      placeholder="Password"
                       type="password"
                     />
                   </FormControl>

@@ -18,17 +18,7 @@ export const SignUpSchema = z.object({
     .string()
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters"),
-});
-
-export const ForgotPasswordSchema = z.object({
-  email: z.string().email({
-    message: "Email is required",
-  })
-});
-
-export const ResetPasswordSchema = z.object({
-  password: z
-  .string()
-  .min(1, "Password is required")
-  .min(8, "Password must be more than 8 characters"),
+  name: z.string().min(1, {
+    message: "Name is required",
+  }),
 });

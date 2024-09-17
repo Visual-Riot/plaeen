@@ -9,7 +9,6 @@ import * as z from "zod";
 import { LoginSchema } from "@/schemas";
 import {
   Form,
-  FormLabel,
   FormControl,
   FormField,
   FormItem,
@@ -21,12 +20,8 @@ import { login } from "@/actions/login";
 import { FormError } from "@/components/forms/FormError";
 import { FormSuccess } from "@/components/forms/FormSuccess";
 import { BackButton } from "./BackButton";
-import { useSearchParams } from "next/navigation";
 
 export const LoginForm = () => {
-  const searchParams = useSearchParams()
-  const urlOAuthError = searchParams.get('error') === "OAuthAccountNotLinked" ? "Email already in use with different provider!" : ""
-
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -63,19 +58,18 @@ export const LoginForm = () => {
       showTerms
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="space-y-5">
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Address</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
                       {...field}
-                      placeholder="mario_bros@gmail.com"
+                      placeholder="Email Address"
                       type="email"
                     />
                   </FormControl>
@@ -89,12 +83,11 @@ export const LoginForm = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
                         disabled={isPending}
                         {...field}
-                        placeholder="••••••••"
+                        placeholder="Password"
                         type="password"
                       />
                     </FormControl>
@@ -121,7 +114,7 @@ export const LoginForm = () => {
             Login
           </Button>
           <FormSuccess message={success} />
-          <FormError message={error || urlOAuthError} />
+          <FormError message={error} />
         </form>
       </Form>
     </CardWrapper>
