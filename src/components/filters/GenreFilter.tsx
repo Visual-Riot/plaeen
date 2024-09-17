@@ -25,7 +25,12 @@ const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, handleGenreCh
     };
   }, []);
 
-  const genres = ["Action", "Adventure", "RPG", "Simulation", "Strategy"];
+  const genres = [
+    "Action", "Adventure", "RPG", "Simulation", "Strategy", 
+    "Shooter", "Casual", "Indie", "Puzzle", "Arcade", 
+    "Platformer", "Racing", "Sports", "Fighting", 
+    "Family", "Board Games", "Educational", "Card"
+  ];
 
   const handleCheckboxChange = (genre: string) => {
     if (selectedGenres.includes(genre)) {
