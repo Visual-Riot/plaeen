@@ -11,6 +11,7 @@ import { IoMdSettings } from "react-icons/io";
 import { ImExit } from "react-icons/im";
 import NavItem from "./NavItem";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 interface NavbarProps {
   avatar: string | null;
@@ -167,9 +168,11 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
                       <IoMdSettings />
                       <span>Account</span>
                     </li>
-                    <li className="flex items-center space-x-2 border-t border-gray-700 pt-2 text-white hover:text-gray-300 cursor-pointer">
+                    <li className="flex items-center border-t border-gray-700 pt-2 text-white hover:text-gray-300 cursor-pointer">
+                      <button className="p-0 flex flex-row items-center gap-2 w-full" onClick={()=>{signOut()}}>
                       <ImExit />
-                      <span>Sign Out of Plaeen</span>
+                      Sign Out
+                      </button>
                     </li>
                   </ul>
                 </div>
