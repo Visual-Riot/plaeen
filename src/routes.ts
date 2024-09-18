@@ -10,6 +10,8 @@ export const publicRoutes = [
   "/contact-us",
   "/cookie-policy",
   "/new-verification",
+  "/reset-password",
+  "/auth-error",
 ];
 
 /**
@@ -21,8 +23,6 @@ export const authRoutes = [
   "/login",
   "/forgot-password",
   "/signup",
-  "/reset-password",
-  "/auth-error",
 ];
 
 /**
