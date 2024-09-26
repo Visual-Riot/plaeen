@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
 import PlayerCalendarMobile from "./PlayerCalendarMobile";
-import { format, set, startOfWeek } from "date-fns";
+import { format, startOfWeek } from "date-fns";
 
-interface PlayerCalendarWrapperProps {
+interface CalendarGridProps {
   dayHours: { [key: string]: { [key: number]: string } };
   setDayHours: React.Dispatch<
     React.SetStateAction<{ [key: string]: { [key: number]: string } }>
@@ -11,7 +11,7 @@ interface PlayerCalendarWrapperProps {
   currentDate: Date;
 }
 
-const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
+const CalendarGrid: React.FC<CalendarGridProps> = ({
   dayHours,
   setDayHours,
   currentDate,
@@ -74,14 +74,14 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   // SELECT ALL -----------------------------------------------------------------------
   const getNextState = (currentState: string) => {
     switch (currentState) {
-      case "available":
-        return "single";
-      case "single":
-        return "recurring";
-      case "recurring":
-        return "available";
+      case "1":
+        return "2";
+      case "2":
+        return "3";
+      case "3":
+        return "1";
       default:
-        return "single";
+        return "1";
     }
   };
 
@@ -156,4 +156,4 @@ const PlayerCalendarWrapper: React.FC<PlayerCalendarWrapperProps> = ({
   );
 };
 
-export default PlayerCalendarWrapper;
+export default CalendarGrid;

@@ -1,15 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 
+/*
+STATES EXPLANATION
+1 - not available
+2 - available this week
+3 - always available
+4 - All team members available
+5 - part of the team available
+6 - game session invitation sent
+7 - game session invitation received
+*/
+
 interface PlayerTimeSlotProps {
   day: string;
   hour: number;
-  state: "available" | "single" | "recurring";
+  state: "1" | "2" | "3" | "4" | "5" | "6" | "7";
   displayedHour?: { hour: number; ampm: string };
-  onStateChange: (
-    day: string,
-    hour: number,
-    newState: "available" | "single" | "recurring"
-  ) => void;
+  onStateChange: (day: string, hour: number, newState: "1" | "2" | "3") => void;
   isDragging?: boolean;
   className?: string;
 }
@@ -35,26 +42,21 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
   const handleClick = (e: React.MouseEvent) => {
     if (isDragging) return;
 
-    const newState =
-      state === "available"
-        ? "single"
-        : state === "single"
-        ? "recurring"
-        : "available";
+    const newState = state === "1" ? "2" : state === "2" ? "3" : "1"; // 1 - not available | 2 - available this week | 3 -always available
     setState(newState);
     onStateChange(day, hour, newState);
   };
 
   const getButtonColor = () => {
     switch (state) {
-      case "available":
-        return "border-2 border-solid bg-black border-green border-opacity-20 bg-opacity-15 text-offWhite";
-      case "single":
-        return "bg-accentThree border-solid border-accentThree border-2 text-black";
-      case "recurring":
-        return "bg-accentOne border-solid border-accentOne border-2 text-black";
+      case "1": // not available
+        return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite";
+      case "2": // available this week
+        return "bg-lightPurple border-solid border-darkGrey border-opacity-20 border-2 text-black";
+      case "3": // always available
+        return "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black";
       default:
-        return "border-2 border-solid bg-mediumGrey border-green border-opacity-20 bg-opacity-10  lg:bg-opacity-80 text-offWhite";
+        return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite";
     }
   };
 
