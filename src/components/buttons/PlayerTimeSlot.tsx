@@ -55,6 +55,14 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
         return "bg-lightPurple border-solid border-darkGrey border-opacity-20 border-2 text-black";
       case "3": // always available
         return "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black";
+      case "4": // All team members available
+        return "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black";
+      case "5": // part of the team available
+        return "bg-green bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 text-black";
+      case "6": // game session invitation sent
+        return "bg-black bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 cursor-not-allowed text-offWhite";
+      case "7": // game session invitation received
+        return "bg-black bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 cursor-not-allowed text-offWhite";
       default:
         return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite";
     }

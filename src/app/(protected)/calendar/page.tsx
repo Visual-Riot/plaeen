@@ -48,8 +48,18 @@ export default function Page() {
 
   // RESET
   const handleReset = () => {
-    setDayHours({});
-    console.log("Reset");
+    // setDayHours({});
+    console.log(dayHours);
+  };
+
+  // SAVE
+  const handleSave = () => {
+    console.log("Save");
+    // try {
+    //   await saveToBackend(dayHours); // HERE WE WOULD SAVE TO BACKEND
+    // } catch (error) {
+    //   console.error("Error saving to backend", error);
+    // }
   };
 
   // update slot style in help modal
@@ -157,7 +167,11 @@ export default function Page() {
           </div>
 
           {/* CALENDAR WRAPPER HERE */}
-          <CalendarWrapper dayHours={dayHours} setDayHours={setDayHours} />
+          <CalendarWrapper
+            dayHours={dayHours}
+            setDayHours={setDayHours}
+            className="mt-8 md:mt-16"
+          />
 
           {/* Bottom Row with legend and submit button */}
           <div className="flex items-start md:items-center w-full justify-between md:mt-8 px-2 md:px-0">
@@ -196,7 +210,7 @@ export default function Page() {
               {/* save button on desktop */}
               <GreenButton
                 className="align-middle hidden lg:flex"
-                onClick={() => console.log("Submit")}
+                onClick={handleSave}
               >
                 Save and continue
               </GreenButton>

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "teamCalendar001",
+    "squad_id": "team001",
+    "session_id": "session001",
+    "day": "2024-09-30",
+    "hour": 18,
+    "available_count": 3,
+    "proposed_session": true,
+    "updated_at": "2024-09-26T09:30:00.000Z"
+  }
+]

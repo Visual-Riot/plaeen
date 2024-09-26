@@ -25,17 +25,17 @@ interface CalendarWrapperProps {
   setDayHours: React.Dispatch<
     React.SetStateAction<{ [key: string]: { [key: number]: string } }>
   >;
+  allowedStates?: string[];
+  className?: string;
 }
 
 const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
   dayHours,
   setDayHours,
+  allowedStates,
+  className,
 }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
-
-  // const [dayHours, setDayHours] = useState<{
-  //   [key: string]: { [key: number]: string };
-  // }>(currentDayHours);
 
   const desktopCalendarRef = useRef<HTMLDivElement>(null);
 
@@ -157,8 +157,10 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
   };
 
   return (
-    <div className="calendar-wrapper">
-      <div className="flex justify-between items-center mt-8 md:mt-16 md:mb-12 text-lightPurple text-2xl font-semibold">
+    <div className={className}>
+      <div
+        className={`flex justify-between items-center md:mb-12 text-lightPurple text-2xl font-semibold`}
+      >
         {/* Mobile view */}
         <div className="flex flex-col lg:hidden w-full items-center">
           <div className="flex items-center">
