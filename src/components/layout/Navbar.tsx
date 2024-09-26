@@ -13,19 +13,21 @@ import NavItem from "./NavItem";
 import Link from "next/link";
 
 interface NavbarProps {
-  avatar: string | null;
+  className?: string;
 }
 
-const Navbar: FC<NavbarProps> = ({ avatar }) => {
+const Navbar: FC<NavbarProps> = ({ className }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [userAvatar, setUserAvatar] = useState<string | null>(avatar);
+  const [userAvatar, setUserAvatar] = useState<string | null>(
+    typeof window !== "undefined" ? localStorage.getItem("userAvatar") : null
+  );
 
   useEffect(() => {
-    if (avatar) {
-      setUserAvatar(avatar);
+    if (localStorage.getItem("userAvatar")) {
+      setUserAvatar(localStorage.getItem("userAvatar"));
     }
-  }, [avatar]);
+  }, [userAvatar]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -84,7 +86,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
   };
 
   return (
-    <div style={navContainerStyles}>
+    <div style={navContainerStyles} className={className}>
       <nav style={navStyles}>
         <div className="container mx-auto flex justify-between items-center mt-1">
           {/* Logo */}
@@ -136,7 +138,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
                     alt="User Avatar"
                     width={60}
                     height={60}
-                    className="rounded-full border-2 border-neonGreen cursor-pointer"
+                    className=" h-14 w-14 rounded-full border-2 border-neonGreen cursor-pointer"
                   />
                 ) : (
                   <Image
