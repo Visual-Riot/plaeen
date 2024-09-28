@@ -201,7 +201,7 @@ export default function Page() {
         </div>
 
         {/* Filters */}
-        <div className="flex xxs:flex-col lg:flex-row w-4/5 mx-auto gap-10">
+        <div className="flex xxs:flex-col lg:flex-row w-4/5 mx-auto gap-7">
           <RelevanceFilter
             selectedOption={selectedRelevance}
             handleRelevanceChange={setSelectedRelevance}
@@ -236,28 +236,34 @@ export default function Page() {
           </button>
         </div>
 
+        {/* Display Available Games Count */}
+        <div className="text-center my-4">
+          <p className="font-extralight">
+            {filteredGames.length} game{filteredGames.length !== 1 ? 's' : ''} available
+          </p>
+          {filteredGames.length === 0 && (
+            <p className="font-extralight text-gray-500 mt-2">
+              Try widening your search.
+            </p>
+          )}
+        </div>
+
         {/* Display Filtered or Initially Displayed Games */}
         <div className="w-4/5 mx-auto mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-32 gap-y-12">
-          {displayedGames.length > 0 ? (
-            displayedGames.map((game) => (
-              <GameCard
-                key={game.id}
-                coverImage={game.background_image}
-                name={game.name}
-                releaseDate={game.released}
-                genre={game.genres.map((genre) => genre.name).join(", ")}
-                platform={game.platforms.map((p) => p.platform.name).join(", ")}
-                rating={`${game.rating}/5`}
-                onCreateSession={() => console.log('Create Session Clicked')}
-                onFavourite={() => console.log('Favourite Clicked')}
-                gameInfoUrl={`https://rawg.io/games/${game.id}`}
-              />
-            ))
-          ) : (
-            <div className="flex justify-center items-center w-full">
-              <p className="text-center text-white text-lg font-extralight">Sorry. No games found using the selected filters.</p>
-            </div>
-          )}
+          {displayedGames.map((game) => (
+            <GameCard
+              key={game.id}
+              coverImage={game.background_image}
+              name={game.name}
+              releaseDate={game.released}
+              genre={game.genres.map((genre) => genre.name).join(", ")}
+              platform={game.platforms.map((p) => p.platform.name).join(", ")}
+              rating={`${game.rating}/5`}
+              onCreateSession={() => console.log('Create Session Clicked')}
+              onFavourite={() => console.log('Favourite Clicked')}
+              gameInfoUrl={`https://rawg.io/games/${game.id}`}
+            />
+          ))}
         </div>
 
         <div className="flex justify-center">
