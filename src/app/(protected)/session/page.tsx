@@ -11,6 +11,7 @@ import RelevanceFilter from "@/components/filters/RelevanceFilter";
 import GenreFilter from "@/components/filters/GenreFilter";
 import PlatformFilter from "@/components/filters/PlatformFilter";
 import ThemeFilter from "@/components/filters/ThemeFilter";
+import PlayerModeFilter from "@/components/filters/PlayerModeFilter";
 import GameCard from "@/components/game/GameCard";
 import Footer from "@/components/layout/Footer";
 import gamesData from "../../../lib/data/rawgGames.json";
@@ -36,6 +37,7 @@ export default function Page() {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]); // Genre filter state
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]); // Platform filter state
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]); // Theme filter state
+  const [selectedPlayerModes, setSelectedPlayerModes] = useState<string[]>([]); // Player mode filter state
   const [allGames, setAllGames] = useState<Game[]>([]); // State for storing all fetched games
   const [filteredGames, setFilteredGames] = useState<Game[]>([]); // State for filtered games
   const [displayedGames, setDisplayedGames] = useState<Game[]>([]); // State for games displayed on the page
@@ -46,30 +48,35 @@ export default function Page() {
     // Fetch all games when the component mounts
     fetchAllGames();
   }, []); // Empty dependency array ensures this runs once on component mount
-  
+
   useEffect(() => {
-    // Filter the games based on search term, genres, platforms, and themes
+    // Filter the games based on search term, genres, platforms, themes, and player modes
     let filtered = allGames.filter((game) => {
       const normalizedPlatforms = game.platforms.map(p => normalizePlatformName(p.platform.name));
-
+  
       const matchesSearchTerm = game.name.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesGenre = selectedGenres.length === 0 || game.genres.some(genre => selectedGenres.includes(genre.name));
       const matchesPlatform = selectedPlatforms.length === 0 || normalizedPlatforms.some(platform => selectedPlatforms.includes(platform));
       const matchesTheme = selectedThemes.length === 0 || selectedThemes.some(theme =>
         game.tags.some(tag => tag.name.toLowerCase() === theme.toLowerCase() || tag.slug.toLowerCase() === theme.toLowerCase())
       );
-
-      return matchesSearchTerm && matchesGenre && matchesPlatform && matchesTheme;
+  
+      // Assuming player modes are also stored in tags
+      const matchesPlayerMode = selectedPlayerModes.length === 0 || selectedPlayerModes.some(playerMode =>
+        game.tags.some(tag => tag.name.toLowerCase() === playerMode.toLowerCase() || tag.slug.toLowerCase() === playerMode.toLowerCase())
+      );
+  
+      return matchesSearchTerm && matchesGenre && matchesPlatform && matchesTheme && matchesPlayerMode;
     });
-
+  
     // Apply sorting based on the relevance filter
     filtered = applySorting(filtered, selectedRelevance);
-
+  
     setFilteredGames(filtered);
     setDisplayedGames(filtered.slice(0, 18)); // Display the first 18 games initially
     setPage(1); // Reset pagination
     setHasMoreGames(filtered.length > 18); // Check if there are more games to load
-  }, [searchTerm, selectedGenres, selectedPlatforms, selectedThemes, selectedRelevance, allGames]);
+  }, [searchTerm, selectedGenres, selectedPlatforms, selectedThemes, selectedPlayerModes, selectedRelevance, allGames]);  
 
   const fetchAllGames = () => {
     try {
@@ -107,6 +114,10 @@ export default function Page() {
     setSelectedThemes(themes);
   };
 
+  const handlePlayerModeChange = (playerModes: string[]) => {
+    setSelectedPlayerModes(playerModes);
+  };
+
   const applySorting = (games: Game[], sortOption: string): Game[] => {
     switch (sortOption) {
       case 'A-Z':
@@ -137,6 +148,7 @@ export default function Page() {
     setSelectedGenres([]); // Reset genre filter
     setSelectedPlatforms([]); // Reset platform filter
     setSelectedThemes([]); // Reset theme filter
+    setSelectedPlayerModes([]); // Reset player modes filter
   };
 
   const router = useRouter();
@@ -203,6 +215,11 @@ export default function Page() {
           <PlatformFilter
             selectedPlatforms={selectedPlatforms}
             handlePlatformChange={handlePlatformChange}
+            className="filter-box"
+          />
+          <PlayerModeFilter
+            selectedPlayerModes={selectedPlayerModes}
+            handlePlayerModeChange={handlePlayerModeChange}
             className="filter-box"
           />
           <ThemeFilter
