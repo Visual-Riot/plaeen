@@ -34,6 +34,7 @@ export default function Page() {
   const [selectedRelevance, setSelectedRelevance] = useState<string>('Relevance'); // Relevance filter state
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]); // Genre filter state
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]); // Platform filter state
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]); // Theme filter state
   const [allGames, setAllGames] = useState<Game[]>([]); // State for storing all fetched games
   const [filteredGames, setFilteredGames] = useState<Game[]>([]); // State for filtered games
   const [displayedGames, setDisplayedGames] = useState<Game[]>([]); // State for games displayed on the page
@@ -144,7 +145,7 @@ export default function Page() {
     <div className="text-taupe font-light font-sofia">
       <Navbar avatar={selectedImage} />
       <div
-        className="container mx-auto mt-16 rounded-xl py-16"
+        className="container mx-auto max-w-[90%] mt-16 rounded-xl py-16"
         style={{ backgroundColor: "rgba(184, 180, 189, 0.15)" }}
       >
         <div className="flex justify-between items-center pb-16 xxs:flex-col-reverse md:flex-row">
