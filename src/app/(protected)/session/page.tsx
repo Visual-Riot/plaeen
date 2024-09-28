@@ -11,7 +11,7 @@ import RelevanceFilter from "@/components/filters/RelevanceFilter";
 import GenreFilter from "@/components/filters/GenreFilter";
 import PlatformFilter from "@/components/filters/PlatformFilter";
 import ThemeFilter from "@/components/filters/ThemeFilter";
-import GameCard from "@/components/game/GardCard";
+import GameCard from "@/components/game/GameCard";
 import Footer from "@/components/layout/Footer";
 import gamesData from "../../../lib/data/rawgGames.json";
 
@@ -23,6 +23,7 @@ interface Game {
   genres: { name: string }[];
   platforms: { platform: { name: string } }[];
   rating: number;
+  tags: { id: number; name: string; slug: string }[];
 }
 
 const gamesDataTyped: Game[] = gamesData as Game[];
@@ -42,29 +43,23 @@ export default function Page() {
   const [hasMoreGames, setHasMoreGames] = useState<boolean>(true); // To check if more games are available
 
   useEffect(() => {
-    const savedImage = localStorage.getItem("plaeenUserAvatar");
-    const savedUsername = localStorage.getItem("plaeenUsername");
-    if (savedImage) {
-      setSelectedImage(savedImage);
-    }
-    if (savedUsername) {
-      setUsername(savedUsername);
-    }
-
-    // Fetch all games initially
+    // Fetch all games when the component mounts
     fetchAllGames();
-  }, []);
-
+  }, []); // Empty dependency array ensures this runs once on component mount
+  
   useEffect(() => {
-    // Filter the games based on search term, genres, and platforms
+    // Filter the games based on search term, genres, platforms, and themes
     let filtered = allGames.filter((game) => {
       const normalizedPlatforms = game.platforms.map(p => normalizePlatformName(p.platform.name));
 
       const matchesSearchTerm = game.name.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesGenre = selectedGenres.length === 0 || game.genres.some(genre => selectedGenres.includes(genre.name));
       const matchesPlatform = selectedPlatforms.length === 0 || normalizedPlatforms.some(platform => selectedPlatforms.includes(platform));
+      const matchesTheme = selectedThemes.length === 0 || selectedThemes.some(theme =>
+        game.tags.some(tag => tag.name.toLowerCase() === theme.toLowerCase() || tag.slug.toLowerCase() === theme.toLowerCase())
+      );
 
-      return matchesSearchTerm && matchesGenre && matchesPlatform;
+      return matchesSearchTerm && matchesGenre && matchesPlatform && matchesTheme;
     });
 
     // Apply sorting based on the relevance filter
@@ -74,7 +69,7 @@ export default function Page() {
     setDisplayedGames(filtered.slice(0, 18)); // Display the first 18 games initially
     setPage(1); // Reset pagination
     setHasMoreGames(filtered.length > 18); // Check if there are more games to load
-  }, [searchTerm, selectedGenres, selectedPlatforms, selectedRelevance, allGames]);
+  }, [searchTerm, selectedGenres, selectedPlatforms, selectedThemes, selectedRelevance, allGames]);
 
   const fetchAllGames = () => {
     try {
@@ -108,6 +103,10 @@ export default function Page() {
     setSelectedPlatforms(platforms);
   };
 
+  const handleThemeChange = (themes: string[]) => {
+    setSelectedThemes(themes);
+  };
+
   const applySorting = (games: Game[], sortOption: string): Game[] => {
     switch (sortOption) {
       case 'A-Z':
@@ -137,15 +136,16 @@ export default function Page() {
     setSelectedRelevance('Relevance'); // Reset relevance filter
     setSelectedGenres([]); // Reset genre filter
     setSelectedPlatforms([]); // Reset platform filter
+    setSelectedThemes([]); // Reset theme filter
   };
 
   const router = useRouter();
 
   return (
-    <div className="text-taupe font-light font-sofia">
+    <div className="text-taupe font-light font-sofia max-w-[90%] mx-auto">
       <Navbar avatar={selectedImage} />
       <div
-        className="container mx-auto max-w-[90%] mt-16 rounded-xl py-16"
+        className="container mx-auto mt-16 rounded-xl py-16"
         style={{ backgroundColor: "rgba(184, 180, 189, 0.15)" }}
       >
         <div className="flex justify-between items-center pb-16 xxs:flex-col-reverse md:flex-row">
@@ -205,7 +205,11 @@ export default function Page() {
             handlePlatformChange={handlePlatformChange}
             className="filter-box"
           />
-          <ThemeFilter className="filter-box" />
+          <ThemeFilter
+            selectedThemes={selectedThemes}
+            handleThemeChange={handleThemeChange}
+            className="filter-box"
+          />
         </div>
 
         {/* Reset filters */}
@@ -233,8 +237,8 @@ export default function Page() {
               />
             ))
           ) : (
-            <div className="flex justify-center items-center w-full h-[50vh]">
-              <p className="text-center text-white text-2xl">No games found.</p>
+            <div className="flex justify-center items-center w-full">
+              <p className="text-center text-white text-lg font-extralight">Sorry. No games found using the selected filters.</p>
             </div>
           )}
         </div>

@@ -2,15 +2,16 @@ import React, { useState, useRef, useEffect } from 'react';
 import WhiteArrow from '../icons/WhiteArrow';
 
 interface ThemeFilterProps {
+  selectedThemes: string[];
+  handleThemeChange: (themes: string[]) => void;
   className?: string;
 }
 
-const ThemeFilter: React.FC<ThemeFilterProps> = ({ className }) => {
+const ThemeFilter: React.FC<ThemeFilterProps> = ({ selectedThemes, handleThemeChange, className }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedThemes, setSelectedThemes] = useState<string[]>([]); // To track selected themes
   const ref = useRef<HTMLDivElement>(null);
 
-  const themes = ["Multiplayer", "Singleplayer", "First-Person", "Third-Person", "VR"];
+  const themes = ["zombies", "city", "night", "animal", "wave", "secrets", "friends", "plants", "geometry"];
 
   const handleClickOutside = (event: MouseEvent) => {
     if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -26,11 +27,11 @@ const ThemeFilter: React.FC<ThemeFilterProps> = ({ className }) => {
   }, []);
 
   const handleThemeToggle = (theme: string) => {
-    setSelectedThemes(prevSelected => 
-      prevSelected.includes(theme)
-        ? prevSelected.filter(t => t !== theme) // Uncheck
-        : [...prevSelected, theme]              // Check
-    );
+    if (selectedThemes.includes(theme)) {
+      handleThemeChange(selectedThemes.filter(t => t !== theme));
+    } else {
+      handleThemeChange([...selectedThemes, theme]);
+    }
   };
 
   return (
@@ -55,14 +56,24 @@ const ThemeFilter: React.FC<ThemeFilterProps> = ({ className }) => {
             paddingBottom: '0',
           }}
         >
-          <span className="leading-none text-sm">
-            {selectedThemes.length > 0 ? selectedThemes.join(', ') : 'Theme'}
-          </span>
-          <WhiteArrow
-            className={`mr-2 h-3 w-3 transform ${isOpen ? "rotate-180" : "rotate-0"}`}
-            noAnimation={true} // Disable animation
-            color="text-white" // Set color to white
-          />
+          <span className="leading-none text-sm">Theme</span>
+          <div className="flex items-center">
+            <span
+              className="mr-2 flex items-center justify-center rounded-full bg-lightPurple text-white"
+              style={{
+                width: '30px',
+                height: '30px',
+                fontSize: '0.875rem',
+              }}
+            >
+              {selectedThemes.length}
+            </span>
+            <WhiteArrow
+              className={`mr-2 h-3 w-3 transform ${isOpen ? "rotate-180" : "rotate-0"}`}
+              noAnimation={true} // Disable animation
+              color="text-white" // Set color to white
+            />
+          </div>
         </button>
       </div>
       {isOpen && (
@@ -77,7 +88,7 @@ const ThemeFilter: React.FC<ThemeFilterProps> = ({ className }) => {
                 <input
                   type="checkbox"
                   checked={selectedThemes.includes(theme)}
-                  onChange={() => handleThemeToggle(theme)} // Prevents checkbox click bubbling issues
+                  onChange={() => handleThemeToggle(theme)}
                   className="mr-2"
                 />
                 {theme}
