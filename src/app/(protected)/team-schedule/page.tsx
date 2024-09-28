@@ -1,0 +1,79 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Navbar from "@/components/layout/Navbar";
+import GreenButton from "@/components/buttons/GreenButton";
+import OutlineButton from "@/components/buttons/OutlineButton";
+import { useRouter } from "next/navigation";
+import { FaSteamSymbol, FaBell, FaTimes } from "react-icons/fa";
+import { BiSolidBellRing } from "react-icons/bi";
+import { MdEdit } from "react-icons/md";
+import { FaPlus } from "react-icons/fa";
+import Footer from "@/components/layout/Footer";
+
+export default function Page() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [username, setUsername] = useState<string>('');
+  const [isNotificationVisible, setIsNotificationVisible] = useState(true);
+
+  const router = useRouter();
+
+  return (
+    <div className="text-taupe font-light font-sofia max-w-[90%] mx-auto">
+      <Navbar avatar={selectedImage} />
+      <div
+        className="container mx-auto mt-16 rounded-xl py-16"
+        style={{ backgroundColor: "rgba(184, 180, 189, 0.15)" }}
+      >
+        <div className="flex justify-between items-center pb-10 xxs:flex-col-reverse md:flex-row">
+          <h1 className="font-abolition text-neonGreen text-7xl xxs:ms-0 xxs:text-center md:ms-16 md:text-left">
+            TEAM NAME
+          </h1>
+          <div className="flex flex-col md:flex-row">
+            <OutlineButton
+              onClick={() => router.back()}
+              className="xxs:me-0 xxs:mb-10 md:me-8 md:mb-0 xs:w-[200px] md:w-fit bg-transparent"
+            >
+              <span className="flex justify-center items-center">
+                <FaPlus />
+                &nbsp;Add session
+              </span>
+            </OutlineButton>
+            <OutlineButton
+              onClick={() => router.back()}
+              className="xxs:me-0 xxs:mb-10 md:me-24 md:mb-0 xs:w-[200px] md:w-fit bg-transparent"
+            >
+              <span className="flex justify-center items-center">
+                <MdEdit />
+                &nbsp;Edit
+              </span>
+            </OutlineButton>
+          </div>
+        </div>
+
+        {/* Notification Banner */}
+        {isNotificationVisible && (
+          <div className="flex items-center justify-center w-full px-4 py-3 relative my-4 bg-purple-800">
+            <div className="w-[90%] flex justify-between">
+                <div className="flex items-center">
+                    <BiSolidBellRing className="mr-6 text-xl text-green" />
+                    <p className="text-md font-extralight">You have 1 schedule change to approve</p>
+                </div>
+                <button
+                onClick={() => setIsNotificationVisible(false)}
+                className="focus:outline-none"
+                >
+                <FaTimes />
+                </button>
+            </div>
+          </div>
+        )}
+
+        <div>
+          {/* Other content goes here */}
+        </div>
+      </div>
+      {/* <Footer useBackgroundImage={false} className="bg-[#000000!important]" /> */}
+    </div>
+  );
+}
