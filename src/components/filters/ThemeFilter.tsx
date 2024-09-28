@@ -11,7 +11,7 @@ const ThemeFilter: React.FC<ThemeFilterProps> = ({ selectedThemes, handleThemeCh
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const themes = ["zombies", "city", "night", "animal", "wave", "secrets", "friends", "plants", "geometry"];
+  const themes = ["Animal", "City", "Friends", "Geometry", "Night", "Plants", "Secrets", "Wave", "Zombies"];
 
   const handleClickOutside = (event: MouseEvent) => {
     if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -77,7 +77,29 @@ const ThemeFilter: React.FC<ThemeFilterProps> = ({ selectedThemes, handleThemeCh
         </button>
       </div>
       {isOpen && (
-        <div className="absolute mt-2 w-full rounded-md shadow-lg bg-violet z-10">
+        <div
+        className="absolute mt-2 w-full rounded-md shadow-lg bg-violet z-10"
+        style={{
+            maxHeight: '450px', // Set the maximum height
+            minWidth: '230px',
+            overflowY: 'auto'   // Add vertical scroll if the content exceeds 200px
+        }}
+        >
+        <style jsx>{`
+            div::-webkit-scrollbar {
+                width: 8px; /* Set scrollbar width */
+            }
+            div::-webkit-scrollbar-track {
+                background: #2e004f; /* Dark purple track */
+            }
+            div::-webkit-scrollbar-thumb {
+                background-color: #5811C0; /* Lighter purple for the thumb */
+                border-radius: 10px; /* Make the scrollbar thumb rounded */
+            }
+            div::-webkit-scrollbar-thumb:hover {
+                background-color: #7e30e8; /* Lighter color on hover for thumb */
+            }
+        `}</style>
           <div className="py-1">
             {themes.map((theme) => (
               <div

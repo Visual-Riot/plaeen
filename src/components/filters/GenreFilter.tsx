@@ -26,11 +26,29 @@ const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, handleGenreCh
   }, []);
 
   const genres = [
-    "Action", "Adventure", "RPG", "Simulation", "Strategy", 
-    "Shooter", "Casual", "Indie", "Puzzle", "Arcade", 
-    "Platformer", "Racing", "Sports", "Fighting", 
-    "Family", "Board Games", "Educational", "Card"
-  ];
+    "Action",
+    "Adventure",
+    "Arcade",
+    "Board Games",
+    "Card",
+    "Casual",
+    "Educational",
+    "Family",
+    "Fighting",
+    "Horror",
+    "Indie",
+    "MMORPG",
+    "Music",
+    "Platformer",
+    "Puzzle",
+    "Racing",
+    "RPG",
+    "Shooter",
+    "Simulation",
+    "Sports",
+    "Strategy",
+    "Survival"
+  ];  
 
   const handleCheckboxChange = (genre: string) => {
     if (selectedGenres.includes(genre)) {
@@ -83,7 +101,29 @@ const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, handleGenreCh
         </button>
       </div>
       {isOpen && (
-        <div className="absolute mt-2 w-full rounded-md shadow-lg bg-violet z-10">
+        <div
+        className="absolute mt-2 w-full rounded-md shadow-lg bg-violet z-10"
+        style={{
+            maxHeight: '450px', // Set the maximum height
+            minWidth: '230px',
+            overflowY: 'auto'   // Add vertical scroll if the content exceeds 200px
+        }}
+        >
+        <style jsx>{`
+            div::-webkit-scrollbar {
+                width: 8px; /* Set scrollbar width */
+            }
+            div::-webkit-scrollbar-track {
+                background: #2e004f; /* Dark purple track */
+            }
+            div::-webkit-scrollbar-thumb {
+                background-color: #5811C0; /* Lighter purple for the thumb */
+                border-radius: 10px; /* Make the scrollbar thumb rounded */
+            }
+            div::-webkit-scrollbar-thumb:hover {
+                background-color: #7e30e8; /* Lighter color on hover for thumb */
+            }
+        `}</style>
           <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
             {genres.map(genre => (
               <div key={genre} className="px-4 py-2">

@@ -25,16 +25,16 @@ const PlatformFilter: React.FC<PlatformFilterProps> = ({ selectedPlatforms, hand
   }, []);
 
   const platforms = [
-    "Steam",           // PC gaming platform
-    "PlayStation",     // Normalized for all PlayStation versions
-    "Xbox",            // Normalized for all Xbox versions
-    "Nintendo",        // Normalized for all Nintendo consoles and handhelds
-    "Wii U",        // Normalized for all Nintendo consoles and handhelds
-    "Twitch",          // Streaming platform
-    "iOS",             // Mobile gaming platform
-    "Android",         // Mobile gaming platform
-    "MacOS",           // Apple desktop gaming
-    "Linux",           // Open-source desktop gaming
+    "Android",
+    "iOS",
+    "Linux",
+    "MacOS",
+    "Nintendo",
+    "PlayStation",
+    "Steam",
+    "Twitch",
+    "Wii U",
+    "Xbox"
   ];  
 
   const handleCheckboxChange = (platform: string) => {
@@ -88,7 +88,29 @@ const PlatformFilter: React.FC<PlatformFilterProps> = ({ selectedPlatforms, hand
         </button>
       </div>
       {isOpen && (
-        <div className="absolute mt-2 w-full rounded-md shadow-lg bg-violet z-10">
+        <div
+        className="absolute mt-2 w-full rounded-md shadow-lg bg-violet z-10"
+        style={{
+            maxHeight: '450px', // Set the maximum height
+            minWidth: '230px',
+            overflowY: 'auto'   // Add vertical scroll if the content exceeds 200px
+        }}
+        >
+        <style jsx>{`
+            div::-webkit-scrollbar {
+                width: 8px; /* Set scrollbar width */
+            }
+            div::-webkit-scrollbar-track {
+                background: #2e004f; /* Dark purple track */
+            }
+            div::-webkit-scrollbar-thumb {
+                background-color: #5811C0; /* Lighter purple for the thumb */
+                border-radius: 10px; /* Make the scrollbar thumb rounded */
+            }
+            div::-webkit-scrollbar-thumb:hover {
+                background-color: #7e30e8; /* Lighter color on hover for thumb */
+            }
+        `}</style>
           <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
             {platforms.map(platform => (
               <div key={platform} className="px-4 py-2">
