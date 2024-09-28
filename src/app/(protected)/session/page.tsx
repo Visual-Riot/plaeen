@@ -239,7 +239,7 @@ export default function Page() {
         {/* Display Available Games Count */}
         <div className="text-center my-4">
           <p className="font-extralight">
-            {filteredGames.length} game{filteredGames.length !== 1 ? 's' : ''} available
+            {filteredGames.length.toLocaleString()} game{filteredGames.length !== 1 ? 's' : ''} available
           </p>
           {filteredGames.length === 0 && (
             <p className="font-extralight text-gray-500 mt-2">
