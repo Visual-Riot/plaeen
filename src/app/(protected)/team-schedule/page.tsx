@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import GreenButton from "@/components/buttons/GreenButton";
+import AddPlayer from "@/components/players/AddPlayer";
 import OutlineButton from "@/components/buttons/OutlineButton";
 import { useRouter } from "next/navigation";
 import { FaSteamSymbol, FaBell, FaTimes } from "react-icons/fa";
@@ -68,6 +69,14 @@ export default function Page() {
             </div>
           </div>
         )}
+
+        <div className="my-12">
+            <span className="flex flex-col justify-center items-center">
+                <AddPlayer onClick={() => {}} className="rounded" />
+                <p className="font-extralight text-sm mt-2">Add player</p>
+            </span>
+            
+        </div>
 
         <div>
           {/* Other content goes here */}
