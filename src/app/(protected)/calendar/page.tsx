@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 // import buttons and icons
 import GreenButton from "@/components/buttons/GreenButton";
 import TertiaryButton from "@/components/buttons/TertiaryButton";
@@ -10,9 +10,11 @@ import PurpleButton from "@/components/buttons/PurpleButton";
 import Navbar from "@/components/layout/Navbar";
 import CalendarWrapper from "@/components/calendar/CalendarWrapper";
 import { useUserCalendarData } from "@/lib/hooks/useUserCalendarData";
+import { user } from "@nextui-org/theme";
 
 export default function Page() {
   const { userAvailability, isLoading } = useUserCalendarData("user-001", true);
+  const [savedData, setSavedData] = useState<{}>({});
 
   const [dayHours, setDayHours] = useState<{
     [key: string]: { [key: number]: string };
@@ -20,9 +22,10 @@ export default function Page() {
 
   useEffect(() => {
     if (!isLoading) {
-      setDayHours(userAvailability);
+      setSavedData(userAvailability);
+      setDayHours(JSON.parse(JSON.stringify(userAvailability)));
     }
-  }, [isLoading, userAvailability]);
+  }, [isLoading, userAvailability, savedData]);
 
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [helpBtnState, setHelpBtnState] = useState<string>("1" || "2" || "3");
@@ -60,13 +63,19 @@ export default function Page() {
   // RESET
   const handleReset = () => {
     const length = localStorage.length;
+    const keysToDelete = [];
+
     for (let i = 0; i < length; i++) {
       const key = localStorage.key(i);
       if (key && key.includes("dayHours")) {
-        localStorage.removeItem(key);
+        keysToDelete.push(key);
       }
     }
-    setDayHours(userAvailability);
+    keysToDelete.forEach((key) => {
+      localStorage.removeItem(key);
+    });
+
+    setDayHours(JSON.parse(JSON.stringify(savedData)));
   };
 
   // SAVE

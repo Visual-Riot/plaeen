@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Availability {
   day: string;
@@ -6,14 +6,15 @@ interface Availability {
 }
 
 export function useUserCalendarData(userId?: string, shouldFetch = true) {
+  const [isLoading, setIsLoading] = useState(true);
   const [userAvailability, setUserAvailability] = useState<{
     [key: string]: { [key: number]: string };
   }>({});
-  const [isLoading, setIsLoading] = useState(true);
 
   // Function to fetch user calendar data
-  const fetchUserCalendarData = async (): Promise<void> => {
-    setIsLoading(true);
+  const fetchUserCalendarData = async (): Promise<{
+    [key: string]: { [key: number]: string };
+  }> => {
     try {
       const userCalendarResponse = await fetch("/data/user-calendar.json");
       if (!userCalendarResponse.ok) {
@@ -44,23 +45,26 @@ export function useUserCalendarData(userId?: string, shouldFetch = true) {
         });
       }
 
-      setUserAvailability(newUserDayHours);
+      return newUserDayHours;
     } catch (error) {
       console.error("Error fetching user availability:", error);
-    } finally {
-      setIsLoading(false);
+      return {};
     }
   };
 
   useEffect(() => {
     if (shouldFetch && userId) {
-      fetchUserCalendarData();
+      // Fetch data and set availability as a constant
+      setIsLoading(true);
+      fetchUserCalendarData().then((data) => {
+        setUserAvailability(data); // Set user availability once fetched
+        setIsLoading(false);
+      });
     }
   }, [shouldFetch, userId]);
 
   return {
     userAvailability,
     isLoading,
-    fetchUserCalendarData, // for manual use
   };
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, use } from "react";
+import React, { useState, useEffect } from "react";
 import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
 import PlayerCalendarMobile from "./PlayerCalendarMobile";
 import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
@@ -88,7 +88,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
     day: string,
     currentStates: { [hour: number]: string }
   ) => {
-    const firstHourState = currentStates[hoursOfDay[0]];
+    const firstHourState = currentStates[hoursOfDay[0]] || "1";
     const nextState = getNextState(firstHourState);
 
     setDayHours((prevDayHours) => {
@@ -109,11 +109,8 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
     hour: number,
     currentStates: { [day: string]: string }
   ) => {
-    const firstDayState = currentStates[daysOfWeek[0]];
+    const firstDayState = currentStates[daysOfWeek[0]] || "1";
     const nextState = getNextState(firstDayState);
-    console.log("nextState", nextState);
-    console.log("currentStates", currentStates);
-    console.log("daysOfWeek", daysOfWeek);
 
     setDayHours((prevDayHours) => {
       const updatedDayHours = { ...prevDayHours };
