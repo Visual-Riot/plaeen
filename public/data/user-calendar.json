@@ -42,15 +42,15 @@
     "user_id": "user-002",
     "availability": [
       {
-        "day": "2024-09-29",
+        "day": "2024-09-23",
         "hours": [
           {
-            "hour": 14,
-            "state": "3"
+            "hour": 1,
+            "state": "2"
           },
           {
-            "hour": 12,
-            "state": "4"
+            "hour": 4,
+            "state": "3"
           }
         ]
       },
@@ -67,7 +67,7 @@
           },
           {
             "hour": 13,
-            "state": "4"
+            "state": "2"
           },
           {
             "hour": 14,
@@ -75,7 +75,7 @@
           },
           {
             "hour": 17,
-            "state": "4"
+            "state": "2"
           }
         ]
       }

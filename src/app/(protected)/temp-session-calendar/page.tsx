@@ -8,6 +8,7 @@ import EditIcon from "@/components/icons/EditIcon";
 import Navbar from "@/components/layout/Navbar";
 import CalendarWrapper from "@/components/calendar/CalendarWrapper";
 import Link from "next/link";
+import { user } from "@nextui-org/theme";
 
 interface Availability {
   day: string;
@@ -21,6 +22,7 @@ export default function Page() {
     [key: string]: { [key: number]: string };
   }>({});
 
+  // Fetch team calendar data and process it
   async function fetchTeamCalendarData() {
     const usersResponse = await fetch("/data/users.json");
     const users = await usersResponse.json();
@@ -40,6 +42,7 @@ export default function Page() {
     }
 
     const teamMembers = team.members;
+
     let newDayHours: { [key: string]: { [key: number]: string } } = {};
 
     // Process each member's availability
@@ -65,11 +68,11 @@ export default function Page() {
 
             // Determine the state based on availability
             if (state === "3") {
-              newDayHours[day][hour] = "3"; // All available
+              newDayHours[day][hour] = "5"; // all available
             } else if (state === "2") {
-              newDayHours[day][hour] = "2"; // Some available
-            } else if (state === "1") {
-              newDayHours[day][hour] = "1"; // Not available
+              newDayHours[day][hour] = "6"; // Some available
+            } else {
+              newDayHours[day][hour] = "4"; // Not available
             }
           });
         });

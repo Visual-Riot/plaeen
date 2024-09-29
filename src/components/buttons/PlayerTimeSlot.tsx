@@ -16,7 +16,7 @@ STATES EXPLANATION
 interface PlayerTimeSlotProps {
   day: string;
   hour: number;
-  state: "1" | "2" | "3" | "4" | "5" | "6" | "7";
+  state: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8";
   displayedHour?: { hour: number; ampm: string };
   onStateChange: (day: string, hour: number, newState: "1" | "2" | "3") => void;
   isDragging?: boolean;
@@ -57,26 +57,28 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
   const getButtonColor = () => {
     switch (state) {
       case "1": // not available
-        return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite";
+        return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90";
       case "2": // available this week
-        return "bg-lightPurple border-solid border-darkGrey border-opacity-20 border-2 text-black";
+        return "bg-lightPurple border-solid border-darkGrey border-opacity-20 border-2 text-black hover:scale-90";
       case "3": // always available
-        return "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black";
-      case "4": // All team members available
-        return "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black";
-      case "5": // part of the team available
-        return "bg-green bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 text-black";
-      case "6": // game session invitation sent
-        return "bg-black bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 cursor-not-allowed text-offWhite";
-      case "7": // game session invitation received
-        return "bg-black bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 cursor-not-allowed text-offWhite";
+        return "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black hover:scale-90";
+      case "4": // No one available
+        return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite pointer-events-none cursor-not-allowed";
+      case "5": // All team members available
+        return "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black hover:scale-90";
+      case "6": // part of the team available
+        return "bg-green bg-opacity-10 border-solid border-green border-opacity-60 border-2 text-black hover:scale-90";
+      case "7": // game session invitation sent
+        return "bg-black bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 cursor-not-allowed text-offWhite hover:scale-90";
+      case "8": // game session invitation received
+        return "bg-black bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 cursor-not-allowed text-offWhite hover:scale-90";
       default:
-        return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite";
+        return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90";
     }
   };
 
   const defaultClasses =
-    "grow lg:grow-0 w-12 h-12 lg:w-5 lg:h-5 font-semibold hover:scale-90 transition-all ease-in-out duration-300 rounded";
+    "grow lg:grow-0 w-12 h-12 lg:w-5 lg:h-5 font-semibold transition-all ease-in-out duration-300 rounded";
 
   return (
     <button
