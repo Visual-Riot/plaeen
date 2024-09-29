@@ -13,7 +13,7 @@ export function useUserCalendarData(userId?: string, shouldFetch = true) {
 
   // Function to fetch user calendar data
   const fetchUserCalendarData = async (): Promise<void> => {
-    setIsLoading(true); // Set loading to true when starting the fetch
+    setIsLoading(true);
     try {
       const userCalendarResponse = await fetch("/data/user-calendar.json");
       if (!userCalendarResponse.ok) {
@@ -39,7 +39,7 @@ export function useUserCalendarData(userId?: string, shouldFetch = true) {
           }
 
           availability.hours.forEach(({ hour, state }) => {
-            newUserDayHours[day][hour] = state; // Use state directly from JSON
+            newUserDayHours[day][hour] = state;
           });
         });
       }
@@ -48,20 +48,19 @@ export function useUserCalendarData(userId?: string, shouldFetch = true) {
     } catch (error) {
       console.error("Error fetching user availability:", error);
     } finally {
-      setIsLoading(false); // Set loading to false when done
+      setIsLoading(false);
     }
   };
 
-  // Run the fetch function only if shouldFetch is true and userId is provided
   useEffect(() => {
     if (shouldFetch && userId) {
       fetchUserCalendarData();
     }
-  }, [shouldFetch, userId]); // Dependency array includes shouldFetch and userId
+  }, [shouldFetch, userId]);
 
   return {
     userAvailability,
     isLoading,
-    fetchUserCalendarData, // Expose this function for manual use
+    fetchUserCalendarData, // for manual use
   };
 }

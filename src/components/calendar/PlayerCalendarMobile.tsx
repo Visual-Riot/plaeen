@@ -2,6 +2,7 @@ import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import DayButton from "../buttons/DayButton";
 import React, { useState, useEffect } from "react";
 import { startOfWeek, format, addDays } from "date-fns";
+import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
 
 interface PlayerCalendarMobileProps {
   dayHours: { [key: string]: { [key: number]: string } };
@@ -21,7 +22,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   className,
 }) => {
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
-  const weekKey = format(start, "dd.MM.yyyy");
+  const weekKey = format(start, "yyy-MM-dd");
   const [animationTrigger, setAnimationTrigger] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [touchedSlots, setTouchedSlots] = useState<{ [key: string]: boolean }>(
@@ -89,17 +90,11 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
           const newState =
             currentState === "1" ? "2" : currentState === "2" ? "3" : "1";
           onHoursStateChange(day, hour, newState);
-
-          const currentDayHours = JSON.parse(
-            localStorage.getItem(`dayHours-${weekKey}`) || "{}"
-          );
-          if (!currentDayHours[day]) {
-            currentDayHours[day] = {};
-          }
-          currentDayHours[day][hour] = newState;
-          localStorage.setItem(
-            `dayHours-${weekKey}`,
-            JSON.stringify(currentDayHours)
+          updateHourStateInLocalStorage(
+            weekKey,
+            day,
+            hour.toString(),
+            newState
           );
         }
       }

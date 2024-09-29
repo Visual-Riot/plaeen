@@ -3,6 +3,7 @@ import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import React, { useState, useCallback } from "react";
 import { startOfWeek, format, addDays } from "date-fns";
 import { Tooltip } from "@nextui-org/react";
+import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
 
 interface PlayerCalendarDesktopProps {
   dayHours: { [key: string]: { [key: number]: string } };
@@ -35,7 +36,7 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
   className = "",
 }) => {
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
-  const weekKey = format(start, "dd.MM.yyyy");
+  const weekKey = format(start, "yyy-MM-dd");
 
   const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
     const date = addDays(start, i);
@@ -87,16 +88,11 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
                 currentState === "1" ? "2" : currentState === "2" ? "3" : "1";
               onHoursStateChange(day, hour, newState);
 
-              const currentDayHours = JSON.parse(
-                localStorage.getItem(`dayHours-${weekKey}`) || "{}"
-              );
-              if (!currentDayHours[day]) {
-                currentDayHours[day] = {};
-              }
-              currentDayHours[day][hour] = newState;
-              localStorage.setItem(
-                `dayHours-${weekKey}`,
-                JSON.stringify(currentDayHours)
+              updateHourStateInLocalStorage(
+                weekKey,
+                day,
+                hour.toString(),
+                newState
               );
             }
           }
@@ -130,8 +126,8 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
       <div className="flex flex-col">
         <div className="h-[30px]"></div>
 
-        {daysOfWeek.map(({ dayName, dayDate }) => (
-          <div key={dayName} className="h-10 flex items-center relative">
+        {daysOfWeek.map(({ dayKey, dayDate }) => (
+          <div key={dayKey} className="h-10 flex items-center relative">
             <Tooltip
               closeDelay={50}
               placement="left"
@@ -144,8 +140,8 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
                 className="hidden md:inline text-lightPurple font-robotoMono font-regular uppercase text-nowrap"
                 onClick={() =>
                   onSelectAllSlotsForDays(
-                    dayName,
-                    dayHours[dayName] || {},
+                    dayKey,
+                    dayHours[dayKey] || {},
                     hoursOfDay
                   )
                 }
@@ -176,19 +172,23 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
                   {/* Display Hours */}
                   <button
                     className="text-lightPurple font-robotoMono font-regular uppercase text-center w-full h-10 pb-2"
-                    onClick={() =>
+                    onClick={() => {
+                      // Get the current states for all days for the selected hour
+                      const currentStates = daysOfWeek.reduce(
+                        (states, { dayKey }) => ({
+                          ...states,
+                          [dayKey]: dayHours[dayKey]?.[hour] || "1",
+                        }),
+                        {}
+                      );
+
+                      // Call the function to select all slots for this hour
                       onSelectAllSlotsForHours(
                         hour,
-                        daysOfWeek.reduce(
-                          (states, { dayName }) => ({
-                            ...states,
-                            [dayName]: dayHours[dayName]?.[hour] || "1",
-                          }),
-                          {}
-                        ),
-                        daysOfWeek.map(({ dayName }) => dayName)
-                      )
-                    }
+                        currentStates,
+                        daysOfWeek.map(({ dayKey }) => dayKey)
+                      );
+                    }}
                   >
                     <Tooltip
                       closeDelay={50}

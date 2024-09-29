@@ -138,7 +138,7 @@ export default function Page() {
               {/* save button on desktop */}
               <OutlineButton
                 className="align-middle hidden items-center lg:flex"
-                onClick={() => console.log("Submit")}
+                onClick={() => console.log("New Session")}
               >
                 Create new session
               </OutlineButton>

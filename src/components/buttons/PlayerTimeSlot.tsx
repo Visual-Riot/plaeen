@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, use } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { format, startOfWeek, parseISO } from "date-fns";
-import { get } from "http";
+import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
 
 /*
 STATES EXPLANATION
@@ -32,13 +32,12 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
   className = "",
   isDragging,
 }) => {
-  console.log();
   const [state, setState] = useState(initialState);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const weekKey = format(
     startOfWeek(parseISO(day), { weekStartsOn: 1 }),
-    "dd.MM.yyyy"
+    "yyy-MM-dd"
   );
 
   useEffect(() => {
@@ -52,23 +51,8 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
     setState(newState);
     onStateChange(day, hour, newState);
 
-    const currentDayHours = JSON.parse(
-      localStorage.getItem(`dayHours-${weekKey}`) || "{}"
-    );
-    if (!currentDayHours[day]) {
-      currentDayHours[day] = {};
-    }
-    currentDayHours[day][hour] = newState;
-
-    localStorage.setItem(
-      `dayHours-${weekKey}`,
-      JSON.stringify(currentDayHours)
-    );
+    updateHourStateInLocalStorage(weekKey, day, hour.toString(), newState);
   };
-
-  // useEffect(() => {
-  //   localStorage.setItem(`dayHours-${weekKey}`, JSON.stringify(dayHours));
-  // }, [dayHours, weekKey]);
 
   const getButtonColor = () => {
     switch (state) {

@@ -133,10 +133,7 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
       return false;
     }
 
-    const weekKey = format(
-      startOfWeek(date, { weekStartsOn: 1 }),
-      "dd.MM.yyyy"
-    );
+    const weekKey = format(startOfWeek(date, { weekStartsOn: 1 }), "yyy-MM-dd");
     const storedData = localStorage.getItem(`dayHours-${weekKey}`);
 
     if (!storedData) {
