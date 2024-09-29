@@ -121,12 +121,12 @@ export default function Page() {
         {/* Game Filter Dropdown */}
         <div className="w-full md:flex-1 relative">
           <div
-            className="w-full bg-transparent text-white p-4 rounded-md border-2 border-purple-600 cursor-pointer flex justify-between items-center"
+            className="w-full bg-transparent text-white p-4 rounded-md border-2 border-neonPurple cursor-pointer flex justify-between items-center"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <span>{selectedGame?.name || "Select a game..."}</span>
             <WhiteArrow
-              className={`transform ${isDropdownOpen ? "rotate-180" : ""} transition-transform duration-200`}
+              className={`transform text-sm ${isDropdownOpen ? "rotate-180" : ""} transition-transform duration-200`}
               noAnimation={true}
               color="text-white"
             />
@@ -186,7 +186,7 @@ export default function Page() {
         {/* Game cover art display */}
         {selectedGame && selectedGame.background_image && (
           <div
-            className="relative w-[90%] mx-auto my-20 h-[250px] rounded-md overflow-hidden"
+            className="relative w-[90%] mx-auto my-20 h-[350px] rounded-md overflow-hidden"
             style={{
               backgroundImage: `url(${selectedGame.background_image})`,
               backgroundSize: "cover",
@@ -195,7 +195,7 @@ export default function Page() {
           >
             <div className="absolute inset-0 bg-black bg-opacity-50"></div>
             <div className="absolute flex flex-col justify-center items-center w-full h-full text-white z-9">
-              <h2 className="text-6xl font-abolition text-neonGreen">
+              <h2 className="text-5xl text-center font-sofia font-semibold text-neonGreen">
                 {selectedGame.name}
               </h2>
               <p className="mt-4 text-sm font-extralight">
@@ -203,7 +203,7 @@ export default function Page() {
               </p>
             </div>
             <div className="absolute bottom-4 right-4 flex space-x-4 z-10">
-              <button className="text-darkGrey bg-lightGrey p-2 rounded-full hover:bg-gray-700">
+              <button className="text-darkGrey bg-lightGrey p-2 rounded-full hover:bg-gray-700 hover:text-lightGrey">
                 <MdEdit className="w-4 h-4" />
               </button>
               <button className="text-white bg-red p-2 rounded-full hover:bg-gray-700">
