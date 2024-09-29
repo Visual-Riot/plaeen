@@ -21,6 +21,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   className,
 }) => {
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const weekKey = format(start, "dd.MM.yyyy");
   const [animationTrigger, setAnimationTrigger] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [touchedSlots, setTouchedSlots] = useState<{ [key: string]: boolean }>(
@@ -33,6 +34,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
       dayName: format(date, "EEEE"),
       shortDayName: format(date, "EEE"),
       dayDate: format(date, "dd"),
+      dayKey: format(date, "yyyy-MM-dd"),
     };
   });
 
@@ -87,6 +89,18 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
           const newState =
             currentState === "1" ? "2" : currentState === "2" ? "3" : "1";
           onHoursStateChange(day, hour, newState);
+
+          const currentDayHours = JSON.parse(
+            localStorage.getItem(`dayHours-${weekKey}`) || "{}"
+          );
+          if (!currentDayHours[day]) {
+            currentDayHours[day] = {};
+          }
+          currentDayHours[day][hour] = newState;
+          localStorage.setItem(
+            `dayHours-${weekKey}`,
+            JSON.stringify(currentDayHours)
+          );
         }
       }
     }
@@ -116,8 +130,13 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   // render player time slots for each day of the week depending on the selected day
   const renderTimeSlots = () => {
     return hoursOfDay.map((hour) => {
-      const slotState = dayHours[selectedDay]?.[hour] || "1";
       const { formattedHour, ampm } = formatHour(hour);
+
+      const dayKey = daysOfWeek.find(
+        (day) => day.dayName === selectedDay
+      )?.dayKey;
+
+      const slotState = dayKey ? dayHours[dayKey]?.[hour] || "1" : "1";
 
       return (
         <div
@@ -127,9 +146,9 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
           }`}
         >
           <PlayerTimeSlot
-            day={selectedDay}
+            day={dayKey as string}
             hour={hour}
-            state={slotState as "1" | "2" | "3"}
+            state={slotState as "1" | "2" | "3" | "4" | "5" | "6" | "7"}
             displayedHour={{ hour: formattedHour, ampm }}
             onStateChange={onHoursStateChange}
             isDragging={isDragging}

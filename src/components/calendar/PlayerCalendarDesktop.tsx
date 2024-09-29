@@ -1,16 +1,15 @@
 "use client";
 import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import React, { useState, useCallback } from "react";
-import HoverInstruction from "./HoverInstruction";
 import { startOfWeek, format, addDays } from "date-fns";
-import { Tooltip, Button } from "@nextui-org/react";
+import { Tooltip } from "@nextui-org/react";
 
 interface PlayerCalendarDesktopProps {
   dayHours: { [key: string]: { [key: number]: string } };
   onHoursStateChange: (
     day: string,
     hour: number,
-    newState: "1" | "2" | "3",
+    newState: "1" | "2" | "3" | "4" | "5" | "6" | "7",
     selectedDay?: string
   ) => void;
   onSelectAllSlotsForDays: (
@@ -36,6 +35,7 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
   className = "",
 }) => {
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const weekKey = format(start, "dd.MM.yyyy");
 
   const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
     const date = addDays(start, i);
@@ -43,6 +43,7 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
       dayName: format(date, "EEEE"),
       shortDayName: format(date, "EEE"),
       dayDate: format(date, "EEEE dd"),
+      dayKey: format(date, "yyyy-MM-dd"),
     };
   });
 
@@ -85,12 +86,24 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
               const newState =
                 currentState === "1" ? "2" : currentState === "2" ? "3" : "1";
               onHoursStateChange(day, hour, newState);
+
+              const currentDayHours = JSON.parse(
+                localStorage.getItem(`dayHours-${weekKey}`) || "{}"
+              );
+              if (!currentDayHours[day]) {
+                currentDayHours[day] = {};
+              }
+              currentDayHours[day][hour] = newState;
+              localStorage.setItem(
+                `dayHours-${weekKey}`,
+                JSON.stringify(currentDayHours)
+              );
             }
           }
         }
       }
     },
-    [isDragging, touchedSlots, dayHours, onHoursStateChange]
+    [isDragging, touchedSlots, dayHours, onHoursStateChange, weekKey]
   );
 
   const handleMouseUp = useCallback(() => {
@@ -189,13 +202,20 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
                   </button>
                 </div>
                 <div className="flex flex-col">
-                  {daysOfWeek.map(({ dayName }) => (
-                    <div key={`${dayName}-${hour}`} className="h-10 flex">
+                  {daysOfWeek.map(({ dayKey }) => (
+                    <div key={`${dayKey}-${hour}`} className="h-10 flex">
                       <PlayerTimeSlot
-                        day={dayName}
+                        day={dayKey}
                         hour={hour}
                         state={
-                          (dayHours[dayName]?.[hour] as "1" | "2" | "3") || "1"
+                          (dayHours[dayKey]?.[hour] as
+                            | "1"
+                            | "2"
+                            | "3"
+                            | "4"
+                            | "5"
+                            | "6"
+                            | "7") || "1"
                         }
                         onStateChange={onHoursStateChange}
                       />

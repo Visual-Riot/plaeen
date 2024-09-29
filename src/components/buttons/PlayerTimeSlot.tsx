@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
+import { format, startOfWeek, parseISO } from "date-fns";
+import { get } from "http";
 
 /*
 STATES EXPLANATION
@@ -30,9 +32,14 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
   className = "",
   isDragging,
 }) => {
+  console.log();
   const [state, setState] = useState(initialState);
-
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const weekKey = format(
+    startOfWeek(parseISO(day), { weekStartsOn: 1 }),
+    "dd.MM.yyyy"
+  );
 
   useEffect(() => {
     setState(initialState);
@@ -41,11 +48,27 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
   // handle click on the button
   const handleClick = (e: React.MouseEvent) => {
     if (isDragging) return;
-
     const newState = state === "1" ? "2" : state === "2" ? "3" : "1"; // 1 - not available | 2 - available this week | 3 -always available
     setState(newState);
     onStateChange(day, hour, newState);
+
+    const currentDayHours = JSON.parse(
+      localStorage.getItem(`dayHours-${weekKey}`) || "{}"
+    );
+    if (!currentDayHours[day]) {
+      currentDayHours[day] = {};
+    }
+    currentDayHours[day][hour] = newState;
+
+    localStorage.setItem(
+      `dayHours-${weekKey}`,
+      JSON.stringify(currentDayHours)
+    );
   };
+
+  // useEffect(() => {
+  //   localStorage.setItem(`dayHours-${weekKey}`, JSON.stringify(dayHours));
+  // }, [dayHours, weekKey]);
 
   const getButtonColor = () => {
     switch (state) {

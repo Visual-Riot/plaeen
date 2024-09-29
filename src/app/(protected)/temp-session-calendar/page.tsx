@@ -8,7 +8,6 @@ import EditIcon from "@/components/icons/EditIcon";
 import Navbar from "@/components/layout/Navbar";
 import CalendarWrapper from "@/components/calendar/CalendarWrapper";
 import Link from "next/link";
-import { set } from "date-fns";
 
 interface Availability {
   day: string;
@@ -32,10 +31,6 @@ export default function Page() {
     const teamResponse = await fetch("/data/teams.json");
     const teams = await teamResponse.json();
 
-    const gameCalendarResponse = await fetch("/data/game-calendar.json");
-    const gameCalendar = await gameCalendarResponse.json();
-
-    const gameCalendarId = "game-calendar-001"; // hardcoded for now
     const teamId = "team-001"; // hardcoded for now
 
     const team = teams.find((team: { id: string }) => team.id === teamId);
@@ -45,8 +40,6 @@ export default function Page() {
     }
 
     const teamMembers = team.members;
-
-    // Initialize newDayHours in the correct format
     let newDayHours: { [key: string]: { [key: number]: string } } = {};
 
     // Process each member's availability
@@ -84,12 +77,6 @@ export default function Page() {
     }
 
     setDayHours(newDayHours);
-    console.log("Day hours", newDayHours);
-
-    localStorage.setItem("dayHours", JSON.stringify(newDayHours));
-    console.log(
-      "Day hours saved to local storage" + localStorage.getItem("dayHours")
-    );
     setIsLoading(false);
   }
 
