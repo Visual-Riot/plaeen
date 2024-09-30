@@ -4,24 +4,16 @@
     "user_id": "user-001",
     "availability": [
       {
-        "day": "2024-09-23",
+        "day": "2024-09-30",
         "hours": [
           {
             "hour": 1,
-            "state": "1"
-          },
-          {
-            "hour": 2,
             "state": "2"
-          },
-          {
-            "hour": 3,
-            "state": "3"
           }
         ]
       },
       {
-        "day": "2024-09-28",
+        "day": "2024-10-01",
         "hours": [
           {
             "hour": 16,
@@ -42,15 +34,53 @@
     "user_id": "user-002",
     "availability": [
       {
-        "day": "2024-09-23",
+        "day": "2024-09-30",
         "hours": [
           {
             "hour": 1,
             "state": "2"
+          }
+        ]
+      },
+      {
+        "day": "2024-09-28",
+        "hours": [
+          {
+            "hour": 11,
+            "state": "2"
           },
           {
-            "hour": 4,
+            "hour": 12,
             "state": "3"
+          },
+          {
+            "hour": 13,
+            "state": "2"
+          },
+          {
+            "hour": 14,
+            "state": "3"
+          },
+          {
+            "hour": 17,
+            "state": "2"
+          }
+        ]
+      }
+    ],
+    "created_at": "2023-09-01T10:15:30.000Z",
+    "updated_at": "2023-09-10T12:30:15.000Z"
+  },
+  {
+    "id": "calendar-user-003",
+    "user_id": "user-002",
+    "availability": [
+      {
+        "day": "2024-09-30",
+        "hours": [
+          {
+            "hour": 1,
+            "state": "2"
           }
         ]
       },

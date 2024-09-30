@@ -10,7 +10,7 @@ interface PlayerCalendarDesktopProps {
   onHoursStateChange: (
     day: string,
     hour: number,
-    newState: "1" | "2" | "3" | "4" | "5" | "6" | "7",
+    newState: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8",
     selectedDay?: string
   ) => void;
   onSelectAllSlotsForDays: (
@@ -215,7 +215,8 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
                             | "4"
                             | "5"
                             | "6"
-                            | "7") || "1"
+                            | "7"
+                            | "8") || "0"
                         }
                         onStateChange={onHoursStateChange}
                       />

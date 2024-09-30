@@ -143,7 +143,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
           <PlayerTimeSlot
             day={dayKey as string}
             hour={hour}
-            state={slotState as "1" | "2" | "3" | "4" | "5" | "6" | "7"}
+            state={slotState as "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8"}
             displayedHour={{ hour: formattedHour, ampm }}
             onStateChange={onHoursStateChange}
             isDragging={isDragging}

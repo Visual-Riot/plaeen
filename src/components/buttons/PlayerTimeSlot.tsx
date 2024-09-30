@@ -7,16 +7,17 @@ STATES EXPLANATION
 1 - not available
 2 - available this week
 3 - always available
-4 - All team members available
-5 - part of the team available
-6 - game session invitation sent
-7 - game session invitation received
+4 - No one from the team is available
+5 - All team members available
+6 - Part of the team available
+7 - game session invitation sent
+8 - game session invitation received
 */
 
 interface PlayerTimeSlotProps {
   day: string;
   hour: number;
-  state: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8";
+  state: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8";
   displayedHour?: { hour: number; ampm: string };
   onStateChange: (day: string, hour: number, newState: "1" | "2" | "3") => void;
   isDragging?: boolean;
@@ -46,6 +47,7 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
 
   // handle click on the button
   const handleClick = (e: React.MouseEvent) => {
+    console.log(state);
     if (isDragging) return;
     const newState = state === "1" ? "2" : state === "2" ? "3" : "1"; // 1 - not available | 2 - available this week | 3 -always available
     setState(newState);
@@ -56,6 +58,8 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
 
   const getButtonColor = () => {
     switch (state) {
+      case "0": // not available
+        return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90 pointer-events-none cursor-not-allowed";
       case "1": // not available
         return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90";
       case "2": // available this week

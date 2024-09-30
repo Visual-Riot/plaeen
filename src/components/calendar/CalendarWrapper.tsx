@@ -25,14 +25,14 @@ interface CalendarWrapperProps {
   setDayHours: React.Dispatch<
     React.SetStateAction<{ [key: string]: { [key: number]: string } }>
   >;
-  allowedStates?: string[];
+  desktopWidgetTop?: string;
   className?: string;
 }
 
 const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
   dayHours,
   setDayHours,
-  allowedStates,
+  desktopWidgetTop = "top-[220px]",
   className,
 }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
@@ -250,7 +250,7 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
             </div>
 
             <div
-              className={`absolute opacity-0 top-[220px] right-[38px] z-10 transition-all duration-300 ease-in-out ${
+              className={`absolute opacity-0 ${desktopWidgetTop} right-[38px] z-10 transition-all duration-300 ease-in-out ${
                 showDesktopCalendarWidget
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
