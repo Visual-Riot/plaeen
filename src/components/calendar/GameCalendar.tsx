@@ -37,7 +37,7 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
       const gameCalendarResponse = await fetch("/data/game-calendar.json");
       const gameCalendars = await gameCalendarResponse.json();
 
-      // Find the correct game calendar based on team_id and game_id
+      // Find the correct game calendar based on team_id and game_id --- that is passed to this component
       const gameCalendar = gameCalendars.find(
         (calendar: { team_id: string; game_id: string }) =>
           calendar.team_id === teamId && calendar.game_id === gameId
@@ -60,7 +60,7 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
 
       const teamMembers = team.members;
 
-      // Fetch the user calendars
+      // Fetch the user calendars (all of the team members)
       const userCalendarResponse = await fetch("/data/user-calendar.json");
       const userCalendars = await userCalendarResponse.json();
 
@@ -82,16 +82,12 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
 
             availability.hours.forEach(({ hour, state }) => {
               if (!newDayHours[day][hour]) {
-                newDayHours[day][hour] = "0"; // Initialize state to 0
+                newDayHours[day][hour] = "0"; // Initialize state to 0 - this is in case no data is available for a specific day-hour
               }
 
-              // Count the states for all members
-              const currentState = newDayHours[day][hour];
-              const currentCount = Number(currentState);
-
               if (state === "2" || state === "3") {
-                // If the member is available, set state to "1" to indicate availability
-                newDayHours[day][hour] = "1";
+                // If the member is available, set state to "1" to indicate availability -
+                newDayHours[day][hour] = "1"; // --- this is temporary marking and will be changed so number/state 1 is not final
               }
             });
           });
@@ -135,11 +131,11 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
 
           // Set the new state based on the count of available members
           if (availableCount === teamMembers.length) {
-            newDayHours[day][hour] = "5"; // All team members available
+            newDayHours[day][hour] = "4"; // All team members available
           } else if (availableCount >= 2) {
-            newDayHours[day][hour] = "6"; // Some team members available
+            newDayHours[day][hour] = "5"; // Some team members available
           } else {
-            newDayHours[day][hour] = "4"; // Less than 2 members available
+            newDayHours[day][hour] = "0"; // Less than 2 members available
           }
         }
       }
@@ -155,6 +151,7 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
     fetchTeamCalendarData(teamId, gameId);
   }, []);
 
+  //   SKELETON LOADING
   if (isLoading) {
     return (
       <div className="my-5 w-full flex">
@@ -220,6 +217,7 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
     );
   }
 
+  //   RETURNING THE LOADED COMPONENT
   return (
     <>
       <CalendarWrapper

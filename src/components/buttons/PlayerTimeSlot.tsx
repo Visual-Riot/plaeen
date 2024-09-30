@@ -4,20 +4,20 @@ import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
 
 /*
 STATES EXPLANATION
+0 - not available and not active (for team calendar)
 1 - not available
 2 - available this week
 3 - always available
-4 - No one from the team is available
-5 - All team members available
-6 - Part of the team available
-7 - game session invitation sent
-8 - game session invitation received
+4 - All team members available
+5 - Part of the team available
+6 - game session invitation sent
+7 - game session invitation received
 */
 
 interface PlayerTimeSlotProps {
   day: string;
   hour: number;
-  state: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8";
+  state: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7";
   displayedHour?: { hour: number; ampm: string };
   onStateChange: (day: string, hour: number, newState: "1" | "2" | "3") => void;
   isDragging?: boolean;
@@ -58,7 +58,7 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
 
   const getButtonColor = () => {
     switch (state) {
-      case "0": // not available
+      case "0": // not available and not active (for team calendar)
         return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90 pointer-events-none cursor-not-allowed";
       case "1": // not available
         return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90";
@@ -66,15 +66,13 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
         return "bg-lightPurple border-solid border-darkGrey border-opacity-20 border-2 text-black hover:scale-90";
       case "3": // always available
         return "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black hover:scale-90";
-      case "4": // No one available
-        return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite pointer-events-none cursor-not-allowed";
-      case "5": // All team members available
+      case "4": // All team members available
         return "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black hover:scale-90";
-      case "6": // part of the team available
+      case "5": // part of the team available
         return "bg-green bg-opacity-10 border-solid border-green border-opacity-60 border-2 text-black hover:scale-90";
-      case "7": // game session invitation sent
+      case "6": // game session invitation sent
         return "bg-black bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 cursor-not-allowed text-offWhite hover:scale-90";
-      case "8": // game session invitation received
+      case "7": // game session invitation received
         return "bg-black bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 cursor-not-allowed text-offWhite hover:scale-90";
       default:
         return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90";
