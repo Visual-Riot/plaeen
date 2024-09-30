@@ -4,10 +4,15 @@ import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
 
 /*
 STATES EXPLANATION
+
 0 - not available and not active (for team calendar)
+
+----STATES FOR PLAYER CALENDAR----
 1 - not available
 2 - available this week
 3 - always available
+
+----STATES FOR TEAM CALENDAR----
 4 - All team members available
 5 - Part of the team available
 6 - game session invitation sent
