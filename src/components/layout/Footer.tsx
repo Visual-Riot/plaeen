@@ -31,7 +31,7 @@ const Footer: React.FC<FooterProps> = ({ useBackgroundImage = true, className })
   };
 
   const footerClass = classNames(
-    "flex items-center justify-center xs:h-[55vh] sm:h-[40vh] mt-[150px] text-center text-white w-screen",
+    "flex items-center justify-center xs:h-[55vh] sm:h-[40vh] mt-[150px] text-center text-white",
     {
       "bg-[url('/img/footer-bg-noshadow.webp')] bg-cover bg-top": useBackgroundImage,
       "bg-gray-800": !useBackgroundImage, // Fallback background color if no image is used
