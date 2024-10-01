@@ -15,7 +15,7 @@ import { signOut } from "next-auth/react";
 
 interface NavbarProps {
   className?: string;
-  avatar?: string;
+  avatar?: string | null;
 }
 
 const Navbar: FC<NavbarProps> = ({ className, avatar }) => {
