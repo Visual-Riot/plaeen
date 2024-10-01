@@ -14,9 +14,10 @@ import Link from "next/link";
 
 interface NavbarProps {
   className?: string;
+  avatar?: string;
 }
 
-const Navbar: FC<NavbarProps> = ({ className }) => {
+const Navbar: FC<NavbarProps> = ({ className, avatar }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
@@ -28,6 +29,7 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
     if (typeof window !== "undefined") {
       if (localStorage.getItem("userAvatar")) {
         setUserAvatar(localStorage.getItem("userAvatar"));
+        console.log({ avatar });
       }
     }
   }, []);
