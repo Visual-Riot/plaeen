@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "A streamlined and intuitive scheduler tailored for busy gamers, by gamers. Estimate completion dates, share your calendars and conquer levels together!",
 };
-
+//test
 export default function RootLayout({
   children,
 }: Readonly<{

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "game-calendar-001",
+    "admin_id": "user-001",
+    "team_id": "team-001",
+    "game_id": "game-001",
+    "sessions": [
+      {
+        "id": "session-001",
+        "dates": [
+          {
+            "day": "2024-09-30",
+            "hours": [18, 19],
+            "duration_hours": 2,
+            "status": "proposed",
+            "created_at": "2024-09-26T09:00:00.000Z",
+            "updated_at": "2024-09-26T09:30:00.000Z"
+          }
+        ],
+        "created_at": "2024-09-26T09:00:00.000Z",
+        "updated_at": "2024-09-26T09:30:00.000Z"
+      },
+      {
+        "id": "session-002",
+        "dates": [
+          {
+            "day": "2024-09-29",
+            "hours": [13, 14],
+            "duration_hours": 2,
+            "status": "pending",
+            "created_at": "2024-09-26T09:00:00.000Z",
+            "updated_at": "2024-09-26T09:30:00.000Z"
+          }
+        ],
+        "created_at": "2024-09-26T09:00:00.000Z",
+        "updated_at": "2024-09-26T09:30:00.000Z"
+      }
+    ],
+    "created_at": "2024-09-26T09:00:00.000Z",
+    "updated_at": "2024-09-26T09:30:00.000Z"
+  }
+]

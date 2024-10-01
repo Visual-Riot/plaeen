@@ -58,7 +58,7 @@ export default function Page() {
 
   return (
     <div className="text-taupe font-light font-sofia max-w-[90%] mx-auto">
-      <Navbar avatar={selectedImage} />
+      <Navbar />
       <div
         className="container mx-auto mt-16 rounded-xl py-16"
         style={{ backgroundColor: "rgba(184, 180, 189, 0.15)" }}
@@ -215,7 +215,7 @@ export default function Page() {
 
         {/* Add calendar here */}
       </div>
-      {/* <Footer useBackgroundImage={false} className="bg-[#000000!important]" /> */}
+      <Footer useBackgroundImage={false} className="bg-[#000000!important]" />
     </div>
   );
 }

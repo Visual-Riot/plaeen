@@ -70,6 +70,7 @@ const config: Config = {
         logo: ["abolition-soft", "sans-serif"],
       },
       fontWeight: {
+        extraLight: "100",
         light: "300",
         regular: "400",
         medium: "500",

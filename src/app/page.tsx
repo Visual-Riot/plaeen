@@ -26,7 +26,7 @@ export default function Home() {
       </div>
       <FAQsSection />
       <HomePageSignUp />
-      <Footer />
+      <Footer useBackgroundImage={true} />
     </main>
   );
 }
