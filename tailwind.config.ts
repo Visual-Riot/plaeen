@@ -36,6 +36,7 @@ const config: Config = {
         yellow: "#FFBB00",
         blue: "#167EE6",
         taupe: "#b8b4bd",
+        neonPurple: "#5811c0",
 
         // PLAEEN specific colors
         // main colors
@@ -69,6 +70,7 @@ const config: Config = {
         logo: ["abolition-soft", "sans-serif"],
       },
       fontWeight: {
+        extraLight: "100",
         light: "300",
         regular: "400",
         medium: "500",
