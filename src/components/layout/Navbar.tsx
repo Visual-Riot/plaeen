@@ -14,19 +14,30 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 
 interface NavbarProps {
-  avatar: string | null;
+  className?: string;
 }
 
-const Navbar: FC<NavbarProps> = ({ avatar }) => {
+const Navbar: FC<NavbarProps> = ({ className }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [userAvatar, setUserAvatar] = useState<string | null>(avatar);
+  const [userAvatar, setUserAvatar] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (avatar) {
-      setUserAvatar(avatar);
+    setMounted(true);
+
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("userAvatar")) {
+        setUserAvatar(localStorage.getItem("userAvatar"));
+      }
     }
-  }, [avatar]);
+  }, []);
+
+  // useEffect(() => {
+  //   if (localStorage.getItem("userAvatar")) {
+  //     setUserAvatar(localStorage.getItem("userAvatar"));
+  //   }
+  // }, [userAvatar]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -85,7 +96,7 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
   };
 
   return (
-    <div style={navContainerStyles}>
+    <div style={navContainerStyles} className={className}>
       <nav style={navStyles}>
         <div className="container mx-auto flex justify-between items-center mt-1">
           {/* Logo */}
@@ -130,23 +141,32 @@ const Navbar: FC<NavbarProps> = ({ avatar }) => {
               ref={dropdownRef}
               onMouseEnter={() => setIsDropdownOpen(true)}
             >
-              <button className="focus:outline-none flex items-center">
-                {userAvatar ? (
-                  <Image
-                    src={userAvatar}
-                    alt="User Avatar"
-                    width={60}
-                    height={60}
-                    className="rounded-full border-2 border-neonGreen cursor-pointer"
-                  />
-                ) : (
-                  <Image
-                    src="/icons/avatar-default.jpg"
-                    alt="Default Avatar"
-                    width={60}
-                    height={60}
-                    className="rounded-full border-2 border-neonGreen cursor-pointer"
-                  />
+              <button className="focus:outline-none flex items-center h-[60px] w-[60px]">
+                {mounted &&
+                  (userAvatar ? (
+                    <Image
+                      src={userAvatar}
+                      alt="User Avatar"
+                      width={60}
+                      height={60}
+                      className="h-14 w-14 rounded-full cursor-pointer border-2 border-neonGreen"
+                    />
+                  ) : (
+                    <Image
+                      src="/icons/avatar-default.jpg"
+                      alt="Default Avatar"
+                      width={60}
+                      height={60}
+                      className="h-14 w-14 rounded-full cursor-pointer border-2 border-neonGreen"
+                    />
+                  ))}
+
+                {!mounted && (
+                  <div
+                    className={`rounded-full z-2 border-2 border-neonGreen cursor-pointer z-2 h-14 w-14 bg-green ${
+                      mounted ? "bg-opacity-0" : "bg-opacity-20 animate-pulse"
+                    }`}
+                  ></div>
                 )}
               </button>
               {isDropdownOpen && (

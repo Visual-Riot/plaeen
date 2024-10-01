@@ -2,6 +2,7 @@ import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
 import DayButton from "../buttons/DayButton";
 import React, { useState, useEffect } from "react";
 import { startOfWeek, format, addDays } from "date-fns";
+import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
 
 interface PlayerCalendarMobileProps {
   dayHours: { [key: string]: { [key: number]: string } };
@@ -9,7 +10,7 @@ interface PlayerCalendarMobileProps {
   onHoursStateChange: (
     day: string,
     hour: number,
-    newState: "available" | "single" | "recurring"
+    newState: "1" | "2" | "3"
   ) => void;
   className?: string;
 }
@@ -21,6 +22,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   className,
 }) => {
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const weekKey = format(start, "yyy-MM-dd");
   const [animationTrigger, setAnimationTrigger] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [touchedSlots, setTouchedSlots] = useState<{ [key: string]: boolean }>(
@@ -33,6 +35,7 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
       dayName: format(date, "EEEE"),
       shortDayName: format(date, "EEE"),
       dayDate: format(date, "dd"),
+      dayKey: format(date, "yyyy-MM-dd"),
     };
   });
 
@@ -82,15 +85,17 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
         if (!touchedSlots[slotKey]) {
           setTouchedSlots((prev) => ({ ...prev, [slotKey]: true }));
 
-          const currentState = dayHours[day]?.[hour] || "available";
+          const currentState = dayHours[day]?.[hour] || "1";
 
           const newState =
-            currentState === "available"
-              ? "single"
-              : currentState === "single"
-              ? "recurring"
-              : "available";
+            currentState === "1" ? "2" : currentState === "2" ? "3" : "1";
           onHoursStateChange(day, hour, newState);
+          updateHourStateInLocalStorage(
+            weekKey,
+            day,
+            hour.toString(),
+            newState
+          );
         }
       }
     }
@@ -120,8 +125,13 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
   // render player time slots for each day of the week depending on the selected day
   const renderTimeSlots = () => {
     return hoursOfDay.map((hour) => {
-      const slotState = dayHours[selectedDay]?.[hour] || "available";
       const { formattedHour, ampm } = formatHour(hour);
+
+      const dayKey = daysOfWeek.find(
+        (day) => day.dayName === selectedDay
+      )?.dayKey;
+
+      const slotState = dayKey ? dayHours[dayKey]?.[hour] || "1" : "1";
 
       return (
         <div
@@ -131,9 +141,9 @@ const PlayerCalendarMobile: React.FC<PlayerCalendarMobileProps> = ({
           }`}
         >
           <PlayerTimeSlot
-            day={selectedDay}
+            day={dayKey as string}
             hour={hour}
-            state={slotState as "available" | "single" | "recurring"}
+            state={slotState as "1" | "2" | "3" | "4" | "5" | "6" | "7"}
             displayedHour={{ hour: formattedHour, ampm }}
             onStateChange={onHoursStateChange}
             isDragging={isDragging}
