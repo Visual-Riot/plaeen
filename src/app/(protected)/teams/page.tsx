@@ -108,7 +108,7 @@ export default function Page() {
 
   return (
     <>
-      <Navbar avatar={selectedImage} />
+      <Navbar />
       <div className="bg-black w-full h-full bg-[url('/img/bg-img_01.webp')] bg-cover bg-center">
         <div className="bg-[black]/85 w-full h-screen flex flex-col items-center justify-center mt-[-70px]">
           <div className="bg-[#6606E3]/5 w-full flex flex-col items-center justify-center h-full">
