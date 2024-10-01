@@ -15,9 +15,10 @@ import { signOut } from "next-auth/react";
 
 interface NavbarProps {
   className?: string;
+  avatar?: string | null;
 }
 
-const Navbar: FC<NavbarProps> = ({ className }) => {
+const Navbar: FC<NavbarProps> = ({ className, avatar }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
