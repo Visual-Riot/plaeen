@@ -44,10 +44,14 @@ export default function Page() {
   const [displayedGames, setDisplayedGames] = useState<Game[]>([]); // State for games displayed on the page
   const [page, setPage] = useState<number>(1); // State for pagination
   const [hasMoreGames, setHasMoreGames] = useState<boolean>(true); // To check if more games are available
-  const [games, setGames] = useState<Game[]>([]); // Assuming you are fetching games
+  const [favouritedGames, setFavouritedGames] = useState<number[]>([]); // Store IDs of favourited games
   const { id: teamId } = useParams(); // Fetch teamId from route params
 
   const router = useRouter();
+
+  useEffect(() => {
+    fetchFavouritedGames(); // Fetch favourited games on mount
+  }, []);
 
   useEffect(() => {
     // Fetch all games when the component mounts
@@ -82,6 +86,60 @@ export default function Page() {
     setPage(1); // Reset pagination
     setHasMoreGames(filtered.length > 18); // Check if there are more games to load
   }, [searchTerm, selectedGenres, selectedPlatforms, selectedThemes, selectedPlayerModes, selectedRelevance, allGames]);  
+
+  const fetchFavouritedGames = async () => {
+    try {
+      const response = await fetch('/api/favourites');
+      if (response.ok) {
+        const data = await response.json();
+        const favouriteIds = data.map((game: { gameId: number }) => game.gameId);
+        setFavouritedGames(favouriteIds); // Store the IDs of favourited games
+      } else {
+        console.error('Failed to fetch favourited games');
+      }
+    } catch (error) {
+      console.error('Error fetching favourited games:', error);
+    }
+  };
+
+  const handleFavouriteClick = async (gameId: number) => {
+    try {
+      const isFavourited = favouritedGames.includes(gameId);
+  
+      if (isFavourited) {
+        // Remove the game from favourites using the DELETE route
+        const response = await fetch(`/api/favourites/${gameId}`, {
+          method: 'DELETE',
+        });
+  
+        if (response.ok) {
+          setFavouritedGames(favouritedGames.filter((id) => id !== gameId)); // Update state to remove the game
+        } else {
+          const errorMessage = await response.text(); // Log server response
+          console.error('Failed to remove game from favourites:', errorMessage);
+        }
+      } else {
+        // Add the game to favourites using the POST route
+        const response = await fetch('/api/favourites', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ gameId }), // Include gameId in the body
+        });
+  
+        if (response.ok) {
+          setFavouritedGames([...favouritedGames, gameId]); // Update state to add the game
+        } else {
+          const errorMessage = await response.text(); // Log server response
+          console.error('Failed to add game to favourites:', errorMessage);
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling favourite:', error);
+    }
+  };
+  
 
   const fetchAllGames = () => {
     try {
@@ -143,7 +201,6 @@ export default function Page() {
     if (platformName.toLowerCase().includes("playstation")) return "PlayStation";
     if (platformName.toLowerCase().includes("xbox")) return "Xbox";
     if (platformName.toLowerCase().includes("nintendo")) return "Nintendo";
-    // Add other normalization rules as needed
     return platformName;
   };
 
@@ -290,7 +347,7 @@ export default function Page() {
             onCreateSession={async () => {
               try {
                 const parsedTeamId = Array.isArray(teamId) ? parseInt(teamId[0], 10) : parseInt(teamId, 10);
-
+          
                 const response = await fetch('/api/sessions', {
                   method: 'POST',
                   headers: {
@@ -306,22 +363,21 @@ export default function Page() {
                     teamId: parsedTeamId, // Use the parsed teamId
                   }),
                 });
-            
+          
                 if (!response.ok) {
                   throw new Error('Failed to create session');
                 }
-            
+          
                 const data = await response.json();
                 console.log('Session created successfully:', data);
               } catch (error) {
                 console.error('Error creating session:', error);
               }
             }}
-            
-            onFavourite={() => console.log('Favourite Clicked')}
+            isfavourited={favouritedGames.includes(game.id)} // Use lowercase as expected by GameCard
+            onFavourite={() => handleFavouriteClick(game.id)} // Toggle favourite
             gameInfoUrl={`https://rawg.io/games/${game.id}`}
           />
-          
           
           ))}
         </div>

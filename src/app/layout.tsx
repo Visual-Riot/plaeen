@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { NextUIProvider } from "@nextui-org/system";
+import { SessionProvider } from "next-auth/react"; // Import SessionProvider
 
 export const metadata: Metadata = {
   title: "Plaeen",
   description:
     "A streamlined and intuitive scheduler tailored for busy gamers, by gamers. Estimate completion dates, share your calendars and conquer levels together!",
 };
-//test
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -19,7 +20,9 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/qor3xoj.css" />
       </head>
       <body>
-        <NextUIProvider>{children}</NextUIProvider>
+        <SessionProvider> {/* Wrap the app in SessionProvider */}
+          <NextUIProvider>{children}</NextUIProvider>
+        </SessionProvider>
       </body>
     </html>
   );

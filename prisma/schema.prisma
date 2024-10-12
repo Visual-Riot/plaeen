@@ -29,6 +29,7 @@ model User {
   role          UserRole  @default(USER)
   accounts      Account[]
   sessions      Session[]
+  favouritedGames  favouritedGame[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -103,4 +104,18 @@ model GameSession {
   team            Team     @relation(fields: [teamId], references: [id])
   teamId          Int
   createdAt       DateTime @default(now())
+}
+
+model favouritedGame {
+  id        Int      @id @default(autoincrement())
+  userId    String      // The ID of the user who favourited the game
+  gameId    Int      // ID of the game that was favourited
+  gameName  String   // Name of the favourited game
+  backgroundImage String? // URL of the game's background image
+  genres    String[] // Array of game genres
+  platforms String[] // Array of platforms
+  rating    Float?   // Game rating
+  favouritedAt DateTime @default(now()) // Timestamp when the game was favourited
+
+  user      User     @relation(fields: [userId], references: [id]) // Relation to the user
 }

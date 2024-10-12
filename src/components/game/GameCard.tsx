@@ -17,6 +17,7 @@ interface GameCardProps {
   rating: string;
   teamId: string;
   onCreateSession: () => void;
+  isfavourited: boolean;
   onFavourite: () => void;
   gameInfoUrl: string;
 }
@@ -29,6 +30,7 @@ const GameCard: React.FC<GameCardProps> = ({
   platform,
   rating,
   onCreateSession,
+  isfavourited,
   onFavourite,
   gameInfoUrl
 }) => {
@@ -38,8 +40,8 @@ const GameCard: React.FC<GameCardProps> = ({
   useEffect(() => {
     // Check if the game is already favourited
     const favouritedGames = JSON.parse(localStorage.getItem('favouritedGames') || '[]');
-    const isAlreadyFavorited = favouritedGames.some((game: { name: string }) => game.name === name);
-    setIsFavourited(isAlreadyFavorited);
+    const isAlreadyfavourited = favouritedGames.some((game: { name: string }) => game.name === name);
+    setIsFavourited(isAlreadyfavourited);
   }, [name]);
   
   const { id } = useParams(); // Capture teamId from the URL
@@ -197,16 +199,13 @@ const GameCard: React.FC<GameCardProps> = ({
           Create Session
         </button>
         <div className='flex xxs:justify-between xxs:w-full xxs:gap-3 xxs:mt-1 xl:justify-normal xl:w-[30%] xl:gap-2 xl:mt-0'>
-          <button
-            className="flex justify-center items-center bg-pink-purple xxs:p-3 xl:p-2 h-[40px] rounded xxs:w-[100%] xl:w-[50%]"
-            onClick={handleFavouriteClick}
-          >
-            {isFavourited ? (
-              <FaHeart size={24} />
-            ) : (
-              <FiHeart size={24} />
-            )}
-          </button>
+        <button onClick={onFavourite} className="p-2 rounded-full">
+          {isfavourited ? (
+            <FaHeart size={24} color="red" /> // Filled heart if favourited
+          ) : (
+            <FiHeart size={24} /> // Empty heart if not favourited
+          )}
+        </button>
           <a
             href={gameInfoUrl}
             target="_blank"
