@@ -156,6 +156,11 @@ export default function Page() {
     }
   };
 
+  // Navigate to the team schedule page when clicking on the avatar
+  const handleNavigateToSchedule = (teamId: number) => {
+    router.push(`/team-schedule/${teamId}`);
+  };
+
   return (
     <>
       <Navbar />
@@ -172,11 +177,11 @@ export default function Page() {
                 >
                   {isEditing ? (
                     <>
-                      <MdCheck />&nbsp;Finished editing?
+                      &nbsp;&nbsp;&nbsp;&nbsp;<MdCheck />&nbsp;Finished editing?
                     </>
                   ) : (
                     <>
-                      <MdEdit />&nbsp;Edit teams
+                      &nbsp;&nbsp;&nbsp;&nbsp;<MdEdit />&nbsp;Edit teams
                     </>
                   )}
                 </span>
@@ -190,7 +195,11 @@ export default function Page() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 px-10 my-20 w-full">
                     {teams.map((team, index) => (
                       <div key={team.id} className="flex flex-col items-center relative">
-                        <button className="bg-darkPurple w-48 h-48 rounded-e-3xl rounded-t-3xl hover:border-green hover:border-2 transition-all relative group">
+                        {/* Navigate to the team schedule page when clicking on the avatar */}
+                        <button
+                          onClick={() => handleNavigateToSchedule(team.id)}
+                          className="bg-darkPurple w-48 h-48 rounded-e-3xl rounded-t-3xl hover:border-green hover:border-2 transition-all relative group"
+                        >
                           <img
                             src={team.image}
                             alt={team.teamName}

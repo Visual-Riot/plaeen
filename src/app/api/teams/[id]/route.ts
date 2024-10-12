@@ -5,6 +5,23 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// RETRIEVE: Team Name
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+  try {
+    const team = await prisma.team.findUnique({
+      where: { id: parseInt(params.id, 10) },
+    });
+
+    if (!team) {
+      return NextResponse.json({ error: 'Team not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(team);
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch team data' }, { status: 500 });
+  }
+}
+
 // PUT: Update a team
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   try {

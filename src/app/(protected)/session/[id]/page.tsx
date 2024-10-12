@@ -14,7 +14,7 @@ import ThemeFilter from "@/components/filters/ThemeFilter";
 import PlayerModeFilter from "@/components/filters/PlayerModeFilter";
 import GameCard from "@/components/game/GameCard";
 import Footer from "@/components/layout/Footer";
-import gamesData from "../../../lib/data/rawgGames.json";
+import gamesData from "../../../api/games/rawgGames.json";
 
 interface Game {
   id: number;

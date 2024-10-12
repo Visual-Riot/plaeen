@@ -84,9 +84,19 @@ model PasswordResetToken {
 }
 
 model Team {
+  id          Int           @id @default(autoincrement())
+  teamName    String        // Team name
+  image       String        // Team image URL or file path
+  createdAt   DateTime      @default(now()) // Timestamp for when the team is created
+  updatedAt   DateTime      @updatedAt      // Automatically update when the record is modified
+  gameSessions GameSession[]  // Add this to establish the relation to GameSession
+}
+
+model GameSession {
   id        Int      @id @default(autoincrement())
-  teamName      String   // Team name
-  image     String   // Team image URL or file path
-  createdAt DateTime @default(now()) // Timestamp for when the team is created
-  updatedAt DateTime @updatedAt      // Automatically update when the record is modified
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    Int
+  gameName  String   // The name of the game
+  gameId    Int      // Game ID to match the external source
+  createdAt DateTime @default(now())
 }
