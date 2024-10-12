@@ -78,7 +78,7 @@ export default function Page() {
 
   const handleTeamSelect = async (teamId: string) => {
     if (!selectedGame) return;
-  
+
     const gameDetails = {
       gameId: selectedGame.gameId,
       gameName: selectedGame.gameName,
@@ -87,7 +87,7 @@ export default function Page() {
       platforms: selectedGame.platforms || [], // Ensure it's an array
       rating: selectedGame.rating || null, // Set null if rating is missing
     };
-  
+
     try {
       const response = await fetch(`/api/teams/${teamId}/games`, {
         method: 'POST',
@@ -96,7 +96,7 @@ export default function Page() {
         },
         body: JSON.stringify(gameDetails),
       });
-  
+
       if (response.ok) {
         // Redirect to the team schedule page
         router.push(`/team-schedule/${teamId}?gameId=${selectedGame.gameId}`);
@@ -108,7 +108,6 @@ export default function Page() {
       console.error('Error adding the game to the team schedule:', error);
     }
   };
-  
 
   return (
     <>
@@ -117,12 +116,12 @@ export default function Page() {
         <div className="bg-[black]/85 w-full h-screen flex flex-col items-center justify-center mt-[-70px]">
           <div className="bg-[#6606E3]/5 w-full flex flex-col items-center justify-center h-full">
             <div>
-              <h1 className="text-white text-[32px] font-sofia xxs:mb-4 md:mb-0 text-center pb-10">
+              <h1 className="text-white text-[32px] font-sofia xxs:mb-4 md:mb-0 text-center pb-10 mt-5">
                 Wishlist
               </h1>
 
               {/* Wishlist games container */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-32 gap-y-12 mt-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-8 mt-8">
                 {favouritedGames.length === 0 ? (
                   <p className="text-white">No games in your wishlist yet.</p>
                 ) : (
