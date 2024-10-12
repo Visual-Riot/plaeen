@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface Team {
   id: string;
@@ -16,12 +16,22 @@ const TeamSelectionModal: React.FC<TeamSelectionModalProps> = ({
   onSelectTeam,
   onClose,
 }) => {
+  const [selectedTeam, setSelectedTeam] = useState<string>("");
+
+  const handleConfirm = () => {
+    if (selectedTeam) {
+      onSelectTeam(selectedTeam);
+      onClose(); // Close the modal after confirming
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg w-96">
         <h2 className="text-xl font-bold mb-4">Select a Team</h2>
         <select
-          onChange={(e) => onSelectTeam(e.target.value)}
+          value={selectedTeam}
+          onChange={(e) => setSelectedTeam(e.target.value)}
           className="w-full p-2 mb-4 border border-gray-300 rounded-md"
         >
           <option value="">Select a team</option>
@@ -31,9 +41,19 @@ const TeamSelectionModal: React.FC<TeamSelectionModalProps> = ({
             </option>
           ))}
         </select>
+
+        {selectedTeam && (
+          <button
+            onClick={handleConfirm}
+            className="mt-4 p-2 bg-green text-white rounded-md w-full"
+          >
+            Confirm
+          </button>
+        )}
+
         <button
           onClick={onClose}
-          className="mt-4 p-2 bg-red text-white rounded-md w-full"
+          className="mt-2 p-2 bg-red text-white rounded-md w-full"
         >
           Close
         </button>
