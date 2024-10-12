@@ -5,8 +5,10 @@ import Link from "next/link";
 import { TiPlus } from "react-icons/ti";
 import Navbar from "@/components/layout/Navbar";
 import GreenButton from "@/components/buttons/GreenButton";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
+  const { data: session } = useSession(); // Get the current session to identify the user
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>("");
   const [fileError, setFileError] = useState<string | null>(null); // State for error message
@@ -33,7 +35,6 @@ export default function Page() {
     const file = event.target.files?.[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
-        // 2MB in bytes
         setFileError("File size exceeds 2MB.");
         return;
       } else {
@@ -51,14 +52,41 @@ export default function Page() {
     setUsername(event.target.value);
   };
 
-  const handleContinue = () => {
-    if (selectedImage) {
-      localStorage.setItem("plaeenUserAvatar", selectedImage);
+  const handleContinue = async () => {
+    if (!session || !session.user) {
+      console.error("No user session found");
+      return;
     }
-    if (username) {
-      localStorage.setItem("plaeenUsername", username);
+  
+    const userId = session.user.id; // Get the logged-in user's ID
+  
+    // Send user avatar and name to the API for updating the database
+    const avatarData = {
+      name: username,
+      image: selectedImage,
+      userId,
+    };
+  
+    try {
+      const response = await fetch("/api/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(avatarData),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Failed to update avatar:", errorData.error);
+      } else {
+        console.log("Avatar updated successfully");
+      }
+    } catch (error) {
+      console.error("Error updating avatar:", error);
     }
   };
+  
 
   const handleSkip = () => {
     let newUsername = "avatar1";
@@ -73,8 +101,8 @@ export default function Page() {
       );
       newUsername = `avatar${highestNumber + 1}`;
     }
-    localStorage.setItem("plaeenUserAvatar", "/icons/avatar-default.jpg");
-    localStorage.setItem("plaeenUsername", newUsername);
+    localStorage.setItem("userAvatar", "/icons/avatar-default.jpg");
+    localStorage.setItem("username", newUsername);
   };
 
   return (
@@ -135,18 +163,13 @@ export default function Page() {
               </div>
               {fileError && (
                 <div className="text-white mt-2 text-sm">{fileError}</div>
-              )}{" "}
-              {/* Display error message */}
-              <div onClick={handleContinue}>
-                <Link href="/">
-                  <GreenButton
-                    onClick={handleContinue}
-                    className="mt-8 p-[1.25rem!important] text-black w-full"
-                  >
-                    Continue
-                  </GreenButton>
-                </Link>
-              </div>
+              )}
+              <GreenButton
+                onClick={handleContinue}
+                className="mt-8 p-[1.25rem!important] text-black w-full"
+              >
+                Continue
+              </GreenButton>
               <div onClick={handleSkip}>
                 <Link href="/">
                   <div className="text-white underline text-sm flex justify-center mt-8 hover:text-gray-300 cursor-pointer">
