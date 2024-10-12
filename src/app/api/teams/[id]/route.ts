@@ -28,15 +28,21 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     const body = await req.json();
     const { teamName, image } = body;
 
-    // Validate input
-    if (!teamName || !image) {
-      return NextResponse.json({ error: 'Team name and avatar are required' }, { status: 400 });
+    // Validate input: Only require teamName, make image optional
+    if (!teamName) {
+      return NextResponse.json({ error: 'Team name is required' }, { status: 400 });
+    }
+
+    // Prepare data for update, conditionally include the image field if provided
+    const updateData: { teamName: string; image?: string } = { teamName };
+    if (image) {
+      updateData.image = image;
     }
 
     // Update the team in the database
     const updatedTeam = await prisma.team.update({
       where: { id: Number(params.id) },
-      data: { teamName, image },
+      data: updateData,
     });
 
     return NextResponse.json(updatedTeam, { status: 200 });
@@ -45,6 +51,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     return NextResponse.json({ error: 'Failed to update team' }, { status: 500 });
   }
 }
+
 
 // DELETE: Remove a team
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {

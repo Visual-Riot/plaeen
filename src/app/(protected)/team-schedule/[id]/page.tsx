@@ -15,14 +15,14 @@ import PurpleButton from "@/components/buttons/PurpleButton";
 import WhiteArrow from "@/components/icons/WhiteArrow";
 import GameCalendar from "@/components/calendar/GameCalendar";
 import CalendarWrapper from "@/components/calendar/CalendarWrapper";
-import GameCard from "@/components/game/GameCard"; 
+import GameCard from "@/components/game/GameCard";
 
 interface GameSession {
   id: number;
   gameName: string;
   gameId: number;
   released: string;
-  backgroundImage?: string; // Use camel case
+  backgroundImage?: string;
   genres?: { name: string }[];
   platforms?: { platform: { name: string } }[];
   rating?: number;
@@ -30,15 +30,17 @@ interface GameSession {
 }
 
 export default function Page() {
-  const { id: teamId } = useParams(); 
+  const { id: teamId } = useParams();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>('');
   const [isNotificationVisible, setIsNotificationVisible] = useState(true);
   const [selectedGame, setSelectedGame] = useState<GameSession | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState<string>(""); 
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [teamName, setTeamName] = useState<string | null>(null);
   const [teamGames, setTeamGames] = useState<GameSession[]>([]);
+  const [isEditingTeamName, setIsEditingTeamName] = useState(false); // State to toggle edit mode
+  const [newTeamName, setNewTeamName] = useState<string | null>(null); // State for new team name
 
   const router = useRouter();
 
@@ -46,8 +48,8 @@ export default function Page() {
     const fetchTeamDetailsAndGames = async () => {
       try {
         const [teamResponse, gamesResponse] = await Promise.all([
-          fetch(`/api/teams/${teamId}`), 
-          fetch(`/api/teams/${teamId}/games`) 
+          fetch(`/api/teams/${teamId}`),
+          fetch(`/api/teams/${teamId}/games`)
         ]);
 
         if (teamResponse.ok) {
@@ -114,14 +116,58 @@ export default function Page() {
     }
   };
 
+  const handleEditTeamName = () => {
+    setIsEditingTeamName(true);
+    setNewTeamName(teamName); // Initialize with the current team name
+  };
+
+  const handleTeamNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewTeamName(e.target.value);
+  };
+
+  const handleSaveTeamName = async () => {
+    if (newTeamName) {
+      try {
+        const response = await fetch(`/api/teams/${teamId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            teamName: newTeamName,
+          }),
+        });
+
+        if (response.ok) {
+          setTeamName(newTeamName);
+          setIsEditingTeamName(false);
+        } else {
+          console.error('Failed to update team name');
+        }
+      } catch (error) {
+        console.error('Error updating team name:', error);
+      }
+    }
+  };
+
   return (
     <div className="text-taupe font-light font-sofia max-w-[90%] mx-auto">
       <Navbar avatar={selectedImage || null} />
       <div className="container mx-auto mt-16 rounded-xl py-16" style={{ backgroundColor: "rgba(184, 180, 189, 0.15)" }}>
         <div className="flex justify-between items-center pb-10 xxs:flex-col-reverse md:flex-row">
-          <h1 className="font-abolition text-neonGreen text-7xl xxs:ms-0 xxs:text-center md:ms-16 md:text-left">
-            {teamName || 'TEAM NAME'}
-          </h1>
+          {isEditingTeamName ? (
+            <input
+              type="text"
+              value={newTeamName || ""}
+              onChange={handleTeamNameChange}
+              className="font-abolition text-neonGreen border-b border-neonGreen text-7xl xxs:ms-0 xxs:text-center md:ms-16 md:text-left bg-transparent"
+              placeholder="Enter new team name"
+            />
+          ) : (
+            <h1 className="font-abolition text-neonGreen text-7xl xxs:ms-0 xxs:text-center md:ms-16 md:text-left">
+              {teamName || 'TEAM NAME'}
+            </h1>
+          )}
           <div className="flex flex-col md:flex-row">
             <OutlineButton onClick={handleAddSessionClick} className="xxs:me-0 xxs:mb-10 md:me-8 md:mb-0 xs:w-[200px] md:w-fit bg-transparent">
               <span className="flex justify-center items-center">
@@ -129,12 +175,20 @@ export default function Page() {
                 &nbsp;Add session
               </span>
             </OutlineButton>
-            <OutlineButton onClick={() => router.back()} className="xxs:me-0 xxs:mb-10 md:me-24 md:mb-0 xs:w-[200px] md:w-fit bg-transparent">
-              <span className="flex justify-center items-center">
-                <MdEdit />
-                &nbsp;Edit
-              </span>
-            </OutlineButton>
+            {isEditingTeamName ? (
+              <OutlineButton onClick={handleSaveTeamName} className="xxs:me-0 xxs:mb-10 md:me-24 md:mb-0 xs:w-[200px] md:w-fit bg-transparent">
+                <span className="flex justify-center items-center">
+                  Save
+                </span>
+              </OutlineButton>
+            ) : (
+              <OutlineButton onClick={handleEditTeamName} className="xxs:me-0 xxs:mb-10 md:me-24 md:mb-0 xs:w-[200px] md:w-fit bg-transparent">
+                <span className="flex justify-center items-center">
+                  <MdEdit />
+                  &nbsp;Edit
+                </span>
+              </OutlineButton>
+            )}
           </div>
         </div>
 
@@ -155,6 +209,7 @@ export default function Page() {
           </div>
         )}
 
+        {/* Add Players and Player View */}
         <div className="my-12">
           <span className="flex flex-col justify-center items-center">
             <AddPlayer onClick={() => {}} className="rounded" />
@@ -162,6 +217,7 @@ export default function Page() {
           </span>
         </div>
 
+        {/* Game filter dropdown */}
         <div className="w-[90%] mx-auto mb-8 flex flex-col md:flex-row items-center gap-4">
           <div className="w-full md:flex-1 relative">
             <div
@@ -169,7 +225,7 @@ export default function Page() {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <span>{selectedGame?.gameName || "Select a game..."}</span>
-              <WhiteArrow className={`transform text-sm ${isDropdownOpen ? "rotate-180" : ""} transition-transform duration-200`} color="text-white" />
+              <WhiteArrow className={`transform text-sm ${isDropdownOpen ? "rotate-180" : ""}`} noAnimation color="text-white" />
             </div>
             {isDropdownOpen && (
               <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-2 max-h-60 overflow-y-auto">
@@ -202,7 +258,7 @@ export default function Page() {
           <div
             className="relative w-[90%] mx-auto my-20 h-[350px] rounded-md overflow-hidden"
             style={{
-              backgroundImage: `url(${selectedGame.backgroundImage})`, // Updated to use backgroundImage
+              backgroundImage: `url(${selectedGame.backgroundImage})`,
               backgroundSize: "cover",
               backgroundPosition: "top",
             }}
