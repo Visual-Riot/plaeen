@@ -34,33 +34,39 @@ export default function Page() {
     setIsAddTeamVisible(true);
   };
 
-  const handleSaveTeam = () => {
+  const handleSaveTeam = async () => {
     if (teamName.trim() && selectedTeamAvatar) {
-      // Get existing teams from local storage, or create an empty array if none exist
-      const existingTeams = JSON.parse(localStorage.getItem("teams") || "[]");
-
-      // Create new team object
-      const newTeam = {
-        name: teamName.trim(),
-        avatar: selectedTeamAvatar,
-      };
-
-      // Add new team to existing teams array
-      existingTeams.push(newTeam);
-
-      // Save updated teams array to local storage
-      localStorage.setItem("teams", JSON.stringify(existingTeams));
-
-      // Show success message
-      setShowSavedMessage(true);
-
-      // Wait for 2 seconds, then redirect to homepage
-      setTimeout(() => {
-        setShowSavedMessage(false);
-        router.push("/teams"); // Redirect to all teams page
-      }, 2000);
+      try {
+        const response = await fetch('/api/create-team', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: teamName.trim(),
+            avatar: selectedTeamAvatar,
+          }),
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+          setShowSavedMessage(true);
+  
+          // Wait for 2 seconds, then redirect to homepage or teams list
+          setTimeout(() => {
+            setShowSavedMessage(false);
+            router.push("/teams"); // Redirect to all teams page
+          }, 2000);
+        } else {
+          const errorText = await response.text();
+          console.error('Failed to save team:', response.status, errorText); // Log any server-side errors
+        }
+      } catch (error) {
+        console.error('Error in request:', error); // Log any client-side errors
+      }
     }
   };
+  
 
   const handleChooseAvatarClick = () => {
     setIsAddTeamVisible(false);

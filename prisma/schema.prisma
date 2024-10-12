@@ -82,3 +82,11 @@ model PasswordResetToken {
 
   @@unique([email, token])
 }
+
+model Team {
+  id        Int      @id @default(autoincrement())
+  teamName      String   // Team name
+  image     String   // Team image URL or file path
+  createdAt DateTime @default(now()) // Timestamp for when the team is created
+  updatedAt DateTime @updatedAt      // Automatically update when the record is modified
+}
