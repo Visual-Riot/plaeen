@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import AddPlayer from "@/components/players/AddPlayer";
@@ -38,10 +38,13 @@ export default function TeamSchedulePage() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [teamName, setTeamName] = useState<string | null>(null);
   const [teamGames, setTeamGames] = useState<GameSession[]>([]);
+  const [filteredGames, setFilteredGames] = useState<GameSession[]>([]);
   const [isEditingTeamName, setIsEditingTeamName] = useState(false);
   const [newTeamName, setNewTeamName] = useState<string | null>(null);
+  const [mostRecentGame, setMostRecentGame] = useState<GameSession | null>(null);
 
   const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement>(null); // Ref to detect clicks outside
 
   useEffect(() => {
     const fetchTeamDetailsAndGames = async () => {
@@ -60,7 +63,16 @@ export default function TeamSchedulePage() {
 
         if (gamesResponse.ok) {
           const gameData = await gamesResponse.json();
-          setTeamGames(gameData);
+          // Remove duplicate game names
+          const uniqueGames = gameData.filter((game: GameSession, index: number, self: GameSession[]) =>
+            index === self.findIndex((g) => g.gameName === game.gameName)
+          );
+          setTeamGames(uniqueGames);
+          setFilteredGames(uniqueGames);
+          // Set the most recently added game
+          if (uniqueGames.length > 0) {
+            setMostRecentGame(uniqueGames[uniqueGames.length - 1]);
+          }
         } else {
           console.error('Failed to fetch team games');
         }
@@ -79,6 +91,17 @@ export default function TeamSchedulePage() {
     if (savedUsername) {
       setUsername(savedUsername);
     }
+
+    // Close dropdown when clicking outside
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [teamId]);
 
   const handleGameSelect = (game: GameSession) => {
@@ -92,10 +115,8 @@ export default function TeamSchedulePage() {
 
   const handleCreateNewSession = async () => {
     if (selectedGame) {
-      // Check if the game already exists in the teamGames
       const gameExists = teamGames.some(game => game.gameId === selectedGame.gameId);
 
-      // If the game doesn't exist, add it to the dropdown list and display cover art
       if (!gameExists) {
         setTeamGames(prevGames => [...prevGames, selectedGame]);
       }
@@ -125,7 +146,7 @@ export default function TeamSchedulePage() {
 
   const handleEditTeamName = () => {
     setIsEditingTeamName(true);
-    setNewTeamName(teamName); // Initialize with the current team name
+    setNewTeamName(teamName);
   };
 
   const handleTeamNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,6 +176,15 @@ export default function TeamSchedulePage() {
         console.error('Error updating team name:', error);
       }
     }
+  };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = e.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+    const filtered = teamGames.filter((game) =>
+      game.gameName.toLowerCase().includes(searchTerm)
+    );
+    setFilteredGames(filtered);
   };
 
   return (
@@ -226,7 +256,7 @@ export default function TeamSchedulePage() {
 
         {/* Game filter dropdown */}
         <div className="w-[90%] mx-auto mb-8 flex flex-col md:flex-row items-center gap-4">
-          <div className="w-full md:flex-1 relative">
+          <div className="w-full md:flex-1 relative" ref={dropdownRef}>
             <div
               className="w-full bg-transparent text-white p-4 rounded-md border-2 border-neonPurple cursor-pointer flex justify-between items-center"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -236,9 +266,16 @@ export default function TeamSchedulePage() {
             </div>
             {isDropdownOpen && (
               <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-2 max-h-60 overflow-y-auto">
+                <input
+                  type="text"
+                  className="w-full p-2 border-b border-gray-300"
+                  placeholder="Search games..."
+                  value={searchTerm}
+                  onChange={handleSearch}
+                />
                 <ul className="max-h-48 overflow-y-auto">
-                  {teamGames.length > 0 ? (
-                    teamGames.map((game) => (
+                  {filteredGames.length > 0 ? (
+                    filteredGames.map((game) => (
                       <li key={game.id} onClick={() => handleGameSelect(game)} className="p-4 hover:bg-gray-200 cursor-pointer flex items-center">
                         {game.gameName}
                       </li>
@@ -261,11 +298,11 @@ export default function TeamSchedulePage() {
           </div>
         </div>
 
-        {selectedGame && selectedGame.backgroundImage && (
+        {mostRecentGame && mostRecentGame.backgroundImage && (
           <div
             className="relative w-[90%] mx-auto my-20 h-[350px] rounded-md overflow-hidden"
             style={{
-              backgroundImage: `url(${selectedGame.backgroundImage})`,
+              backgroundImage: `url(${mostRecentGame.backgroundImage})`,
               backgroundSize: "cover",
               backgroundPosition: "top",
             }}
@@ -273,7 +310,7 @@ export default function TeamSchedulePage() {
             <div className="absolute inset-0 bg-black bg-opacity-50"></div>
             <div className="absolute flex flex-col justify-center items-center w-full h-full text-white z-9">
               <h2 className="text-5xl text-center font-sofia font-semibold text-neonGreen">
-                {selectedGame.gameName}
+                {mostRecentGame.gameName}
               </h2>
               <p className="mt-4 text-sm font-extralight">
                 Your next session is in 5 days!
