@@ -15,6 +15,7 @@ import PlayerModeFilter from "@/components/filters/PlayerModeFilter";
 import GameCard from "@/components/game/GameCard";
 import Footer from "@/components/layout/Footer";
 import gamesData from "../../../api/games/rawgGames.json";
+import { useParams } from "next/navigation";
 
 interface Game {
   id: number;
@@ -43,6 +44,10 @@ export default function Page() {
   const [displayedGames, setDisplayedGames] = useState<Game[]>([]); // State for games displayed on the page
   const [page, setPage] = useState<number>(1); // State for pagination
   const [hasMoreGames, setHasMoreGames] = useState<boolean>(true); // To check if more games are available
+  const [games, setGames] = useState<Game[]>([]); // Assuming you are fetching games
+  const { id: teamId } = useParams(); // Fetch teamId from route params
+
+  const router = useRouter();
 
   useEffect(() => {
     // Fetch all games when the component mounts
@@ -151,7 +156,28 @@ export default function Page() {
     setSelectedPlayerModes([]); // Reset player modes filter
   };
 
-  const router = useRouter();
+  const handleCreateSession = async (game: Game) => {
+    try {
+      const response = await fetch('/api/sessions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          gameId: game.id,
+          gameName: game.name,
+        }),
+      });
+
+      if (response.ok) {
+        router.push(`/session/${game.id}`); // Redirect to the session page
+      } else {
+        console.error('Failed to create a new session');
+      }
+    } catch (error) {
+      console.error('Error creating a new session:', error);
+    }
+  };
 
   return (
     <div className="text-taupe font-light font-sofia max-w-[90%] mx-auto">
@@ -177,7 +203,7 @@ export default function Page() {
             <p className="text-neonGreen uppercase xxs:text-center md:text-left">Our Recommendation</p>
             <h2 className="text-7xl text-white font-abolition my-5 xxs:text-center md:text-left">Dead By Daylight</h2>
             <div className="flex xxs:flex-col md:flex-row">
-              <GreenButton onClick={() => {}} className="xxs:w-auto md:w-[200px] h-[60px] xs:mb-3 md:mb-0 opacity-[1!important] hover:bg-violet hover:text-white">
+              <GreenButton onClick={() => handleCreateSession(gamesDataTyped[0])} className="xxs:w-auto md:w-[200px] h-[60px] xs:mb-3 md:mb-0 opacity-[1!important] hover:bg-violet hover:text-white">
                 {"Let's play!"}
               </GreenButton>
               <OutlineButton
@@ -252,17 +278,51 @@ export default function Page() {
         <div className="w-4/5 mx-auto mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-32 gap-y-12">
           {displayedGames.map((game) => (
             <GameCard
-              key={game.id}
-              coverImage={game.background_image}
-              name={game.name}
-              releaseDate={game.released}
-              genre={game.genres.map((genre) => genre.name).join(", ")}
-              platform={game.platforms.map((p) => p.platform.name).join(", ")}
-              rating={`${game.rating}/5`}
-              onCreateSession={() => console.log('Create Session Clicked')}
-              onFavourite={() => console.log('Favourite Clicked')}
-              gameInfoUrl={`https://rawg.io/games/${game.id}`}
-            />
+            id={game.id}
+            key={game.id}
+            coverImage={game.background_image}
+            name={game.name}
+            releaseDate={game.released}
+            teamId={teamId as string}
+            genre={game.genres.map((genre) => genre.name).join(", ")}
+            platform={game.platforms.map((p) => p.platform.name).join(", ")}
+            rating={`${game.rating}/5`}
+            onCreateSession={async () => {
+              try {
+                const parsedTeamId = Array.isArray(teamId) ? parseInt(teamId[0], 10) : parseInt(teamId, 10);
+
+                const response = await fetch('/api/sessions', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    gameId: game.id,
+                    gameName: game.name,
+                    backgroundImage: game.background_image,
+                    genres: game.genres.map((genre) => genre.name),
+                    platforms: game.platforms.map((p) => p.platform.name),
+                    rating: game.rating,
+                    teamId: parsedTeamId, // Use the parsed teamId
+                  }),
+                });
+            
+                if (!response.ok) {
+                  throw new Error('Failed to create session');
+                }
+            
+                const data = await response.json();
+                console.log('Session created successfully:', data);
+              } catch (error) {
+                console.error('Error creating session:', error);
+              }
+            }}
+            
+            onFavourite={() => console.log('Favourite Clicked')}
+            gameInfoUrl={`https://rawg.io/games/${game.id}`}
+          />
+          
+          
           ))}
         </div>
 

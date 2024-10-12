@@ -93,10 +93,14 @@ model Team {
 }
 
 model GameSession {
-  id        Int      @id @default(autoincrement())
-  team      Team     @relation(fields: [teamId], references: [id])
-  teamId    Int
-  gameName  String   // The name of the game
-  gameId    Int      // Game ID to match the external source
-  createdAt DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  gameName        String   // The name of the game
+  gameId          Int      // Game ID to match the external source
+  backgroundImage String?  // URL for the game's background image
+  genres          String[] // List of game genres (as an array of strings)
+  platforms       String[] // List of platforms (as an array of strings)
+  rating          Float?   // Game rating
+  team            Team     @relation(fields: [teamId], references: [id])
+  teamId          Int
+  createdAt       DateTime @default(now())
 }

@@ -5,14 +5,17 @@ import { SiPlaystationvita, SiWiiu } from "react-icons/si";
 import { FiHeart } from 'react-icons/fi';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
+import { useParams } from "next/navigation";
 
 interface GameCardProps {
+  id: number;
   coverImage: string;
   name: string;
   releaseDate: string;
   genre: string;
   platform: string;
   rating: string;
+  teamId: string;
   onCreateSession: () => void;
   onFavourite: () => void;
   gameInfoUrl: string;
@@ -39,6 +42,7 @@ const GameCard: React.FC<GameCardProps> = ({
     setIsFavourited(isAlreadyFavorited);
   }, [name]);
   
+  const { id } = useParams(); // Capture teamId from the URL
 
   const handleFavouriteClick = () => {
     let favouritedGames = JSON.parse(localStorage.getItem('favouritedGames') || '[]');
@@ -137,8 +141,8 @@ const GameCard: React.FC<GameCardProps> = ({
     // Call the parent component's onCreateSession if needed
     onCreateSession();
   
-    // Redirect to the select-team page
-    router.push('/select-team');
+    // Redirect to the team-schedule page
+    router.push(`/team-schedule/${id}`);
   };
   
 

@@ -15,45 +15,51 @@ import PurpleButton from "@/components/buttons/PurpleButton";
 import WhiteArrow from "@/components/icons/WhiteArrow";
 import GameCalendar from "@/components/calendar/GameCalendar";
 import CalendarWrapper from "@/components/calendar/CalendarWrapper";
+import GameCard from "@/components/game/GameCard"; 
 
 interface GameSession {
   id: number;
   gameName: string;
   gameId: number;
+  released: string;
+  backgroundImage?: string; // Use camel case
+  genres?: { name: string }[];
+  platforms?: { platform: { name: string } }[];
+  rating?: number;
+  tags?: { id: number; name: string; slug: string }[];
 }
 
 export default function Page() {
-  const { id } = useParams(); // Capture teamId from the URL
+  const { id: teamId } = useParams(); 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>('');
   const [isNotificationVisible, setIsNotificationVisible] = useState(true);
-  const [selectedGame, setSelectedGame] = useState<GameSession | null>(null); // State to store the selected game object
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Control dropdown visibility
-  const [searchTerm, setSearchTerm] = useState<string>(""); // State for the search term
-  const [teamName, setTeamName] = useState<string | null>(null); // State for team name
-  const [teamGames, setTeamGames] = useState<GameSession[]>([]); // State to store team game sessions
+  const [selectedGame, setSelectedGame] = useState<GameSession | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>(""); 
+  const [teamName, setTeamName] = useState<string | null>(null);
+  const [teamGames, setTeamGames] = useState<GameSession[]>([]);
 
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch team details and the games associated with this team using the teamId
     const fetchTeamDetailsAndGames = async () => {
       try {
         const [teamResponse, gamesResponse] = await Promise.all([
-          fetch(`/api/teams/${id}`), // Fetch team details
-          fetch(`/api/teams/${id}/games`) // Fetch games for the team (this should hit your API for games)
+          fetch(`/api/teams/${teamId}`), 
+          fetch(`/api/teams/${teamId}/games`) 
         ]);
 
         if (teamResponse.ok) {
           const teamData = await teamResponse.json();
-          setTeamName(teamData.teamName); // Set the team name
+          setTeamName(teamData.teamName);
         } else {
           console.error('Failed to fetch team details');
         }
 
         if (gamesResponse.ok) {
           const gameData = await gamesResponse.json();
-          setTeamGames(gameData); // Set the games associated with the team
+          setTeamGames(gameData);
         } else {
           console.error('Failed to fetch team games');
         }
@@ -64,7 +70,6 @@ export default function Page() {
 
     fetchTeamDetailsAndGames();
 
-    // Load user avatar and username from local storage
     const savedImage = localStorage.getItem("userAvatar");
     const savedUsername = localStorage.getItem("username");
     if (savedImage) {
@@ -73,7 +78,7 @@ export default function Page() {
     if (savedUsername) {
       setUsername(savedUsername);
     }
-  }, [id]);
+  }, [teamId]);
 
   const handleGameSelect = (game: GameSession) => {
     setSelectedGame(game);
@@ -81,14 +86,13 @@ export default function Page() {
   };
 
   const handleAddSessionClick = () => {
-    router.push(`/session/${id}`);
+    router.push(`/session/${teamId}`);
   };
 
   const handleCreateNewSession = async () => {
     if (selectedGame) {
       try {
-        // Store the new session in Prisma
-        const response = await fetch(`/api/teams/${id}/games`, {
+        const response = await fetch(`/api/teams/${teamId}/games`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -100,7 +104,6 @@ export default function Page() {
         });
 
         if (response.ok) {
-          // Navigate to the session page
           router.push(`/session?game=${encodeURIComponent(selectedGame.gameName)}`);
         } else {
           console.error('Failed to create a new session');
@@ -113,11 +116,11 @@ export default function Page() {
 
   return (
     <div className="text-taupe font-light font-sofia max-w-[90%] mx-auto">
-      <Navbar />
+      <Navbar avatar={selectedImage || null} />
       <div className="container mx-auto mt-16 rounded-xl py-16" style={{ backgroundColor: "rgba(184, 180, 189, 0.15)" }}>
         <div className="flex justify-between items-center pb-10 xxs:flex-col-reverse md:flex-row">
           <h1 className="font-abolition text-neonGreen text-7xl xxs:ms-0 xxs:text-center md:ms-16 md:text-left">
-            {teamName || 'TEAM NAME'} {/* Dynamic team name */}
+            {teamName || 'TEAM NAME'}
           </h1>
           <div className="flex flex-col md:flex-row">
             <OutlineButton onClick={handleAddSessionClick} className="xxs:me-0 xxs:mb-10 md:me-8 md:mb-0 xs:w-[200px] md:w-fit bg-transparent">
@@ -135,15 +138,12 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Notification Banner */}
         {isNotificationVisible && (
           <div className="flex items-center justify-center w-full px-4 py-3 relative my-4 bg-purple-800">
             <div className="w-[90%] flex justify-between">
               <div className="flex items-center">
                 <BiSolidBellRing className="mr-6 text-xl text-green" />
-                <p className="text-md font-extralight">
-                  You have 1 schedule change to approve
-                </p>
+                <p className="text-md font-extralight">You have 1 schedule change to approve</p>
               </div>
               <button
                 onClick={() => setIsNotificationVisible(false)}
@@ -155,7 +155,6 @@ export default function Page() {
           </div>
         )}
 
-        {/* Add Players and Player View */}
         <div className="my-12">
           <span className="flex flex-col justify-center items-center">
             <AddPlayer onClick={() => {}} className="rounded" />
@@ -163,7 +162,6 @@ export default function Page() {
           </span>
         </div>
 
-        {/* Game filter dropdown */}
         <div className="w-[90%] mx-auto mb-8 flex flex-col md:flex-row items-center gap-4">
           <div className="w-full md:flex-1 relative">
             <div
@@ -171,7 +169,7 @@ export default function Page() {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <span>{selectedGame?.gameName || "Select a game..."}</span>
-              <WhiteArrow className={`transform text-sm ${isDropdownOpen ? "rotate-180" : ""} transition-transform duration-200`} noAnimation={true} color="text-white" />
+              <WhiteArrow className={`transform text-sm ${isDropdownOpen ? "rotate-180" : ""} transition-transform duration-200`} color="text-white" />
             </div>
             {isDropdownOpen && (
               <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-2 max-h-60 overflow-y-auto">
@@ -190,7 +188,6 @@ export default function Page() {
             )}
           </div>
 
-          {/* Create new session button */}
           <div className="w-full md:w-auto md:flex-shrink-0 md:ml-4 text-center">
             <PurpleButton onClick={handleCreateNewSession} className="w-full md:w-auto flex justify-center h-[58px]">
               <span className="flex justify-center items-center font-semibold text-sm h-full">
@@ -200,6 +197,35 @@ export default function Page() {
             </PurpleButton>
           </div>
         </div>
+
+        {selectedGame && selectedGame.backgroundImage && (
+          <div
+            className="relative w-[90%] mx-auto my-20 h-[350px] rounded-md overflow-hidden"
+            style={{
+              backgroundImage: `url(${selectedGame.backgroundImage})`, // Updated to use backgroundImage
+              backgroundSize: "cover",
+              backgroundPosition: "top",
+            }}
+          >
+            <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+            <div className="absolute flex flex-col justify-center items-center w-full h-full text-white z-9">
+              <h2 className="text-5xl text-center font-sofia font-semibold text-neonGreen">
+                {selectedGame.gameName}
+              </h2>
+              <p className="mt-4 text-sm font-extralight">
+                Your next session is in 5 days!
+              </p>
+            </div>
+            <div className="absolute bottom-4 right-4 flex space-x-4 z-10">
+              <button className="text-darkGrey bg-lightGrey p-2 rounded-full hover:bg-gray-700 hover:text-lightGrey">
+                <MdEdit className="w-4 h-4" />
+              </button>
+              <button className="text-white bg-red p-2 rounded-full hover:bg-gray-700">
+                <GoTrash className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="w-4/5 mx-auto pt-20">
           {/* <CalendarWrapper dayHours={2} /> */}
