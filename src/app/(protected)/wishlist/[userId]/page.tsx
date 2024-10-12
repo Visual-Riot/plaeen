@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation"; // Use Next.js router
 import Navbar from "@/components/layout/Navbar";
-import WishlistGameCard from "@/components/game/WishlistGameCard"; // Use the new WishlistGameCard component
+import WishlistGameCard from "@/components/game/WishlistGameCard";
+import TeamSelectionModal from "@/components/modals/teamSelectionModal";
 
 interface FavouritedGame {
   id: number;
@@ -12,15 +14,25 @@ interface FavouritedGame {
   backgroundImage: string;
 }
 
+interface Team {
+  id: string;
+  name: string;
+}
+
 export default function Page() {
   const { data: session } = useSession();
+  const router = useRouter(); // Initialize Next.js router
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>("");
   const [favouritedGames, setFavouritedGames] = useState<FavouritedGame[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedGame, setSelectedGame] = useState<FavouritedGame | null>(null);
 
   useEffect(() => {
     if (session?.user?.id) {
       fetchFavouritedGames(session.user.id);
+      fetchUserTeams(session.user.id); // Fetch user teams
     }
   }, [session]);
 
@@ -45,9 +57,32 @@ export default function Page() {
     }
   };
 
+  const fetchUserTeams = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/teams?userId=${userId}`);
+      const data = await response.json();
+      setTeams(data);
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    }
+  };
+
   const handleFavouriteClick = async (gameId: number) => {
     // Logic to handle adding/removing favourites
   };
+
+  const handleCreateSessionClick = (game: FavouritedGame) => {
+    setSelectedGame(game);
+    setIsModalOpen(true); // Open modal
+  };
+
+  const handleTeamSelect = (teamId: string) => {
+  if (!selectedGame) return;
+
+  // Redirect to the correct team schedule page using dynamic teamId in the URL
+  router.push(`/team-schedule/${teamId}?gameId=${selectedGame.gameId}`);
+};
+
 
   return (
     <>
@@ -69,9 +104,9 @@ export default function Page() {
                       gameId={game.gameId}
                       gameName={game.gameName}
                       backgroundImage={game.backgroundImage}
-                      isFavourited={true} // Set this based on your logic
+                      isFavourited={true}
                       onFavourite={() => handleFavouriteClick(game.gameId)}
-                      onCreateSession={() => console.log("Session creation")}
+                      onCreateSession={() => handleCreateSessionClick(game)}
                       gameInfoUrl={`https://rawg.io/games/${game.gameId}`}
                     />
                   ))
@@ -81,6 +116,15 @@ export default function Page() {
           </div>
         </div>
       </div>
+
+      {/* Team Selection Modal */}
+      {isModalOpen && (
+        <TeamSelectionModal 
+          teams={teams}
+          onSelectTeam={handleTeamSelect}
+          onClose={() => setIsModalOpen(false)} 
+        />
+      )}
     </>
   );
 }

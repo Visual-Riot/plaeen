@@ -13,7 +13,6 @@ import { GoTrash } from "react-icons/go";
 import Footer from "@/components/layout/Footer";
 import PurpleButton from "@/components/buttons/PurpleButton";
 import WhiteArrow from "@/components/icons/WhiteArrow";
-import GameCalendar from "@/components/calendar/GameCalendar";
 import CalendarWrapper from "@/components/calendar/CalendarWrapper";
 import GameCard from "@/components/game/GameCard";
 
@@ -29,7 +28,7 @@ interface GameSession {
   tags?: { id: number; name: string; slug: string }[];
 }
 
-export default function Page() {
+export default function TeamSchedulePage() {
   const { id: teamId } = useParams();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>('');
@@ -39,8 +38,8 @@ export default function Page() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [teamName, setTeamName] = useState<string | null>(null);
   const [teamGames, setTeamGames] = useState<GameSession[]>([]);
-  const [isEditingTeamName, setIsEditingTeamName] = useState(false); // State to toggle edit mode
-  const [newTeamName, setNewTeamName] = useState<string | null>(null); // State for new team name
+  const [isEditingTeamName, setIsEditingTeamName] = useState(false);
+  const [newTeamName, setNewTeamName] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -93,6 +92,14 @@ export default function Page() {
 
   const handleCreateNewSession = async () => {
     if (selectedGame) {
+      // Check if the game already exists in the teamGames
+      const gameExists = teamGames.some(game => game.gameId === selectedGame.gameId);
+
+      // If the game doesn't exist, add it to the dropdown list and display cover art
+      if (!gameExists) {
+        setTeamGames(prevGames => [...prevGames, selectedGame]);
+      }
+
       try {
         const response = await fetch(`/api/teams/${teamId}/games`, {
           method: 'POST',
