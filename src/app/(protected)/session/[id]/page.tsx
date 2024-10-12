@@ -20,7 +20,7 @@ import gamesData from "../../../api/games/rawgGames.json";
 interface Game {
   id: number;
   name: string;
-  released: string;
+  releaseDate: string;
   background_image: string;
   genres: { name: string }[];
   platforms: { platform: { name: string } }[];
@@ -205,7 +205,7 @@ export default function Page() {
       case 'By Rating':
         return games.sort((a, b) => b.rating - a.rating);
       case 'By Release Date':
-        return games.sort((a, b) => new Date(b.released).getTime() - new Date(a.released).getTime());
+        return games.sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
       default:
         return games;
     }
@@ -353,7 +353,7 @@ export default function Page() {
               key={game.id}
               coverImage={game.background_image}
               name={game.name}
-              releaseDate={game.released}
+              releaseDate={game.releaseDate}
               teamId={teamId as string}
               genre={game.genres.map((genre) => genre.name).join(", ")}
               platform={game.platforms.map((p) => p.platform.name).join(", ")}
@@ -375,6 +375,7 @@ export default function Page() {
                       platforms: game.platforms.map((p) => p.platform.name),
                       rating: game.rating,
                       teamId: parsedTeamId,
+                      releaseDate: game.releaseDate,
                     }),
                   });
             

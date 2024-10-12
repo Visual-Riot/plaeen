@@ -169,7 +169,7 @@ export default function Page() {
           <div className="bg-[#6606E3]/5 w-full flex flex-col items-center justify-center h-full">
             {/* Display Teams */}
             <div className="flex flex-col justify-center items-center w-full">
-              <div className="flex xxs:flex-col xxs:justify-center xxs:items-center md:items-baseline md:flex-row items-baseline text-white mb-10">
+              <div className="flex xxs:flex-col xxs:justify-center xxs:items-center md:items-baseline md:flex-row items-baseline text-white my-16 mb-4">
                 <h1 className="text-white text-[32px] font-sofia xxs:mb-4 md:mb-0">Who are you playing with?</h1>
                 <span
                   className="text-sm font-extralight flex justify-center items-center hover:text-lightPurple hover:cursor-pointer"
@@ -188,7 +188,7 @@ export default function Page() {
               </div>
 
               {teams.length === 0 ? (
-                <p className="text-white text-sm text-center mb-10">Please create your first team to start</p>
+                <p className="text-white text-sm text-center mb-5">Please create your first team to start</p>
               ) : (
                 <div className="relative w-[80%] flex items-center">
                   {/* Teams Grid */}

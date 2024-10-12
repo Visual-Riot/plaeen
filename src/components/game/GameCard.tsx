@@ -3,7 +3,7 @@ import { FaHeart, FaExternalLinkAlt, FaSteam, FaPlaystation, FaXbox, FaApple, Fa
 import { BsNintendoSwitch } from "react-icons/bs";
 import { SiPlaystationvita, SiWiiu } from "react-icons/si";
 import { FiHeart } from 'react-icons/fi';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useParams } from "next/navigation";
 
@@ -77,9 +77,9 @@ const GameCard: React.FC<GameCardProps> = ({
     onFavourite();
   };
   
-
-  // Format the release date
-  const formattedDate = format(new Date(releaseDate), 'dd MMMM yyyy');
+  const formattedDate = isValid(new Date(releaseDate))
+  ? format(new Date(releaseDate), 'dd MMMM yyyy')
+  : 'Unknown release date'; // Fallback for invalid or missing dates
 
   // Platform icons map
   const platformIcons = {
