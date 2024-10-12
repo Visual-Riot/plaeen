@@ -44,7 +44,7 @@ export default function TeamSchedulePage() {
   const [mostRecentGame, setMostRecentGame] = useState<GameSession | null>(null);
 
   const router = useRouter();
-  const dropdownRef = useRef<HTMLDivElement>(null); // Ref to detect clicks outside
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchTeamDetailsAndGames = async () => {
@@ -63,13 +63,11 @@ export default function TeamSchedulePage() {
 
         if (gamesResponse.ok) {
           const gameData = await gamesResponse.json();
-          // Remove duplicate game names
           const uniqueGames = gameData.filter((game: GameSession, index: number, self: GameSession[]) =>
             index === self.findIndex((g) => g.gameName === game.gameName)
           );
           setTeamGames(uniqueGames);
           setFilteredGames(uniqueGames);
-          // Set the most recently added game
           if (uniqueGames.length > 0) {
             setMostRecentGame(uniqueGames[uniqueGames.length - 1]);
           }
@@ -92,7 +90,6 @@ export default function TeamSchedulePage() {
       setUsername(savedUsername);
     }
 
-    // Close dropdown when clicking outside
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
@@ -106,6 +103,7 @@ export default function TeamSchedulePage() {
 
   const handleGameSelect = (game: GameSession) => {
     setSelectedGame(game);
+    setMostRecentGame(game); // Update the most recent game to display its cover art
     setIsDropdownOpen(false);
   };
 
