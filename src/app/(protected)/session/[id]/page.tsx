@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react"; // Import useSession to access current user session
 import Navbar from "@/components/layout/Navbar";
 import GreenButton from "@/components/buttons/GreenButton";
 import OutlineButton from "@/components/buttons/OutlineButton";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { FaSteamSymbol } from "react-icons/fa";
 import SearchBar from "@/components/ui/SearchBar";
 import RelevanceFilter from "@/components/filters/RelevanceFilter";
@@ -15,7 +16,6 @@ import PlayerModeFilter from "@/components/filters/PlayerModeFilter";
 import GameCard from "@/components/game/GameCard";
 import Footer from "@/components/layout/Footer";
 import gamesData from "../../../api/games/rawgGames.json";
-import { useParams } from "next/navigation";
 
 interface Game {
   id: number;
@@ -31,69 +31,71 @@ interface Game {
 const gamesDataTyped: Game[] = gamesData as Game[];
 
 export default function Page() {
+  const { data: session } = useSession(); // Get the current session
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState<string>(''); // Search term state
-  const [selectedRelevance, setSelectedRelevance] = useState<string>('Relevance'); // Relevance filter state
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]); // Genre filter state
-  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]); // Platform filter state
-  const [selectedThemes, setSelectedThemes] = useState<string[]>([]); // Theme filter state
-  const [selectedPlayerModes, setSelectedPlayerModes] = useState<string[]>([]); // Player mode filter state
-  const [allGames, setAllGames] = useState<Game[]>([]); // State for storing all fetched games
-  const [filteredGames, setFilteredGames] = useState<Game[]>([]); // State for filtered games
-  const [displayedGames, setDisplayedGames] = useState<Game[]>([]); // State for games displayed on the page
-  const [page, setPage] = useState<number>(1); // State for pagination
-  const [hasMoreGames, setHasMoreGames] = useState<boolean>(true); // To check if more games are available
-  const [favouritedGames, setFavouritedGames] = useState<number[]>([]); // Store IDs of favourited games
-  const { id: teamId } = useParams(); // Fetch teamId from route params
-
+  const [searchTerm, setSearchTerm] = useState<string>(''); 
+  const [selectedRelevance, setSelectedRelevance] = useState<string>('Relevance');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
+  const [selectedPlayerModes, setSelectedPlayerModes] = useState<string[]>([]);
+  const [allGames, setAllGames] = useState<Game[]>([]);
+  const [filteredGames, setFilteredGames] = useState<Game[]>([]);
+  const [displayedGames, setDisplayedGames] = useState<Game[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [hasMoreGames, setHasMoreGames] = useState<boolean>(true);
+  const [favouritedGames, setFavouritedGames] = useState<number[]>([]);
+  const { id: teamId } = useParams();
   const router = useRouter();
 
   useEffect(() => {
-    fetchFavouritedGames(); // Fetch favourited games on mount
+    if (session?.user?.id) {
+      fetchFavouritedGames(session.user.id);
+    }
+  }, [session]);
+
+  useEffect(() => {
+    fetchAllGames();
   }, []);
 
   useEffect(() => {
-    // Fetch all games when the component mounts
-    fetchAllGames();
-  }, []); // Empty dependency array ensures this runs once on component mount
-
-  useEffect(() => {
-    // Filter the games based on search term, genres, platforms, themes, and player modes
     let filtered = allGames.filter((game) => {
       const normalizedPlatforms = game.platforms.map(p => normalizePlatformName(p.platform.name));
-  
       const matchesSearchTerm = game.name.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesGenre = selectedGenres.length === 0 || game.genres.some(genre => selectedGenres.includes(genre.name));
       const matchesPlatform = selectedPlatforms.length === 0 || normalizedPlatforms.some(platform => selectedPlatforms.includes(platform));
       const matchesTheme = selectedThemes.length === 0 || selectedThemes.some(theme =>
         game.tags.some(tag => tag.name.toLowerCase() === theme.toLowerCase() || tag.slug.toLowerCase() === theme.toLowerCase())
       );
-  
-      // Assuming player modes are also stored in tags
       const matchesPlayerMode = selectedPlayerModes.length === 0 || selectedPlayerModes.some(playerMode =>
         game.tags.some(tag => tag.name.toLowerCase() === playerMode.toLowerCase() || tag.slug.toLowerCase() === playerMode.toLowerCase())
       );
-  
+
       return matchesSearchTerm && matchesGenre && matchesPlatform && matchesTheme && matchesPlayerMode;
     });
-  
-    // Apply sorting based on the relevance filter
-    filtered = applySorting(filtered, selectedRelevance);
-  
-    setFilteredGames(filtered);
-    setDisplayedGames(filtered.slice(0, 18)); // Display the first 18 games initially
-    setPage(1); // Reset pagination
-    setHasMoreGames(filtered.length > 18); // Check if there are more games to load
-  }, [searchTerm, selectedGenres, selectedPlatforms, selectedThemes, selectedPlayerModes, selectedRelevance, allGames]);  
 
-  const fetchFavouritedGames = async () => {
+    filtered = applySorting(filtered, selectedRelevance);
+    setFilteredGames(filtered);
+    setDisplayedGames(filtered.slice(0, 18)); 
+    setPage(1); 
+    setHasMoreGames(filtered.length > 18); 
+  }, [searchTerm, selectedGenres, selectedPlatforms, selectedThemes, selectedPlayerModes, selectedRelevance, allGames]);
+
+  const fetchFavouritedGames = async (userId: string) => {
     try {
-      const response = await fetch('/api/favourites');
+      const response = await fetch('/api/favourites', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }), // Pass userId from session
+      });
+
       if (response.ok) {
         const data = await response.json();
         const favouriteIds = data.map((game: { gameId: number }) => game.gameId);
-        setFavouritedGames(favouriteIds); // Store the IDs of favourited games
+        setFavouritedGames(favouriteIds);
       } else {
         console.error('Failed to fetch favourited games');
       }
@@ -102,37 +104,51 @@ export default function Page() {
     }
   };
 
-  const handleFavouriteClick = async (gameId: number) => {
+  const handleFavouriteClick = async (game: Game) => {
+    if (!session?.user?.id) {
+      console.error('User must be logged in to favourite games');
+      return;
+    }
+  
     try {
-      const isFavourited = favouritedGames.includes(gameId);
+      const isFavourited = favouritedGames.includes(game.id);
   
       if (isFavourited) {
-        // Remove the game from favourites using the DELETE route
-        const response = await fetch(`/api/favourites/${gameId}`, {
+        // Remove the game from favourites using the DELETE method
+        const response = await fetch(`/api/favourites/${game.id}`, {
           method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId: session.user.id }), // Send userId in the body
         });
   
         if (response.ok) {
-          setFavouritedGames(favouritedGames.filter((id) => id !== gameId)); // Update state to remove the game
+          setFavouritedGames(favouritedGames.filter((id) => id !== game.id));
         } else {
-          const errorMessage = await response.text(); // Log server response
-          console.error('Failed to remove game from favourites:', errorMessage);
+          console.error('Failed to remove game from favourites');
         }
       } else {
-        // Add the game to favourites using the POST route
-        const response = await fetch('/api/favourites', {
+        // Add the game to favourites using the POST method
+        const response = await fetch(`/api/favourites/${game.id}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ gameId }), // Include gameId in the body
+          body: JSON.stringify({
+            userId: session.user.id,  // Send userId in the body
+            gameName: game.name,      // Pass the actual game name
+            backgroundImage: game.background_image,  // Pass the actual background image URL
+            genres: game.genres.map((genre) => genre.name),  // Pass the actual genres array
+            platforms: game.platforms.map((p) => p.platform.name),  // Pass the actual platforms array
+            rating: game.rating,  // Pass the actual rating
+          }),
         });
   
         if (response.ok) {
-          setFavouritedGames([...favouritedGames, gameId]); // Update state to add the game
+          setFavouritedGames([...favouritedGames, game.id]);
         } else {
-          const errorMessage = await response.text(); // Log server response
-          console.error('Failed to add game to favourites:', errorMessage);
+          console.error('Failed to add game to favourites');
         }
       }
     } catch (error) {
@@ -143,8 +159,7 @@ export default function Page() {
 
   const fetchAllGames = () => {
     try {
-      // Set all games using imported JSON data
-      setAllGames(gamesDataTyped); // Replace this with the actual data variable from the JSON import
+      setAllGames(gamesDataTyped);
     } catch (error) {
       console.error("Error fetching all games:", error);
     }
@@ -157,7 +172,7 @@ export default function Page() {
     setPage(nextPage);
 
     if (nextSetOfGames.length >= filteredGames.length) {
-      setHasMoreGames(false); // No more games to load
+      setHasMoreGames(false);
     }
   };
 
@@ -191,9 +206,8 @@ export default function Page() {
         return games.sort((a, b) => b.rating - a.rating);
       case 'By Release Date':
         return games.sort((a, b) => new Date(b.released).getTime() - new Date(a.released).getTime());
-      case 'Reset': // or "Relevance"
       default:
-        return games; // No sorting or default order
+        return games;
     }
   };
 
@@ -205,12 +219,12 @@ export default function Page() {
   };
 
   const resetFilters = () => {
-    setSearchTerm(''); // Reset search term
-    setSelectedRelevance('Relevance'); // Reset relevance filter
-    setSelectedGenres([]); // Reset genre filter
-    setSelectedPlatforms([]); // Reset platform filter
-    setSelectedThemes([]); // Reset theme filter
-    setSelectedPlayerModes([]); // Reset player modes filter
+    setSearchTerm('');
+    setSelectedRelevance('Relevance');
+    setSelectedGenres([]);
+    setSelectedPlatforms([]);
+    setSelectedThemes([]);
+    setSelectedPlayerModes([]);
   };
 
   const handleCreateSession = async (game: Game) => {
@@ -227,7 +241,7 @@ export default function Page() {
       });
 
       if (response.ok) {
-        router.push(`/session/${game.id}`); // Redirect to the session page
+        router.push(`/session/${game.id}`);
       } else {
         console.error('Failed to create a new session');
       }
@@ -335,50 +349,49 @@ export default function Page() {
         <div className="w-4/5 mx-auto mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-32 gap-y-12">
           {displayedGames.map((game) => (
             <GameCard
-            id={game.id}
-            key={game.id}
-            coverImage={game.background_image}
-            name={game.name}
-            releaseDate={game.released}
-            teamId={teamId as string}
-            genre={game.genres.map((genre) => genre.name).join(", ")}
-            platform={game.platforms.map((p) => p.platform.name).join(", ")}
-            rating={`${game.rating}/5`}
-            onCreateSession={async () => {
-              try {
-                const parsedTeamId = Array.isArray(teamId) ? parseInt(teamId[0], 10) : parseInt(teamId, 10);
-          
-                const response = await fetch('/api/sessions', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    gameId: game.id,
-                    gameName: game.name,
-                    backgroundImage: game.background_image,
-                    genres: game.genres.map((genre) => genre.name),
-                    platforms: game.platforms.map((p) => p.platform.name),
-                    rating: game.rating,
-                    teamId: parsedTeamId, // Use the parsed teamId
-                  }),
-                });
-          
-                if (!response.ok) {
-                  throw new Error('Failed to create session');
+              id={game.id}
+              key={game.id}
+              coverImage={game.background_image}
+              name={game.name}
+              releaseDate={game.released}
+              teamId={teamId as string}
+              genre={game.genres.map((genre) => genre.name).join(", ")}
+              platform={game.platforms.map((p) => p.platform.name).join(", ")}
+              rating={`${game.rating}/5`}
+              onCreateSession={async () => {
+                try {
+                  const parsedTeamId = Array.isArray(teamId) ? parseInt(teamId[0], 10) : parseInt(teamId, 10);
+            
+                  const response = await fetch('/api/sessions', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      gameId: game.id,
+                      gameName: game.name,
+                      backgroundImage: game.background_image,
+                      genres: game.genres.map((genre) => genre.name),
+                      platforms: game.platforms.map((p) => p.platform.name),
+                      rating: game.rating,
+                      teamId: parsedTeamId,
+                    }),
+                  });
+            
+                  if (!response.ok) {
+                    throw new Error('Failed to create session');
+                  }
+            
+                  const data = await response.json();
+                  console.log('Session created successfully:', data);
+                } catch (error) {
+                  console.error('Error creating session:', error);
                 }
-          
-                const data = await response.json();
-                console.log('Session created successfully:', data);
-              } catch (error) {
-                console.error('Error creating session:', error);
-              }
-            }}
-            isfavourited={favouritedGames.includes(game.id)} // Use lowercase as expected by GameCard
-            onFavourite={() => handleFavouriteClick(game.id)} // Toggle favourite
-            gameInfoUrl={`https://rawg.io/games/${game.id}`}
-          />
-          
+              }}
+              isfavourited={favouritedGames.includes(game.id)}
+              onFavourite={() => handleFavouriteClick(game)}
+              gameInfoUrl={`https://rawg.io/games/${game.id}`}
+            />
           ))}
         </div>
 
