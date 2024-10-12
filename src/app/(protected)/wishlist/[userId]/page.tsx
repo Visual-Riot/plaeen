@@ -76,13 +76,39 @@ export default function Page() {
     setIsModalOpen(true); // Open modal
   };
 
-  const handleTeamSelect = (teamId: string) => {
-  if (!selectedGame) return;
-
-  // Redirect to the correct team schedule page using dynamic teamId in the URL
-  router.push(`/team-schedule/${teamId}?gameId=${selectedGame.gameId}`);
-};
-
+  const handleTeamSelect = async (teamId: string) => {
+    if (!selectedGame) return;
+  
+    const gameDetails = {
+      gameId: selectedGame.gameId,
+      gameName: selectedGame.gameName,
+      backgroundImage: selectedGame.backgroundImage || '', // Provide default value if missing
+      genres: selectedGame.genres || [], // Ensure it's an array
+      platforms: selectedGame.platforms || [], // Ensure it's an array
+      rating: selectedGame.rating || null, // Set null if rating is missing
+    };
+  
+    try {
+      const response = await fetch(`/api/teams/${teamId}/games`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(gameDetails),
+      });
+  
+      if (response.ok) {
+        // Redirect to the team schedule page
+        router.push(`/team-schedule/${teamId}?gameId=${selectedGame.gameId}`);
+      } else {
+        const errorResponse = await response.json();
+        console.error('Failed to add the game to the team schedule:', errorResponse.error || 'Unknown error');
+      }
+    } catch (error) {
+      console.error('Error adding the game to the team schedule:', error);
+    }
+  };
+  
 
   return (
     <>
@@ -91,7 +117,9 @@ export default function Page() {
         <div className="bg-[black]/85 w-full h-screen flex flex-col items-center justify-center mt-[-70px]">
           <div className="bg-[#6606E3]/5 w-full flex flex-col items-center justify-center h-full">
             <div>
-              <h1 className="text-white text-[32px] font-sofia xxs:mb-4 md:mb-0 text-center pb-10">Wishlist</h1>
+              <h1 className="text-white text-[32px] font-sofia xxs:mb-4 md:mb-0 text-center pb-10">
+                Wishlist
+              </h1>
 
               {/* Wishlist games container */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-32 gap-y-12 mt-8">
@@ -119,10 +147,10 @@ export default function Page() {
 
       {/* Team Selection Modal */}
       {isModalOpen && (
-        <TeamSelectionModal 
+        <TeamSelectionModal
           teams={teams}
           onSelectTeam={handleTeamSelect}
-          onClose={() => setIsModalOpen(false)} 
+          onClose={() => setIsModalOpen(false)}
         />
       )}
     </>
