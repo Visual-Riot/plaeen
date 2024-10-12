@@ -16,7 +16,7 @@ const AvatarButton: React.FC<AvatarButtonProps> = ({ onClick, imageSrc, altText,
       className="bg-darkPurple w-[103px] h-[103px] rounded-e-3xl rounded-t-3xl hover:bg-violet transition-all duration-200 hover:text-green group flex items-center justify-center"
     >
       {imageSrc ? (
-        <img src={imageSrc} alt={altText} className="w-full h-full rounded-e-3xl rounded-t-3xl" />
+        <img src={imageSrc} alt={altText} className="w-full h-full rounded-e-3xl rounded-t-3xl object-cover" />
       ) : (
         children
       )}

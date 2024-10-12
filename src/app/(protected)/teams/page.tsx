@@ -138,26 +138,10 @@ export default function Page() {
                 <p className="text-white text-sm text-center mb-10">Please create your first team to start</p>
               ) : (
                 <div className="relative w-[80%] flex items-center">
-                  {/* Left Carousel Button */}
-                  {teams.length > 1 && (
-                    <button
-                      onClick={() => scrollCarousel("left")}
-                      className="absolute left-0 z-10 bg-black/50 p-3 rounded-full text-white"
-                    >
-                      <IoIosArrowBack size={24} />
-                    </button>
-                  )}
-
-                  {/* Carousel Container */}
-                  <div
-                    ref={carouselRef}
-                    className="flex gap-8 overflow-x-hidden scrollbar-hide snap-x snap-mandatory px-10 my-20 w-full"
-                  >
+                  {/* Teams Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 px-10 my-20 w-full">
                     {teams.map((team, index) => (
-                      <div
-                        key={index}
-                        className="snap-center flex flex-col items-center w-full sm:w-1/2 md:w-1/3 lg:w-1/5 relative"
-                      >
+                      <div key={index} className="flex flex-col items-center relative">
                         <button className="bg-darkPurple w-48 h-48 rounded-e-3xl rounded-t-3xl hover:border-green hover:border-2 transition-all relative group">
                           <img
                             src={team.avatar}
@@ -207,16 +191,6 @@ export default function Page() {
                       </div>
                     ))}
                   </div>
-
-                  {/* Right Carousel Button */}
-                  {teams.length > 1 && (
-                    <button
-                      onClick={() => scrollCarousel("right")}
-                      className="absolute right-0 z-10 bg-black/50 p-3 rounded-full text-white"
-                    >
-                      <IoIosArrowForward size={24} />
-                    </button>
-                  )}
                 </div>
               )}
 

@@ -115,7 +115,7 @@ export default function Page() {
                   className="w-[103px] h-[103px] mx-auto my-6"
                 >
                   {selectedTeamAvatar ? (
-                    <img src={selectedTeamAvatar} alt="Selected Team Avatar" className="w-full h-full rounded-e-3xl rounded-t-3xl" />
+                    <img src={selectedTeamAvatar} alt="Selected Team Avatar" className="w-full h-full rounded-e-3xl rounded-t-3xl object-cover" />
                   ) : (
                     <AvatarButton onClick={handleChooseAvatarClick}>
                       <ImPlus className="w-[21px] h-[21px] text-white group-hover:text-green" />
@@ -170,8 +170,8 @@ export default function Page() {
                   {[...Array(9)].map((_, index) => (
                     <AvatarButton
                       key={index}
-                      onClick={() => handleAvatarSelection(`/img/avatar_${index + 1}.png`)}
-                      imageSrc={`/img/avatar_${index + 1}.png`}
+                      onClick={() => handleAvatarSelection(`/img/avatar_${index + 1}.jpeg`)}
+                      imageSrc={`/img/avatar_${index + 1}.jpeg`}
                       altText={`Avatar ${index + 1}`}
                     />
                   ))}
