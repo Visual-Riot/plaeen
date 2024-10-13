@@ -1,29 +1,45 @@
-"use client";
+"use client"; // Ensure client-side execution
 
 import { useRef, useState, useEffect } from "react";
-import Link from "next/link";
 import { TiPlus } from "react-icons/ti";
 import Navbar from "@/components/layout/Navbar";
 import GreenButton from "@/components/buttons/GreenButton";
-import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react"; // For session data
+import { useRouter } from "next/navigation"; // For navigation
 
 export default function Page() {
-  const { data: session } = useSession(); // Get the current session to identify the user
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [username, setUsername] = useState<string>("");
+  const [isUsernameValid, setIsUsernameValid] = useState<boolean>(true); // Track username validity
+  const [isUsernameChecking, setIsUsernameChecking] = useState<boolean>(false); // Track username checking
   const [fileError, setFileError] = useState<string | null>(null); // State for error message
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { data: session } = useSession(); // Get the user session
+  const router = useRouter(); // Initialize the Next.js router
 
   useEffect(() => {
-    const savedImage = localStorage.getItem("userAvatar");
-    const savedUsername = localStorage.getItem("username");
-    if (savedImage) {
-      setSelectedImage(savedImage);
+    if (session?.user?.id) {
+      // Fetch existing user data (name and image) from the database if available
+      fetchUserDetails(session.user.id as string);
     }
-    if (savedUsername) {
-      setUsername(savedUsername);
+  }, [session]);  
+
+  const fetchUserDetails = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/user/${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.name) {
+          setUsername(data.name);
+        }
+        if (data.image) {
+          setSelectedImage(data.image);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error);
     }
-  }, []);
+  };
 
   const handleFileInputClick = () => {
     if (fileInputRef.current) {
@@ -38,7 +54,7 @@ export default function Page() {
         setFileError("File size exceeds 2MB.");
         return;
       } else {
-        setFileError(null); // Clear any previous errors
+        setFileError(null); // Clear previous errors
         const reader = new FileReader();
         reader.onloadend = () => {
           setSelectedImage(reader.result as string);
@@ -48,8 +64,28 @@ export default function Page() {
     }
   };
 
-  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
+  const checkUsernameUniqueness = async (newUsername: string) => {
+    setIsUsernameChecking(true); // Start checking
+    try {
+      const response = await fetch(`/api/user/check-username?username=${newUsername}`);
+      const { isAvailable } = await response.json();
+      setIsUsernameValid(isAvailable);
+    } catch (error) {
+      console.error("Error checking username uniqueness:", error);
+    } finally {
+      setIsUsernameChecking(false); // Finish checking
+    }
+  };
+
+  const handleUsernameChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newUsername = event.target.value;
+    setUsername(newUsername);
+    
+    if (newUsername.length > 0) {
+      await checkUsernameUniqueness(newUsername); // Check uniqueness when the username changes
+    } else {
+      setIsUsernameValid(true); // Reset validity for empty input
+    }
   };
 
   const handleContinue = async () => {
@@ -57,16 +93,15 @@ export default function Page() {
       console.error("No user session found");
       return;
     }
-  
+
     const userId = session.user.id; // Get the logged-in user's ID
-  
-    // Send user avatar and name to the API for updating the database
+
     const avatarData = {
       name: username,
       image: selectedImage,
       userId,
     };
-  
+
     try {
       const response = await fetch("/api/user", {
         method: "POST",
@@ -75,34 +110,20 @@ export default function Page() {
         },
         body: JSON.stringify(avatarData),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Failed to update avatar:", errorData.error);
       } else {
-        console.log("Avatar updated successfully");
+        router.push("/game-calendar"); // Redirect to game-calendar after success
       }
     } catch (error) {
       console.error("Error updating avatar:", error);
     }
   };
-  
 
   const handleSkip = () => {
-    let newUsername = "avatar1";
-    const storedUsernames = Object.keys(localStorage).filter((key) =>
-      key.startsWith("avatar")
-    );
-    if (storedUsernames.length > 0) {
-      const highestNumber = Math.max(
-        ...storedUsernames.map((name) =>
-          parseInt(name.replace("avatar", ""), 10)
-        )
-      );
-      newUsername = `avatar${highestNumber + 1}`;
-    }
-    localStorage.setItem("userAvatar", "/icons/avatar-default.jpg");
-    localStorage.setItem("username", newUsername);
+    router.push("/game-calendar"); // Redirect to game-calendar on skip
   };
 
   return (
@@ -111,9 +132,7 @@ export default function Page() {
       <div className="bg-black w-full h-full bg-[url('/img/bg-img_01.webp')] bg-cover bg-center">
         <div className="bg-[black]/85 w-full h-screen flex flex-col items-center justify-center mt-[-70px]">
           <div className="bg-[#6606E3]/5 w-full flex flex-col items-center justify-center h-full">
-            {/* Log in / Sign in Card */}
             <div className="p-16 bg-lightPurple/15 min-w-[320px] md:min-w-[520px] rounded-lg backdrop-blur-[14px] backdrop-brightness-[1.4] mt-[60px]">
-              {/* Create Character Section */}
               <div>
                 <h2 className="text-white font-semibold text-3xl mt-0.5">
                   Create your character
@@ -126,10 +145,15 @@ export default function Page() {
                   placeholder="username"
                   value={username}
                   onChange={handleUsernameChange}
-                  className={`border-green bg-green ${
-                    username ? "opacity-100" : "opacity-75"
-                  } border-2 mt-4 w-full p-5 rounded-lg placeholder-gray-700 text-gray-900`}
+                  className={`border-2 mt-4 w-full p-5 rounded-lg placeholder-gray-700 text-gray-900 ${
+                    isUsernameValid ? "border-green bg-green" : "border-red-500"
+                  }`}
                 />
+                {!isUsernameValid && (
+                  <p className="text-red-500 mt-2 text-sm">
+                    Username is already taken. Please try another.
+                  </p>
+                )}
               </div>
               <div className="flex mt-8 items-center">
                 {selectedImage ? (
@@ -164,18 +188,21 @@ export default function Page() {
               {fileError && (
                 <div className="text-white mt-2 text-sm">{fileError}</div>
               )}
-              <GreenButton
-                onClick={handleContinue}
-                className="mt-8 p-[1.25rem!important] text-black w-full"
-              >
-                Continue
-              </GreenButton>
+              <div onClick={handleContinue}>
+                <GreenButton
+                  onClick={handleContinue}
+                  disabled={!isUsernameValid || isUsernameChecking}
+                  className={`mt-8 p-[1.25rem!important] text-black w-full ${
+                    isUsernameValid && !isUsernameChecking ? "" : "opacity-50 cursor-not-allowed"
+                  }`}
+                >
+                  {isUsernameChecking ? "Checking..." : "Continue"}
+                </GreenButton>
+              </div>
               <div onClick={handleSkip}>
-                <Link href="/">
-                  <div className="text-white underline text-sm flex justify-center mt-8 hover:text-gray-300 cursor-pointer">
-                    Skip for now
-                  </div>
-                </Link>
+                <div className="text-white underline text-sm flex justify-center mt-8 hover:text-gray-300 cursor-pointer">
+                  Skip for now
+                </div>
               </div>
             </div>
           </div>

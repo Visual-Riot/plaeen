@@ -5,7 +5,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // Use Next.js router
 import Navbar from "@/components/layout/Navbar";
 import WishlistGameCard from "@/components/game/WishlistGameCard";
-import TeamSelectionModal from "@/components/modals/teamSelectionModal";
+import TeamSelectionModal from "@/components/modals/teamSelectionModal"; // Ensure this exists
+import { MdEdit, MdDelete, MdCheck } from "react-icons/md"; // For edit and delete icons
+import GreenButton from "@/components/buttons/GreenButton"; // Ensure this exists
 
 interface FavouritedGame {
   id: number;
@@ -28,6 +30,8 @@ export default function Page() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState<FavouritedGame | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false); // For edit mode
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For delete confirmation
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -73,7 +77,7 @@ export default function Page() {
 
   const handleCreateSessionClick = (game: FavouritedGame) => {
     setSelectedGame(game);
-    setIsModalOpen(true); // Open modal
+    setIsModalOpen(true); // Open modal for team selection
   };
 
   const handleTeamSelect = async (teamId: string) => {
@@ -109,40 +113,132 @@ export default function Page() {
     }
   };
 
+  const handleRemoveGameClick = (game: FavouritedGame) => {
+    setSelectedGame(game);
+    setIsDeleteModalOpen(true); // Open delete confirmation modal
+  };
+
+  const confirmRemoveGame = async () => {
+    if (!selectedGame) return;
+  
+    try {
+      const response = await fetch(`/api/favourites/${selectedGame.gameId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: session?.user?.id, // Pass the userId in the body
+        }),
+      });
+  
+      if (response.ok) {
+        setFavouritedGames((prevGames) =>
+          prevGames.filter((game) => game.gameId !== selectedGame.gameId)
+        );
+        setIsDeleteModalOpen(false); // Close modal after deletion
+      } else {
+        console.error("Failed to remove the game from the wishlist.");
+      }
+    } catch (error) {
+      console.error("Error removing the game:", error);
+    }
+  };
+  
+  
   return (
     <>
-      <Navbar avatar={selectedImage || null} />
-      <div className="bg-black w-full h-full bg-[url('/img/bg-img_01.webp')] bg-cover bg-center">
-        <div className="bg-[black]/85 w-full h-screen flex flex-col items-center justify-center mt-[-70px]">
+      <Navbar />
+      <div className="bg-black w-full h-full bg-[url('/img/bg-img_01.webp')] bg-cover bg-center relative">
+        {isEditMode && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
+        )}
+        <div className="bg-[black]/85 w-full h-screen flex flex-col items-center justify-center mt-[-70px] z-20 relative">
           <div className="bg-[#6606E3]/5 w-full flex flex-col items-center justify-center h-full">
             <div>
-              <h1 className="text-white text-[32px] font-sofia xxs:mb-4 md:mb-0 text-center pb-10 mt-5">
-                Wishlist
-              </h1>
+              <div className="flex justify-center w-full px-12 items-center pb-5">
+                <h1 className="text-white text-[32px] font-sofia">
+                  Wishlist
+                </h1>
+                {favouritedGames.length > 0 && (
+                  <span
+                    className="text-sm font-extralight flex justify-center items-center text-white hover:text-lightPurple hover:cursor-pointer"
+                    onClick={() => setIsEditMode(!isEditMode)}
+                  >
+                    {isEditMode ? (
+                      <>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<MdCheck />&nbsp;Finished editing?
+                      </>
+                    ) : (
+                      <>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<MdEdit />&nbsp;Edit wishlist
+                      </>
+                    )}
+                  </span>
+                )}
+              </div>
 
-              {/* Wishlist games container */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-8 mt-8">
+              <div className="w-full">
                 {favouritedGames.length === 0 ? (
-                  <p className="text-white">No games in your wishlist yet.</p>
+                  <div className="flex flex-col items-center justify-center h-[40]">
+                    {/* Center content vertically and horizontally */}
+                    <p className="text-white text-center mb-6">No games in your wishlist yet.</p>
+                  </div>
                 ) : (
-                  favouritedGames.map((game) => (
-                    <WishlistGameCard
-                      key={game.id}
-                      gameId={game.gameId}
-                      gameName={game.gameName}
-                      backgroundImage={game.backgroundImage}
-                      isFavourited={true}
-                      onFavourite={() => handleFavouriteClick(game.gameId)}
-                      onCreateSession={() => handleCreateSessionClick(game)}
-                      gameInfoUrl={`https://rawg.io/games/${game.gameId}`}
-                    />
-                  ))
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-8 mt-8">
+                    {favouritedGames.map((game) => (
+                      <div key={game.id} className="relative">
+                        <WishlistGameCard
+                          key={game.id}
+                          gameId={game.gameId}
+                          gameName={game.gameName}
+                          backgroundImage={game.backgroundImage}
+                          isFavourited={true}
+                          onFavourite={() => handleFavouriteClick(game.gameId)}
+                          onCreateSession={() => handleCreateSessionClick(game)}
+                          gameInfoUrl={`https://rawg.io/games/${game.gameId}`}
+                        />
+                        {isEditMode && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-sm">
+                            <button
+                              className="text-white hover:text-red mb-16"
+                              onClick={() => handleRemoveGameClick(game)}
+                            >
+                              <MdDelete size={30} />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && selectedGame && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-20">
+          <div className="bg-darkPurple p-8 rounded-lg text-center">
+            <p className="text-white mb-4">
+              Are you sure you want to remove <span className="font-bold">{selectedGame.gameName}</span> from your wishlist?
+            </p>
+            <div className="flex justify-center gap-4">
+              <GreenButton onClick={confirmRemoveGame} className="w-[100px]">
+                Confirm
+              </GreenButton>
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="text-white underline"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Team Selection Modal */}
       {isModalOpen && (

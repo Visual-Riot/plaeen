@@ -8,8 +8,10 @@ import Navbar from "@/components/layout/Navbar";
 import GreenButton from "@/components/buttons/GreenButton";
 import AvatarButton from "@/components/buttons/AvatarButton";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react"; // Import useSession to access session data
 
 export default function Page() {
+  const { data: session } = useSession(); // Get the user session
   const [selectedImage, setSelectedImage] = useState<string | null>(null); // User avatar for Navbar
   const [username, setUsername] = useState<string>('');
   const [teams, setTeams] = useState<{ id: number; teamName: string; image: string }[]>([]); // List of teams
@@ -25,22 +27,24 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch teams from the API
-    const fetchTeams = async () => {
-      try {
-        const response = await fetch('/api/teams');
-        if (response.ok) {
-          const data = await response.json();
-          setTeams(data);
-        } else {
-          console.error('Failed to fetch teams');
+    if (session?.user?.id) {
+      // Fetch teams that the user has created or been invited to
+      const fetchUserTeams = async () => {
+        try {
+          const response = await fetch(`/api/teams?userId=${session.user.id}`);
+          if (response.ok) {
+            const data = await response.json();
+            setTeams(data);
+          } else {
+            console.error('Failed to fetch teams');
+          }
+        } catch (error) {
+          console.error('Error fetching teams:', error);
         }
-      } catch (error) {
-        console.error('Error fetching teams:', error);
-      }
-    };
+      };
 
-    fetchTeams();
+      fetchUserTeams();
+    }
 
     // Load user avatar and username
     const savedImage = localStorage.getItem("userAvatar");
@@ -51,7 +55,7 @@ export default function Page() {
     if (savedUsername) {
       setUsername(savedUsername);
     }
-  }, []);
+  }, [session]);
 
   const handleAddTeamClick = () => {
     // Redirect to the create-team page
@@ -171,20 +175,22 @@ export default function Page() {
             <div className="flex flex-col justify-center items-center w-full">
               <div className="flex xxs:flex-col xxs:justify-center xxs:items-center md:items-baseline md:flex-row items-baseline text-white my-16 mb-4">
                 <h1 className="text-white text-[32px] font-sofia xxs:mb-4 md:mb-0">Who are you playing with?</h1>
-                <span
-                  className="text-sm font-extralight flex justify-center items-center hover:text-lightPurple hover:cursor-pointer"
-                  onClick={() => setIsEditing(!isEditing)}
-                >
-                  {isEditing ? (
-                    <>
-                      &nbsp;&nbsp;&nbsp;&nbsp;<MdCheck />&nbsp;Finished editing?
-                    </>
-                  ) : (
-                    <>
-                      &nbsp;&nbsp;&nbsp;&nbsp;<MdEdit />&nbsp;Edit teams
-                    </>
-                  )}
-                </span>
+                {teams.length > 0 && (
+                  <span
+                    className="text-sm font-extralight flex justify-center items-center hover:text-lightPurple hover:cursor-pointer"
+                    onClick={() => setIsEditing(!isEditing)}
+                  >
+                    {isEditing ? (
+                      <>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<MdCheck />&nbsp;Finished editing?
+                      </>
+                    ) : (
+                      <>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<MdEdit />&nbsp;Edit teams
+                      </>
+                    )}
+                  </span>
+                )}
               </div>
 
               {teams.length === 0 ? (

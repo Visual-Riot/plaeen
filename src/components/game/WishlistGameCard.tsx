@@ -28,10 +28,10 @@ export default function WishlistGameCard({
       ></div>
       
       {/* Game Name */}
-      <p className="mt-4 text-lg text-center font-extralight">{gameName}</p>
+      <p className="mt-4 text-sm text-center font-extralight">{gameName}</p>
 
       {/* Icons Section */}
-      <div className="flex justify-center mt-2 w-full">
+      <div className="flex justify-center mt-2 w-[192px]">
         {/* Create session */}
         <button
           className="bg-usp1 text-white font-medium font-roboto py-2 px-4 uppercase rounded xxs:w-[100%]"
