@@ -53,10 +53,10 @@ export default function Page() {
 
   const handleContinue = () => {
     if (selectedImage) {
-      localStorage.setItem("userAvatar", selectedImage);
+      localStorage.setItem("plaeenUserAvatar", selectedImage);
     }
     if (username) {
-      localStorage.setItem("username", username);
+      localStorage.setItem("plaeenUsername", username);
     }
   };
 
@@ -73,8 +73,8 @@ export default function Page() {
       );
       newUsername = `avatar${highestNumber + 1}`;
     }
-    localStorage.setItem("userAvatar", "/icons/avatar-default.jpg");
-    localStorage.setItem("username", newUsername);
+    localStorage.setItem("plaeenUserAvatar", "/icons/avatar-default.jpg");
+    localStorage.setItem("plaeenUsername", newUsername);
   };
 
   return (
