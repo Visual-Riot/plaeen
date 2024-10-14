@@ -252,7 +252,7 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
         dayHours={dayHours}
         setDayHours={setDayHours}
         desktopWidgetTop="top-[100px]"
-        isActive={false}
+        isActive={false} // should player buttons be active from default?
       />
 
       {/* Bottom Row with legend and submit button */}

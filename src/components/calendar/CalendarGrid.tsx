@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import PlayerCalendarDesktop from "./PlayerCalendarDesktop";
-import PlayerCalendarMobile from "./PlayerCalendarMobile";
 import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
 import { startOfWeek, format } from "date-fns";
+import Calendar from "./Calendar";
 
 interface CalendarGridProps {
   dayHours: { [key: string]: { [key: number]: string } };
@@ -132,14 +131,16 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
   return (
     <div className="player-calendar-wrapper">
       {isMobile ? (
-        <PlayerCalendarMobile
+        <Calendar
           className="flex lg:hidden"
           dayHours={dayHours}
           onHoursStateChange={handleHourStateChange}
           currentDate={currentDate}
+          isActive={isActive}
+          isMobile={true}
         />
       ) : (
-        <PlayerCalendarDesktop
+        <Calendar
           className="hidden lg:flex"
           dayHours={dayHours}
           onHoursStateChange={handleHourStateChange}

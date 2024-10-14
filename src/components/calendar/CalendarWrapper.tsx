@@ -2,11 +2,10 @@ import React from "react";
 import CalendarGrid from "./CalendarGrid";
 import LeftArrow from "../icons/LeftArrow";
 import CalendarIcon from "../icons/CalendarIcon";
-import CalendarDesktopWidget from "./CalendarDesktopWidget";
-import CalendarMobileWidget from "./CalendarMobileWidget";
 import RightArrow from "../icons/RightArrow";
 import TertiaryButton from "../buttons/TertiaryButton";
 import OutlineButton from "../buttons/OutlineButton";
+import CalendarWidget from "./CalendarWidget";
 import {
   format,
   addWeeks,
@@ -182,13 +181,14 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
                     : "opacity-0 pointer-events-none"
                 }`}
               >
-                <CalendarMobileWidget
+                <CalendarWidget
                   currentDate={currentDate}
                   handlePrevMonthClick={handlePreviousMonth}
                   handleNextMonthClick={handleNextMonth}
                   onClose={handleMobileCalendarPrevToggle}
                   hasDayEvents={hasDayEvents}
                   onWeekSelect={handleWeekSelect}
+                  isMobile={true}
                 />
               </div>
             )}
@@ -258,11 +258,10 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
                   : "opacity-0 pointer-events-none"
               }`}
             >
-              <CalendarDesktopWidget
+              <CalendarWidget
                 currentDate={currentDate}
                 handlePrevMonthClick={handlePreviousMonth}
                 handleNextMonthClick={handleNextMonth}
-                // hasDayEvents={hasDayEvents}
                 onWeekSelect={handleWeekSelect}
               />
             </div>
