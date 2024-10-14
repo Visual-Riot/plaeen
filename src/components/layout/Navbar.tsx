@@ -15,7 +15,7 @@ import { signOut } from "next-auth/react";
 
 interface NavbarProps {
   className?: string;
-  avatar?: string;
+  avatar?: string | null;
 }
 
 const Navbar: FC<NavbarProps> = ({ className, avatar }) => {
@@ -191,9 +191,14 @@ const Navbar: FC<NavbarProps> = ({ className, avatar }) => {
                       <span>Account</span>
                     </li>
                     <li className="flex items-center border-t border-gray-700 pt-2 text-white hover:text-gray-300 cursor-pointer">
-                      <button className="p-0 flex flex-row items-center gap-2 w-full" onClick={()=>{signOut()}}>
-                      <ImExit />
-                      Sign Out
+                      <button
+                        className="p-0 flex flex-row items-center gap-2 w-full"
+                        onClick={() => {
+                          signOut();
+                        }}
+                      >
+                        <ImExit />
+                        Sign Out
                       </button>
                     </li>
                   </ul>
