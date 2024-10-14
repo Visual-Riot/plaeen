@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const Social = () => {
-  const onClick = (provider: "google") => {
+  const onClick = (provider: "google" | "twitch" | "discord") => {
     signIn(provider, {
       callbackUrl: DEFAULT_LOGIN_REDIRECT,
     });
@@ -33,10 +33,10 @@ export const Social = () => {
           className="gap-7"
           variant="social"
           onClick={() => {
-            onClick("google");
+            onClick("twitch");
           }}
         >
-          <FaTwitch size={24} />
+          <FaTwitch size={24} color="#9146FF"/>
           Continue with Twitch
         </Button>
         <Button
@@ -44,10 +44,10 @@ export const Social = () => {
           className="gap-7"
           variant="social"
           onClick={() => {
-            onClick("google");
+            onClick("discord");
           }}
         >
-          <FaDiscord size={24} />
+          <FaDiscord size={24} color="#5865F2" />
           Continue with Discord
         </Button>
       </div>
