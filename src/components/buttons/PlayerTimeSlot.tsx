@@ -38,7 +38,7 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
   className = "",
   isDragging,
 }) => {
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(initialState || "1");
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const weekKey = format(
@@ -52,7 +52,6 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
 
   // handle click on the button
   const handleClick = (e: React.MouseEvent) => {
-    console.log(state);
     if (isDragging) return;
     const newState = state === "1" ? "2" : state === "2" ? "3" : "1"; // 1 - not available | 2 - available this week | 3 -always available
     setState(newState);

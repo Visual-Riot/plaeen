@@ -224,6 +224,7 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
         dayHours={dayHours}
         setDayHours={setDayHours}
         desktopWidgetTop="top-[100px]"
+        isActive={false}
       />
 
       {/* Bottom Row with legend and submit button */}

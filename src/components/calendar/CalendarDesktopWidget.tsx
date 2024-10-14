@@ -23,7 +23,7 @@ const CalendarDesktopWidget: React.FC<CalendarDesktopWidgetProps> = ({
   currentDate,
   handlePrevMonthClick,
   handleNextMonthClick,
-  hasDayEvents,
+  // hasDayEvents,
   onWeekSelect,
 }) => {
   const [selectedDate, setSelectedDate] = useState(currentDate);

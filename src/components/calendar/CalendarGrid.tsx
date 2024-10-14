@@ -10,12 +10,14 @@ interface CalendarGridProps {
     React.SetStateAction<{ [key: string]: { [key: number]: string } }>
   >;
   currentDate: Date;
+  isActive?: boolean;
 }
 
 const CalendarGrid: React.FC<CalendarGridProps> = ({
   dayHours,
   setDayHours,
   currentDate,
+  isActive = true,
 }) => {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -144,6 +146,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
           onSelectAllSlotsForHours={selectAllSlotsForHours}
           onSelectAllSlotsForDays={selectAllSlotsForDays}
           currentDate={currentDate}
+          isActive={isActive}
         />
       )}
     </div>

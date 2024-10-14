@@ -26,6 +26,7 @@ interface CalendarWrapperProps {
     React.SetStateAction<{ [key: string]: { [key: number]: string } }>
   >;
   desktopWidgetTop?: string;
+  isActive?: boolean;
   className?: string;
 }
 
@@ -33,6 +34,7 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
   dayHours,
   setDayHours,
   desktopWidgetTop = "top-[220px]",
+  isActive = true,
   className,
 }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
@@ -277,6 +279,7 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
         dayHours={dayHours}
         setDayHours={setDayHours}
         currentDate={currentDate}
+        isActive={isActive}
       />
     </div>
   );

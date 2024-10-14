@@ -25,6 +25,7 @@ interface PlayerCalendarDesktopProps {
   ) => void;
   currentDate: Date;
   className?: string;
+  isActive?: boolean;
 }
 
 const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
@@ -34,6 +35,7 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
   onSelectAllSlotsForHours,
   currentDate,
   className = "",
+  isActive = true,
 }) => {
   const start = startOfWeek(currentDate, { weekStartsOn: 1 });
   const weekKey = format(start, "yyy-MM-dd");
@@ -215,7 +217,7 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
                             | "4"
                             | "5"
                             | "6"
-                            | "7") || "0"
+                            | "7") || (isActive ? "1" : "0")
                         }
                         onStateChange={onHoursStateChange}
                       />

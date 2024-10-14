@@ -10,7 +10,6 @@ import PurpleButton from "@/components/buttons/PurpleButton";
 import Navbar from "@/components/layout/Navbar";
 import CalendarWrapper from "@/components/calendar/CalendarWrapper";
 import { useUserCalendarData } from "@/lib/hooks/useUserCalendarData";
-import { user } from "@nextui-org/theme";
 
 export default function Page() {
   const { userAvailability, isLoading } = useUserCalendarData("user-001", true);
@@ -28,7 +27,7 @@ export default function Page() {
   }, [isLoading, userAvailability, savedData]);
 
   const [isHelpOpen, setIsHelpOpen] = useState(false);
-  const [helpBtnState, setHelpBtnState] = useState<string>("1" || "2" || "3");
+  const [helpBtnState, setHelpBtnState] = useState<string>("1");
 
   // FUNCTIONS -------------------------------------------------------------------------
   // *** PLACEHOLDER FOR IMPORT CALENDARS FUNCTIONALITY ***
