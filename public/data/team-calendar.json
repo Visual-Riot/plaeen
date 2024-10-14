@@ -1,8 +1,8 @@
 [
   {
-    "id": "teamCalendar001",
-    "squad_id": "team001",
-    "session_id": "session001",
+    "id": "team-calendar-001",
+    "squad_id": "team-001",
+    "session_id": "session-001",
     "day": "2024-09-30",
     "hour": 18,
     "available_count": 3,

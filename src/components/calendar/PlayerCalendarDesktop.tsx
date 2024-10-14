@@ -86,8 +86,27 @@ const PlayerCalendarDesktop: React.FC<PlayerCalendarDesktopProps> = ({
               setTouchedSlots((prev) => ({ ...prev, [slotKey]: true }));
 
               const currentState = dayHours[day]?.[hour] || "1";
-              const newState =
-                currentState === "1" ? "2" : currentState === "2" ? "3" : "1";
+              // const newState =
+              //   currentState === "1" ? "2" : currentState === "2" ? "3" : currentState === "1" : return;
+
+              const newState: "1" | "2" | "3" | "4" | "5" | "6" | "7" = (() => {
+                if (currentState === "1") {
+                  return "2";
+                } else if (currentState === "2") {
+                  return "3";
+                } else if (currentState === "3") {
+                  return "1";
+                } else {
+                  return currentState as
+                    | "1"
+                    | "2"
+                    | "3"
+                    | "4"
+                    | "5"
+                    | "6"
+                    | "7"; // Default state if none of the conditions match
+                }
+              })();
               onHoursStateChange(day, hour, newState);
 
               updateHourStateInLocalStorage(

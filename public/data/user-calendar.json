@@ -4,7 +4,7 @@
     "user_id": "user-001",
     "availability": [
       {
-        "day": "2024-09-30",
+        "day": "2024-10-14",
         "hours": [
           {
             "hour": 1,
@@ -13,7 +13,7 @@
         ]
       },
       {
-        "day": "2024-10-01",
+        "day": "2024-09-30",
         "hours": [
           {
             "hour": 16,
@@ -34,7 +34,7 @@
     "user_id": "user-002",
     "availability": [
       {
-        "day": "2024-09-30",
+        "day": "2024-10-14",
         "hours": [
           {
             "hour": 1,
@@ -76,7 +76,7 @@
     "user_id": "user-002",
     "availability": [
       {
-        "day": "2024-09-30",
+        "day": "2024-10-14",
         "hours": [
           {
             "hour": 1,

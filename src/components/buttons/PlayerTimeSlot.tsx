@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { format, startOfWeek, parseISO } from "date-fns";
+import { format, startOfWeek, parseISO, set } from "date-fns";
 import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
 
 /*
@@ -52,12 +52,25 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
 
   // handle click on the button
   const handleClick = (e: React.MouseEvent) => {
+    console.log(state);
     if (isDragging) return;
-    const newState = state === "1" ? "2" : state === "2" ? "3" : "1"; // 1 - not available | 2 - available this week | 3 -always available
-    setState(newState);
-    onStateChange(day, hour, newState);
 
-    updateHourStateInLocalStorage(weekKey, day, hour.toString(), newState);
+    // If the state is not 1, 2, or 3, prevent further state changes
+    if (state !== "1" && state !== "2" && state !== "3") return;
+
+    // Update state for valid state values (1, 2, or 3)
+    if (state === "1") {
+      setState("2");
+      onStateChange(day, hour, "2");
+    } else if (state === "2") {
+      setState("3");
+      onStateChange(day, hour, "3");
+    } else if (state === "3") {
+      setState("1");
+      onStateChange(day, hour, "1");
+    }
+
+    updateHourStateInLocalStorage(weekKey, day, hour.toString(), state);
   };
 
   const getButtonColor = () => {
@@ -75,9 +88,9 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
       case "5": // part of the team available
         return "bg-green bg-opacity-10 border-solid border-green border-opacity-60 border-2 text-black hover:scale-90";
       case "6": // game session invitation sent
-        return "bg-black bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 cursor-not-allowed text-offWhite hover:scale-90";
+        return "bg-darkPurple border-solid border-darkGrey border-2 rounded text-offWhite hover:scale-90";
       case "7": // game session invitation received
-        return "bg-black bg-opacity-40 border-solid border-darkGrey border-opacity-20 border-2 cursor-not-allowed text-offWhite hover:scale-90";
+        return "bg-lightPurple border-solid border-darkGrey border-2 rounded text-offWhite hover:scale-90";
       default:
         return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90";
     }
