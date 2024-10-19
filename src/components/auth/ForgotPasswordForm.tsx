@@ -64,6 +64,7 @@ export const ForgotPasswordForm = () => {
                   <FormLabel>Email Address</FormLabel>
                   <FormControl>
                     <Input
+                      variant="greenFilled"
                       disabled={isPending}
                       {...field}
                       placeholder="zelda_hyrule@live.com"
@@ -77,7 +78,7 @@ export const ForgotPasswordForm = () => {
           </div>
           <Button
             size="full"
-            className="font-bold text-md"
+            className="font-bold"
             type="submit"
             disabled={isPending}
           >

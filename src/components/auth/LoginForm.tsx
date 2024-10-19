@@ -20,12 +20,14 @@ import { Button } from "../ui/button";
 import { login } from "@/actions/login";
 import { FormError } from "@/components/forms/FormError";
 import { FormSuccess } from "@/components/forms/FormSuccess";
-import { BackButton } from "./BackButton";
 import { useSearchParams } from "next/navigation";
 
 export const LoginForm = () => {
-  const searchParams = useSearchParams()
-  const urlOAuthError = searchParams.get('error') === "OAuthAccountNotLinked" ? "Email already in use with different provider!" : ""
+  const searchParams = useSearchParams();
+  const urlOAuthError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in use with different provider!"
+      : "";
 
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -73,6 +75,7 @@ export const LoginForm = () => {
                   <FormLabel>Email Address</FormLabel>
                   <FormControl>
                     <Input
+                      variant="greenFilled"
                       disabled={isPending}
                       {...field}
                       placeholder="mario_bros@gmail.com"
@@ -92,6 +95,7 @@ export const LoginForm = () => {
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
+                        variant="greenFilled"
                         disabled={isPending}
                         {...field}
                         placeholder="••••••••"
@@ -114,7 +118,7 @@ export const LoginForm = () => {
           </div>
           <Button
             size="full"
-            className="font-bold text-md"
+            className="font-bold"
             type="submit"
             disabled={isPending}
           >
