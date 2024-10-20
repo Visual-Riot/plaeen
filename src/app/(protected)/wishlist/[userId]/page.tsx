@@ -14,11 +14,14 @@ interface FavouritedGame {
   gameId: number;
   gameName: string;
   backgroundImage: string;
+  genres: string;
+  platforms: string;
+  rating: null;
 }
 
 interface Team {
   id: string;
-  name: string;
+  teamName: string;
 }
 
 export default function Page() {
@@ -144,8 +147,7 @@ export default function Page() {
       console.error("Error removing the game:", error);
     }
   };
-  
-  
+
   return (
     <>
       <Navbar />
@@ -156,7 +158,7 @@ export default function Page() {
         <div className="bg-[black]/85 w-full h-screen flex flex-col items-center justify-center mt-[-70px] z-20 relative">
           <div className="bg-[#6606E3]/5 w-full flex flex-col items-center justify-center h-full">
             <div>
-              <div className="flex justify-center w-full px-12 items-center pb-5">
+              <div className="flex xxs:flex-col xxs:justify-center xxs:items-center md:items-baseline md:flex-row items-baseline w-full px-12 pb-5">
                 <h1 className="text-white text-[32px] font-sofia">
                   Wishlist
                 </h1>
@@ -185,29 +187,40 @@ export default function Page() {
                     <p className="text-white text-center mb-6">No games in your wishlist yet.</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-8 mt-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-8 mt-8 relative">
                     {favouritedGames.map((game) => (
                       <div key={game.id} className="relative">
-                        <WishlistGameCard
-                          key={game.id}
-                          gameId={game.gameId}
-                          gameName={game.gameName}
-                          backgroundImage={game.backgroundImage}
-                          isFavourited={true}
-                          onFavourite={() => handleFavouriteClick(game.gameId)}
-                          onCreateSession={() => handleCreateSessionClick(game)}
-                          gameInfoUrl={`https://rawg.io/games/${game.gameId}`}
-                        />
-                        {isEditMode && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-sm">
-                            <button
-                              className="text-white hover:text-red mb-16"
-                              onClick={() => handleRemoveGameClick(game)}
-                            >
-                              <MdDelete size={30} />
-                            </button>
+                        {/* Game card with cover art and overlay in edit mode */}
+                        <div className="relative group">
+                          <div className="bg-darkPurple w-48 h-48 rounded-t-3xl rounded-e-3xl overflow-hidden">
+                            <img
+                              src={game.backgroundImage}
+                              alt={game.gameName}
+                              className="w-full h-full object-cover rounded-t-3xl rounded-e-3xl hover:border-neonGreen hover:border-2"
+                            />
+                            {isEditMode && (
+                              <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-3xl rounded-e-3xl">
+                                <button
+                                  className="text-white hover:text-red"
+                                  onClick={() => handleRemoveGameClick(game)}
+                                >
+                                  <MdDelete size={30} />
+                                </button>
+                              </div>
+                            )}
                           </div>
-                        )}
+                        </div>
+
+                        {/* Game name and session button */}
+                        <div className="py-4 rounded-b-3xl">
+                          <h3 className="text-white text-center font-extralight">{game.gameName}</h3>
+                          <GreenButton
+                            className="mt-4 w-full"
+                            onClick={() => handleCreateSessionClick(game)}
+                          >
+                            Create Session
+                          </GreenButton>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -246,7 +259,7 @@ export default function Page() {
           teams={teams}
           onSelectTeam={handleTeamSelect}
           onClose={() => setIsModalOpen(false)}
-        />
+        />     
       )}
     </>
   );
