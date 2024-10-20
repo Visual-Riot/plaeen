@@ -199,9 +199,9 @@ const GameCard: React.FC<GameCardProps> = ({
           Create Session
         </button>
         <div className='flex xxs:justify-between xxs:w-full xxs:gap-3 xxs:mt-1 xl:justify-normal xl:w-[30%] xl:gap-2 xl:mt-0'>
-        <button onClick={onFavourite} className="p-2 rounded-full">
+        <button onClick={onFavourite} className="p-2 rounded bg-pink-purple">
           {isfavourited ? (
-            <FaHeart size={24} color="red" /> // Filled heart if favourited
+            <FaHeart size={24} color="white" /> // Filled heart if favourited
           ) : (
             <FiHeart size={24} /> // Empty heart if not favourited
           )}
