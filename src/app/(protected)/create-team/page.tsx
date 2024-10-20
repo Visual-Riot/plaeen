@@ -179,6 +179,7 @@ export default function Page() {
                       onClick={() => handleAvatarSelection(`/img/avatar_${index + 1}.jpeg`)}
                       imageSrc={`/img/avatar_${index + 1}.jpeg`}
                       altText={`Avatar ${index + 1}`}
+                      className={`hover:border-2 hover:border-neonGreen transition-all ease-in-out duration-100`}
                     />
                   ))}
                 </div>
