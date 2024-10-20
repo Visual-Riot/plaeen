@@ -23,6 +23,8 @@ export default function Page() {
   const [isChooseAvatarVisible, setIsChooseAvatarVisible] = useState<boolean>(false); // Choose avatar modal visibility
   const [teamIndexToEditAvatar, setTeamIndexToEditAvatar] = useState<number | null>(null); // Index of the team to change avatar
   const carouselRef = useRef<HTMLDivElement | null>(null); // Ref for carousel container
+  const [selectedTeam, setSelectedTeam] = useState<{ id: number; teamName: string; image: string } | null>(null);
+
 
   const router = useRouter();
 
@@ -97,9 +99,11 @@ export default function Page() {
   };
 
   const handleDeleteTeam = (index: number) => {
+    setSelectedTeam(teams[index]); // Store the selected team details
     setDeleteIndex(index);
     setIsDeleteModalVisible(true);
   };
+  
 
   const confirmDeleteTeam = async () => {
     if (deleteIndex !== null) {
@@ -203,7 +207,11 @@ export default function Page() {
                       <div key={team.id} className="flex flex-col items-center relative">
                         {/* Navigate to the team schedule page when clicking on the avatar */}
                         <button
-                          onClick={() => handleNavigateToSchedule(team.id)}
+                          onClick={() => {
+                            if (!isEditing) {
+                              handleNavigateToSchedule(team.id); // Only navigate if not in edit mode
+                            }
+                          }}
                           className="bg-darkPurple w-48 h-48 rounded-e-3xl rounded-t-3xl hover:border-green hover:border-2 transition-all relative group"
                         >
                           <img
@@ -228,6 +236,7 @@ export default function Page() {
                             </div>
                           )}
                         </button>
+
                         {editIndex === index ? (
                           <div className="flex flex-col items-center mt-2">
                             <input
@@ -294,10 +303,12 @@ export default function Page() {
       )}
 
       {/* Delete Confirmation Modal */}
-      {isDeleteModalVisible && (
+      {isDeleteModalVisible && selectedTeam && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-20">
           <div className="bg-darkPurple p-8 rounded-lg text-center">
-            <p className="text-white mb-4">Are you sure you want to delete this team?</p>
+            <p className="text-white mb-4">
+              Are you sure you want to delete <span className="font-bold">{selectedTeam.teamName}</span>? This change is <span style={{color: "red"}}>irreversible.</span>
+            </p>
             <div className="flex justify-center gap-4">
               <GreenButton onClick={confirmDeleteTeam} className="w-[100px]">
                 Confirm
