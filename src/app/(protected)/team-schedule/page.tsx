@@ -14,7 +14,7 @@ import Footer from "@/components/layout/Footer";
 import { FaPlus } from "react-icons/fa";
 import PurpleButton from "@/components/buttons/PurpleButton";
 import WhiteArrow from "@/components/icons/WhiteArrow"; // Import WhiteArrow component
-import gamesData from "../../../lib/data/rawgGames.json"; // Import the list of games
+import gamesData from "../../api/games/rawgGames.json"
 
 interface Game {
   id: number;
