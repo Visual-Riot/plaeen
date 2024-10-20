@@ -1,5 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
+import Twitch from "next-auth/providers/twitch"
+import Discord from "next-auth/providers/discord"
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
@@ -11,6 +13,8 @@ export const options: NextAuthConfig = {
       clientId: process.env.GOOGLE_ID as string,
       clientSecret: process.env.GOOGLE_SECRET as string,
     }),
+    Twitch,
+    Discord,
     Credentials({
       async authorize(credentials) {
         //* test user code *//
