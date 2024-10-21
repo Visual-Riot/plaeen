@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GreenButton from "@/components/buttons/GreenButton";
 import OutlineButton from "@/components/buttons/OutlineButton";
 
@@ -26,6 +26,14 @@ interface AddPlayerModalProps {
 const AddPlayerModal: React.FC<AddPlayerModalProps> = ({ users, onAddPlayers, onClose }) => {
   const [selectedPlayers, setSelectedPlayers] = useState<SelectedPlayer[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+
+  // Debounce search input for better performance
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchTerm(searchTerm);
+    }, 300); // Adjust the delay based on your preference
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // Filter users based on the search term
   const filteredUsers = users.filter((user) =>
@@ -55,13 +63,14 @@ const AddPlayerModal: React.FC<AddPlayerModalProps> = ({ users, onAddPlayers, on
   const handleConfirmSelection = () => {
     onAddPlayers(selectedPlayers); // Pass SelectedPlayer[]
     onClose();
+    setSelectedPlayers([]); // Clear selection on close
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-10">
       <div className="bg-white p-6 rounded-lg w-96">
         <h2 className="text-xl font-bold mb-4">Find other Plaeen members</h2>
-        
+
         {/* Search Bar */}
         <input
           type="text"
@@ -95,7 +104,11 @@ const AddPlayerModal: React.FC<AddPlayerModalProps> = ({ users, onAddPlayers, on
 
         {/* Buttons */}
         <div className="mt-4 flex justify-between">
-          <GreenButton onClick={handleConfirmSelection} className="w-full mr-2">
+          <GreenButton
+            onClick={handleConfirmSelection}
+            className="w-full mr-2"
+            disabled={selectedPlayers.length === 0 } // Disable button if no players selected
+          >
             Confirm Selection
           </GreenButton>
           <OutlineButton onClick={onClose} className="w-full ml-2">
