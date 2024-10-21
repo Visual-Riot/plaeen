@@ -3,6 +3,25 @@ import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
+// Fetch all users
+export async function GET() {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true, // Assuming you have a name field for the username
+        image: true, // Assuming this is the avatarUrl
+      },
+    });
+
+    return NextResponse.json(users, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
+  }
+}
+
+
 export async function POST(req: Request) {
   try {
     const body = await req.json(); // Parse the incoming request body

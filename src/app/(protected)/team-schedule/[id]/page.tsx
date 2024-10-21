@@ -15,6 +15,7 @@ import PurpleButton from "@/components/buttons/PurpleButton";
 import WhiteArrow from "@/components/icons/WhiteArrow";
 import CalendarWrapper from "@/components/calendar/CalendarWrapper";
 import GameCard from "@/components/game/GameCard";
+import AddPlayerModal from "@/components/modals/AddPlayerModal";
 
 interface GameSession {
   id: number;
@@ -26,6 +27,12 @@ interface GameSession {
   platforms?: { platform: { name: string } }[];
   rating?: number;
   tags?: { id: number; name: string; slug: string }[];
+}
+
+interface User {
+  id: string;
+  name: string;
+  image: string;
 }
 
 export default function TeamSchedulePage() {
@@ -42,16 +49,21 @@ export default function TeamSchedulePage() {
   const [isEditingTeamName, setIsEditingTeamName] = useState(false);
   const [newTeamName, setNewTeamName] = useState<string | null>(null);
   const [mostRecentGame, setMostRecentGame] = useState<GameSession | null>(null);
+  const [isAddPlayerModalOpen, setIsAddPlayerModalOpen] = useState(false);
+  const [users, setUsers] = useState<User[]>([]); // Track users
+  const [selectedPlayers, setSelectedPlayers] = useState<User[]>([]); // Track selected players
 
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Fetch team details, games, and users
   useEffect(() => {
     const fetchTeamDetailsAndGames = async () => {
       try {
-        const [teamResponse, gamesResponse] = await Promise.all([
+        const [teamResponse, gamesResponse, usersResponse] = await Promise.all([
           fetch(`/api/teams/${teamId}`),
-          fetch(`/api/teams/${teamId}/games`)
+          fetch(`/api/teams/${teamId}/games`),
+          fetch("/api/user"), // Fetch users for player selection
         ]);
 
         if (teamResponse.ok) {
@@ -63,8 +75,9 @@ export default function TeamSchedulePage() {
 
         if (gamesResponse.ok) {
           const gameData = await gamesResponse.json();
-          const uniqueGames = gameData.filter((game: GameSession, index: number, self: GameSession[]) =>
-            index === self.findIndex((g) => g.gameName === game.gameName)
+          const uniqueGames = gameData.filter(
+            (game: GameSession, index: number, self: GameSession[]) =>
+              index === self.findIndex((g) => g.gameName === game.gameName)
           );
           setTeamGames(uniqueGames);
           setFilteredGames(uniqueGames);
@@ -74,8 +87,16 @@ export default function TeamSchedulePage() {
         } else {
           console.error('Failed to fetch team games');
         }
+
+        // Fetch available users for player selection
+        if (usersResponse.ok) {
+          const usersData = await usersResponse.json();
+          setUsers(usersData);
+        } else {
+          console.error('Failed to fetch users');
+        }
       } catch (error) {
-        console.error('Error fetching team or games:', error);
+        console.error('Error fetching team, games, or users:', error);
       }
     };
 
@@ -185,6 +206,18 @@ export default function TeamSchedulePage() {
     setFilteredGames(filtered);
   };
 
+  const handleOpenAddPlayerModal = () => {
+    setIsAddPlayerModalOpen(true);
+  };
+
+  const handleCloseAddPlayerModal = () => {
+    setIsAddPlayerModalOpen(false);
+  };
+
+  const handleAddPlayers = (players: User[]) => {
+    setSelectedPlayers([...selectedPlayers, ...players]);
+  };
+
   return (
     <div className="text-taupe font-light font-sofia max-w-[90%] mx-auto">
       <Navbar avatar={selectedImage || null} />
@@ -247,9 +280,26 @@ export default function TeamSchedulePage() {
         {/* Add Players and Player View */}
         <div className="my-12">
           <span className="flex flex-col justify-center items-center">
-            <AddPlayer onClick={() => {}} className="rounded" />
-            <p className="font-extralight text-sm mt-2">Add player</p>
+            <span onClick={handleOpenAddPlayerModal} className="font-extralight text-sm mt-2 flex flex-col items-center cursor-pointer">
+              <AddPlayer onClick={() => {}} className="rounded mb-3" />
+              Add Player
+            </span>
           </span>
+
+          {isAddPlayerModalOpen && (
+            <AddPlayerModal onClose={handleCloseAddPlayerModal} onAddPlayers={handleAddPlayers} users={users} />
+          )}
+
+          {/* Display the selected players with pending icons */}
+          <div className="mt-4">
+            {selectedPlayers.map((player) => (
+              <div key={player.id} className="flex items-center gap-4">
+                <img src={player.image} alt={player.name} className="w-8 h-8 rounded-full" />
+                <span>{player.name}</span>
+                <span className="text-yellow">Pending</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Game filter dropdown */}
