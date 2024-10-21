@@ -11,7 +11,7 @@ import { IoMdSettings } from "react-icons/io";
 import { ImExit } from "react-icons/im";
 import NavItem from "./NavItem";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 interface NavbarProps {
   className?: string;
@@ -23,6 +23,8 @@ const Navbar: FC<NavbarProps> = ({ className, avatar }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+
+  const { data: session } = useSession(); // Get the current session
 
   useEffect(() => {
     setMounted(true);
@@ -96,6 +98,8 @@ const Navbar: FC<NavbarProps> = ({ className, avatar }) => {
     overflow: "hidden", // Ensure that the content inside does not overflow
   };
 
+  const userId = session?.user?.id; // Retrieve the user ID from the session
+
   return (
     <div style={navContainerStyles} className={className}>
       <nav style={navStyles}>
@@ -132,7 +136,8 @@ const Navbar: FC<NavbarProps> = ({ className, avatar }) => {
           >
             <NavItem href="/teams" label="Teams" />
             <NavItem href="/friends" label="Friends" />
-            <NavItem href="/wishlist" label="Wishlist" />
+            {/* Dynamically link to the user's wishlist */}
+            {userId && <NavItem href={`/wishlist/${userId}`} label="Wishlist" />}
             <button className="relative text-white hover:text-gray-300">
               <FaBell className="scale-[2] text-white" />
               <span className="absolute top-0 right-0 bg-[#6606E3] border-[3px] border-black rounded-full w-5 h-5 translate-x-1/2 -translate-y-1/2"></span>
@@ -225,7 +230,9 @@ const Navbar: FC<NavbarProps> = ({ className, avatar }) => {
               <div className="mt-8 flex flex-col space-y-2">
                 <NavItem href="/teams" label="Teams" />
                 <NavItem href="/friends" label="Friends" />
-                <NavItem href="/wishlist" label="Wishlist" />
+                {userId && (
+                  <NavItem href={`/wishlist/${userId}`} label="Wishlist" />
+                )}
                 <button className="text-white hover:text-gray-300 flex items-center relative left-4 mt-[1.25rem!important]">
                   <FaBell className="scale-[1.5] text-white" />
                   <span className="relative top-0 right-4 bg-[#6606E3] border-[2px] border-black rounded-full w-4 h-4 translate-x-1/2 -translate-y-1/2"></span>

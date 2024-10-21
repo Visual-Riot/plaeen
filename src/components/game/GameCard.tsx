@@ -3,17 +3,21 @@ import { FaHeart, FaExternalLinkAlt, FaSteam, FaPlaystation, FaXbox, FaApple, Fa
 import { BsNintendoSwitch } from "react-icons/bs";
 import { SiPlaystationvita, SiWiiu } from "react-icons/si";
 import { FiHeart } from 'react-icons/fi';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { useRouter } from 'next/navigation';
+import { useParams } from "next/navigation";
 
 interface GameCardProps {
+  id: number;
   coverImage: string;
   name: string;
   releaseDate: string;
   genre: string;
   platform: string;
   rating: string;
+  teamId: string;
   onCreateSession: () => void;
+  isfavourited: boolean;
   onFavourite: () => void;
   gameInfoUrl: string;
 }
@@ -26,6 +30,7 @@ const GameCard: React.FC<GameCardProps> = ({
   platform,
   rating,
   onCreateSession,
+  isfavourited,
   onFavourite,
   gameInfoUrl
 }) => {
@@ -35,10 +40,11 @@ const GameCard: React.FC<GameCardProps> = ({
   useEffect(() => {
     // Check if the game is already favourited
     const favouritedGames = JSON.parse(localStorage.getItem('favouritedGames') || '[]');
-    const isAlreadyFavorited = favouritedGames.some((game: { name: string }) => game.name === name);
-    setIsFavourited(isAlreadyFavorited);
+    const isAlreadyfavourited = favouritedGames.some((game: { name: string }) => game.name === name);
+    setIsFavourited(isAlreadyfavourited);
   }, [name]);
   
+  const { id } = useParams(); // Capture teamId from the URL
 
   const handleFavouriteClick = () => {
     let favouritedGames = JSON.parse(localStorage.getItem('favouritedGames') || '[]');
@@ -71,9 +77,9 @@ const GameCard: React.FC<GameCardProps> = ({
     onFavourite();
   };
   
-
-  // Format the release date
-  const formattedDate = format(new Date(releaseDate), 'dd MMMM yyyy');
+  const formattedDate = isValid(new Date(releaseDate))
+  ? format(new Date(releaseDate), 'dd MMMM yyyy')
+  : 'Unknown release date'; // Fallback for invalid or missing dates
 
   // Platform icons map
   const platformIcons = {
@@ -137,15 +143,15 @@ const GameCard: React.FC<GameCardProps> = ({
     // Call the parent component's onCreateSession if needed
     onCreateSession();
   
-    // Redirect to the select-team page
-    router.push('/select-team');
+    // Redirect to the team-schedule page
+    router.push(`/team-schedule/${id}`);
   };
   
 
   return (
     <div className="max-w-[20rem] mx-auto rounded overflow-hidden bg-transparent text-white">
         <img 
-          className="w-full h-48 rounded-t-xl object-cover" 
+          className="w-full h-48 rounded-e-3xl rounded-t-3xl object-cover" 
           src={coverImage} 
           alt={`${name} cover`} 
         />
@@ -185,35 +191,34 @@ const GameCard: React.FC<GameCardProps> = ({
                 <span>{rating}</span>
             </div>
         </div>
-      <div className="px-2 pt-4 pb-6 flex justify-between items-center gap-2 xxs:flex-col xl:flex-row">
-        <button
-          className="bg-violet text-white font-medium font-roboto py-2 px-4 uppercase rounded xxs:w-[100%] xl:w-[70%]"
-          onClick={handleCreateSessionClick}
-        >
-          Create Session
-        </button>
-        <div className='flex xxs:justify-between xxs:w-full xxs:gap-3 xxs:mt-1 xl:justify-normal xl:w-[30%] xl:gap-2 xl:mt-0'>
-          <button
-            className="flex justify-center items-center bg-pink-purple xxs:p-3 xl:p-2 h-[40px] rounded xxs:w-[100%] xl:w-[50%]"
-            onClick={handleFavouriteClick}
-          >
-            {isFavourited ? (
-              <FaHeart size={24} />
-            ) : (
-              <FiHeart size={24} />
-            )}
-          </button>
-          <a
-            href={gameInfoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex justify-center items-center text-blue-500 hover:text-blue-700 bg-pink-purple xxs:p-3 lg:p-2 h-[40px] rounded xxs:w-[100%] lg:w-[50%]"
-          >
-            <FaExternalLinkAlt size={24} />
-          </a>
-        </div>
-        
-      </div>
+        <div className="px-2 pt-4 pb-6 flex justify-between items-center gap-2 xxs:flex-col xl:flex-row">
+  <button
+    className="bg-violet text-white font-medium font-roboto py-2 px-4 uppercase rounded xxs:w-[100%] xl:w-[70%] transition-transform transform hover:scale-105"
+    onClick={handleCreateSessionClick}
+  >
+    Create Session
+  </button>
+
+  <div className="flex xxs:justify-between xxs:w-full xxs:gap-3 xxs:mt-1 xl:justify-normal xl:w-[30%] xl:gap-2 xl:mt-0">
+    <button onClick={onFavourite} className="p-2 rounded bg-pink-purple transition-transform transform hover:scale-105">
+      {isfavourited ? (
+        <FaHeart size={24} color="white" /> // Filled heart if favourited
+      ) : (
+        <FiHeart size={24} /> // Empty heart if not favourited
+      )}
+    </button>
+
+    <a
+      href={gameInfoUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex justify-center items-center text-blue-500 hover:text-blue-700 bg-pink-purple xxs:p-3 lg:p-2 h-[40px] rounded xxs:w-[100%] lg:w-[50%] transition-transform transform hover:scale-105"
+    >
+      <FaExternalLinkAlt size={24} />
+    </a>
+  </div>
+</div>
+
     </div>
   );
 };

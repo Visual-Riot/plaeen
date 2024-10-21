@@ -29,6 +29,7 @@ model User {
   role          UserRole  @default(USER)
   accounts      Account[]
   sessions      Session[]
+  favouritedGames  favouritedGame[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -81,4 +82,40 @@ model PasswordResetToken {
   expires    DateTime
 
   @@unique([email, token])
+}
+
+model Team {
+  id          Int           @id @default(autoincrement())
+  teamName    String        // Team name
+  image       String        // Team image URL or file path
+  createdAt   DateTime      @default(now()) // Timestamp for when the team is created
+  updatedAt   DateTime      @updatedAt      // Automatically update when the record is modified
+  gameSessions GameSession[]  // Add this to establish the relation to GameSession
+}
+
+model GameSession {
+  id              Int      @id @default(autoincrement())
+  gameName        String   // The name of the game
+  gameId          Int      // Game ID to match the external source
+  backgroundImage String?  // URL for the game's background image
+  genres          String[] // List of game genres (as an array of strings)
+  platforms       String[] // List of platforms (as an array of strings)
+  rating          Float?   // Game rating
+  team            Team     @relation(fields: [teamId], references: [id])
+  teamId          Int
+  createdAt       DateTime @default(now())
+}
+
+model favouritedGame {
+  id        Int      @id @default(autoincrement())
+  userId    String      // The ID of the user who favourited the game
+  gameId    Int      // ID of the game that was favourited
+  gameName  String   // Name of the favourited game
+  backgroundImage String? // URL of the game's background image
+  genres    String[] // Array of game genres
+  platforms String[] // Array of platforms
+  rating    Float?   // Game rating
+  favouritedAt DateTime @default(now()) // Timestamp when the game was favourited
+
+  user      User     @relation(fields: [userId], references: [id]) // Relation to the user
 }

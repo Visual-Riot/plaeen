@@ -5,6 +5,7 @@ type ButtonProps = {
   children: React.ReactNode; // Accept any valid React node
   onClick: () => void; // Function to call on button click
   className?: string; // Optional prop to allow custom styling
+  disabled?: boolean; // optional prop to disable green button
 };
 
 // Button component
