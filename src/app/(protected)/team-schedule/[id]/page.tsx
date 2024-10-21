@@ -32,8 +32,17 @@ interface GameSession {
 
 interface User {
   id: string;
-  name: string;
+  name?: string;
   image: string;
+}
+
+interface SelectedPlayer {
+  user: {
+    id: string;
+    name: string;
+    image: string;
+  };
+  status: string;
 }
 
 export default function TeamSchedulePage() {
@@ -52,7 +61,7 @@ export default function TeamSchedulePage() {
   const [mostRecentGame, setMostRecentGame] = useState<GameSession | null>(null);
   const [isAddPlayerModalOpen, setIsAddPlayerModalOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]); // Track users
-  const [selectedPlayers, setSelectedPlayers] = useState<User[]>([]); // Track selected players
+  const [selectedPlayers, setSelectedPlayers] = useState<SelectedPlayer[]>([]);
 
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -66,16 +75,20 @@ export default function TeamSchedulePage() {
           fetch(`/api/teams/${teamId}/games`),
           fetch(`/api/teams/${teamId}/players`),
         ]);
-
+  
+        // Team details response
         if (teamResponse.ok) {
           const teamData = await teamResponse.json();
+          console.log("Fetched team details: ", teamData); // Debugging log
           setTeamName(teamData.teamName);
         } else {
           console.error('Failed to fetch team details');
         }
-
+  
+        // Team games response
         if (gamesResponse.ok) {
           const gameData = await gamesResponse.json();
+          console.log("Fetched team games: ", gameData); // Debugging log
           const uniqueGames = gameData.filter(
             (game: GameSession, index: number, self: GameSession[]) =>
               index === self.findIndex((g) => g.gameName === game.gameName)
@@ -88,11 +101,12 @@ export default function TeamSchedulePage() {
         } else {
           console.error('Failed to fetch team games');
         }
-
-        // Fetch available users for player selection
+  
+        // Users response
         if (usersResponse.ok) {
           const usersData = await usersResponse.json();
-          setUsers(usersData);
+          console.log("Fetched team users: ", usersData); // Debugging log
+          setUsers(usersData.map((teamUser: any) => teamUser.user));
         } else {
           console.error('Failed to fetch users');
         }
@@ -100,9 +114,9 @@ export default function TeamSchedulePage() {
         console.error('Error fetching team, games, or users:', error);
       }
     };
-
+  
     fetchTeamDetailsAndGames();
-
+  
     const savedImage = localStorage.getItem("userAvatar");
     const savedUsername = localStorage.getItem("username");
     if (savedImage) {
@@ -111,7 +125,7 @@ export default function TeamSchedulePage() {
     if (savedUsername) {
       setUsername(savedUsername);
     }
-
+  
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
@@ -122,6 +136,7 @@ export default function TeamSchedulePage() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [teamId]);
+  
 
   const handleGameSelect = (game: GameSession) => {
     setSelectedGame(game);
@@ -215,9 +230,10 @@ export default function TeamSchedulePage() {
     setIsAddPlayerModalOpen(false);
   };
 
-  const handleAddPlayers = (players: User[]) => {
+  const handleAddPlayers = (players: SelectedPlayer[]) => {
     setSelectedPlayers([...selectedPlayers, ...players]);
   };
+  
 
   return (
     <div className="text-taupe font-light font-sofia max-w-[90%] mx-auto">
@@ -282,7 +298,7 @@ export default function TeamSchedulePage() {
         <div className="my-12 flex gap-6 flex-wrap justify-center">
           {/* Selected Players */}
           {selectedPlayers.map((player) => (
-            <div key={player.id} className="flex flex-col items-center justify-center">
+            <div key={player.user.id} className="flex flex-col items-center justify-center">
               {/* Avatar container with relative positioning */}
               <div className="relative">
                 {/* User's image */}
@@ -314,7 +330,6 @@ export default function TeamSchedulePage() {
           </span>
         </div>
 
-        {/* Add Player Modal */}
         {isAddPlayerModalOpen && (
           <AddPlayerModal
             onClose={handleCloseAddPlayerModal}

@@ -7,15 +7,25 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   const teamId = parseInt(params.id, 10);
 
   try {
-    const players = await prisma.teamUser.findMany({
+    // Fetch team players including full user details (name, image)
+    const teamPlayers = await prisma.teamUser.findMany({
       where: { teamId },
-      include: { user: true }, // Include user details like name, image
+      include: {
+        user: { // Include user details
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json(players);
+    console.log("Fetched team users: ", teamPlayers); // This should now include full user info
+    return NextResponse.json(teamPlayers);
   } catch (error) {
-    console.error('Error fetching players:', error);
-    return NextResponse.json({ error: 'Failed to fetch players' }, { status: 500 });
+    console.error('Error fetching team players:', error);
+    return NextResponse.json({ error: 'Failed to fetch team players' }, { status: 500 });
   }
 }
 
@@ -24,11 +34,12 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   const { userId } = await req.json();
 
   try {
+    // Add a new player to the team with status set to 'pending'
     const newPlayer = await prisma.teamUser.create({
       data: {
         teamId,
         userId,
-        status: 'pending', // Set initial status to 'pending'
+        status: 'pending',  // Set the status as 'pending' initially
       },
     });
 
@@ -41,15 +52,16 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   const teamId = parseInt(params.id, 10);
-  const { userId, status } = await req.json(); // Expect userId and new status from the body
+  const { userId, status } = await req.json();
 
   try {
+    // Update the player's status (either 'pending' or 'confirmed')
     const updatedPlayer = await prisma.teamUser.update({
       where: {
-        teamId_userId: { teamId, userId }, // Update based on teamId and userId
+        teamId_userId: { teamId, userId },  // Update based on teamId and userId composite key
       },
       data: {
-        status,
+        status,  // Update the status of the player
       },
     });
 

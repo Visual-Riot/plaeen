@@ -1,39 +1,59 @@
 import { useState } from "react";
-import GreenButton from "@/components/buttons/GreenButton"; // Assuming GreenButton component exists
-import OutlineButton from "@/components/buttons/OutlineButton"; // Assuming OutlineButton component exists
+import GreenButton from "@/components/buttons/GreenButton";
+import OutlineButton from "@/components/buttons/OutlineButton";
 
 interface User {
   id: string;
-  name: string;
+  name?: string; // Optional, but we'll handle this case
   image: string;
+}
+
+interface SelectedPlayer {
+  user: {
+    id: string;
+    name: string; // Always a string, not optional
+    image: string;
+  };
+  status: string;
 }
 
 interface AddPlayerModalProps {
   users: User[];
-  onAddPlayers: (players: User[]) => void;
+  onAddPlayers: (players: SelectedPlayer[]) => void; // Expect SelectedPlayer[]
   onClose: () => void;
 }
 
 const AddPlayerModal: React.FC<AddPlayerModalProps> = ({ users, onAddPlayers, onClose }) => {
-  const [selectedPlayers, setSelectedPlayers] = useState<User[]>([]);
+  const [selectedPlayers, setSelectedPlayers] = useState<SelectedPlayer[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Filter users based on the search term
   const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    user.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleSelectUser = (user: User) => {
-    if (selectedPlayers.some((u) => u.id === user.id)) {
-      setSelectedPlayers(selectedPlayers.filter((u) => u.id !== user.id));
+    const existingPlayer = selectedPlayers.find((p) => p.user.id === user.id);
+
+    if (existingPlayer) {
+      // If already selected, remove from the list
+      setSelectedPlayers(selectedPlayers.filter((p) => p.user.id !== user.id));
     } else {
-      setSelectedPlayers([...selectedPlayers, user]);
+      // Otherwise, add new player with default status as 'pending', ensuring name is always a string
+      const selectedPlayer: SelectedPlayer = {
+        user: {
+          id: user.id,
+          name: user.name || "Unnamed Player", // Ensure name is always a string
+          image: user.image,
+        },
+        status: 'pending',
+      };
+      setSelectedPlayers([...selectedPlayers, selectedPlayer]);
     }
   };
 
   const handleConfirmSelection = () => {
-    // Add logic to send email invitations to selected players here
-    onAddPlayers(selectedPlayers);
+    onAddPlayers(selectedPlayers); // Pass SelectedPlayer[]
     onClose();
   };
 
@@ -59,12 +79,12 @@ const AddPlayerModal: React.FC<AddPlayerModalProps> = ({ users, onAddPlayers, on
                 <div className="flex items-center">
                   <input
                     type="checkbox"
-                    checked={selectedPlayers.some((u) => u.id === user.id)}
+                    checked={selectedPlayers.some((p) => p.user.id === user.id)}
                     onChange={() => handleSelectUser(user)}
                     className="mr-4"
                   />
-                  <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full mr-4" />
-                  {user.name}
+                  <img src={user.image} alt={user.name || "Unnamed Player"} className="w-8 h-8 rounded-full mr-4" />
+                  {user.name || "Unnamed Player"} {/* Safely handle missing names */}
                 </div>
               </li>
             ))
@@ -75,15 +95,9 @@ const AddPlayerModal: React.FC<AddPlayerModalProps> = ({ users, onAddPlayers, on
 
         {/* Buttons */}
         <div className="mt-4 flex justify-between">
-          {/* Confirm Selection Button */}
-          <GreenButton
-            onClick={handleConfirmSelection}
-            className="w-full mr-2"
-          >
+          <GreenButton onClick={handleConfirmSelection} className="w-full mr-2">
             Confirm Selection
           </GreenButton>
-
-          {/* Cancel Button */}
           <OutlineButton onClick={onClose} className="w-full ml-2">
             Cancel
           </OutlineButton>
