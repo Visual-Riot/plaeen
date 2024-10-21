@@ -31,7 +31,10 @@ export const CardWrapper = ({
   showTerms,
 }: CardWrapperProps) => {
   return (
-    <Card className="min-w-[520px] max-w-[40%]" variant="glass">
+    <Card
+      className="max-w-[80%] sm:max-w-[70%] md:max-w-[520px]"
+      variant="glass"
+    >
       <CardHeader>
         <Header header={header} label={headerLabel} />
       </CardHeader>

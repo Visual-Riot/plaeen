@@ -13,41 +13,47 @@ export const Social = () => {
 
   return (
     <>
-      <div className="my-4 flex basis-full text-lightGrey font-thin before:bg-[#707070] before:h-px before:grow before:mr-4 before:mt-2 after:bg-[#707070] after:h-px after:grow items-center after:ml-4 after:mt-2">
+      <div className="my-4 text-xs sm:text-sm md:text-base flex basis-full text-lightGrey font-thin before:bg-[#707070] before:h-px before:grow before:mr-4 before:mt-2 after:bg-[#707070] after:h-px after:grow items-center after:ml-4 after:mt-2">
         or
       </div>
       <div className="flex flex-col items-center w-full gap-y-2 mt-4 ">
         <Button
           size="full"
-          className="gap-7"
+          className="gap-4 sm:gap-5 md:gap-7"
           variant="social"
           onClick={() => {
             onClick("google");
           }}
         >
-          <FcGoogle size={24} />
+          <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6">
+            <FcGoogle size="auto" />
+          </div>
           Continue with Google
         </Button>
         <Button
           size="full"
-          className="gap-7"
+          className="gap-4 sm:gap-5 md:gap-7"
           variant="social"
           onClick={() => {
             onClick("twitch");
           }}
         >
-          <FaTwitch size={24} color="#9146FF"/>
+          <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6">
+            <FaTwitch size="auto" color="#9146FF" />
+          </div>
           Continue with Twitch
         </Button>
         <Button
           size="full"
-          className="gap-7"
+          className="gap-4 sm:gap-5 md:gap-7"
           variant="social"
           onClick={() => {
             onClick("discord");
           }}
         >
-          <FaDiscord size={24} color="#5865F2" />
+          <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6">
+            <FaDiscord size="auto" color="#5865F2" />
+          </div>
           Continue with Discord
         </Button>
       </div>

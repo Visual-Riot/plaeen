@@ -3,7 +3,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
-const cardVariants = cva("rounded-lg p-14", {
+const cardVariants = cva("rounded-lg p-10 sm:p-12 md:p-14", {
   variants: {
     variant: {
       default: "linear-gradient(180deg, #6606E3 0%, #330372 100%)",
