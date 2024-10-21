@@ -16,6 +16,7 @@ import WhiteArrow from "@/components/icons/WhiteArrow";
 import CalendarWrapper from "@/components/calendar/CalendarWrapper";
 import GameCard from "@/components/game/GameCard";
 import AddPlayerModal from "@/components/modals/AddPlayerModal";
+import { RxTimer } from "react-icons/rx";
 
 interface GameSession {
   id: number;
@@ -63,7 +64,7 @@ export default function TeamSchedulePage() {
         const [teamResponse, gamesResponse, usersResponse] = await Promise.all([
           fetch(`/api/teams/${teamId}`),
           fetch(`/api/teams/${teamId}/games`),
-          fetch("/api/user"), // Fetch users for player selection
+          fetch(`/api/teams/${teamId}/players`),
         ]);
 
         if (teamResponse.ok) {
@@ -278,29 +279,49 @@ export default function TeamSchedulePage() {
         )}
 
         {/* Add Players and Player View */}
-        <div className="my-12">
-          <span className="flex flex-col justify-center items-center">
-            <span onClick={handleOpenAddPlayerModal} className="font-extralight text-sm mt-2 flex flex-col items-center cursor-pointer">
-              <AddPlayer onClick={() => {}} className="rounded mb-3" />
-              Add Player
-            </span>
-          </span>
-
-          {isAddPlayerModalOpen && (
-            <AddPlayerModal onClose={handleCloseAddPlayerModal} onAddPlayers={handleAddPlayers} users={users} />
-          )}
-
-          {/* Display the selected players with pending icons */}
-          <div className="mt-4">
-            {selectedPlayers.map((player) => (
-              <div key={player.id} className="flex items-center gap-4">
-                <img src={player.image} alt={player.name} className="w-8 h-8 rounded-full" />
-                <span>{player.name}</span>
-                <span className="text-yellow">Pending</span>
+        <div className="my-12 flex gap-6 flex-wrap justify-center">
+          {/* Selected Players */}
+          {selectedPlayers.map((player) => (
+            <div key={player.id} className="flex flex-col items-center justify-center">
+              {/* Avatar container with relative positioning */}
+              <div className="relative">
+                {/* User's image */}
+                <img
+                  src={player.user.image}
+                  alt={player.user.name}
+                  className="w-[100px] h-[100px] rounded-full object-cover border-2 border-lightGrey"
+                />
+                {/* Timer icon positioned on the bottom-right of the avatar if pending */}
+                {player.status === "pending" && (
+                  <span className="absolute bottom-0 right-0 p-1 rounded-full bg-yellow">
+                    <RxTimer className="h-4 w-4 text-white" />
+                  </span>
+                )}
               </div>
-            ))}
-          </div>
+              {/* Player's name */}
+              <span className="text-sm font-extralight mt-5">{player.user.name}</span>
+            </div>
+          ))}
+
+          {/* AddPlayer Button at the end */}
+          <span
+            className="flex flex-col items-center justify-center cursor-pointer"
+            onClick={handleOpenAddPlayerModal}
+          >
+            {/* Original AddPlayer component */}
+            <AddPlayer onClick={() => {}} className="rounded mb-5" />
+            <p className="font-extralight text-sm">Add Player</p>
+          </span>
         </div>
+
+        {/* Add Player Modal */}
+        {isAddPlayerModalOpen && (
+          <AddPlayerModal
+            onClose={handleCloseAddPlayerModal}
+            onAddPlayers={handleAddPlayers}
+            users={users}
+          />
+        )}
 
         {/* Game filter dropdown */}
         <div className="w-[90%] mx-auto mb-8 flex flex-col md:flex-row items-center gap-4">

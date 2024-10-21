@@ -30,6 +30,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   favouritedGames  favouritedGame[]
+  teamUsers     TeamUser[]  // Relation to TeamUser to track team memberships
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -91,6 +92,7 @@ model Team {
   createdAt   DateTime      @default(now()) // Timestamp for when the team is created
   updatedAt   DateTime      @updatedAt      // Automatically update when the record is modified
   gameSessions GameSession[]  // Add this to establish the relation to GameSession
+  teamUsers    TeamUser[]    // Relation to TeamUser to track players in the team
 }
 
 model GameSession {
@@ -118,4 +120,16 @@ model favouritedGame {
   favouritedAt DateTime @default(now()) // Timestamp when the game was favourited
 
   user      User     @relation(fields: [userId], references: [id]) // Relation to the user
+}
+
+model TeamUser {
+  id        Int      @id @default(autoincrement())
+  teamId    Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  team      Team     @relation(fields: [teamId], references: [id])
+  status    String   @default("pending") // Status field to track if player is pending or confirmed
+  createdAt DateTime @default(now())     // Timestamp for when the player was added to the team
+
+  @@unique([teamId, userId]) // Ensure that each player can only be added to a team once
 }
