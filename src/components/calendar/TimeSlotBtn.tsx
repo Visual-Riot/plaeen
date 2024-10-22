@@ -4,20 +4,22 @@ import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
 import { TimeSlotState } from "@/types/TimeSlotState";
 
 /*
-STATES EXPLANATION
+STATES EXPLANATION: use TimeSlotState.StateName to access the states 
 
 0 - not available and not active (for team calendar)
 
 ----STATES FOR PLAYER CALENDAR----
-1 - not available
-2 - available this week
-3 - always available
+AvailableNever            1         player not available
+AvailableOnce             2         player available this week
+AvailableAlways           3         player always available
 
 ----STATES FOR TEAM CALENDAR----
-4 - All team members available
-5 - Part of the team available
-6 - game session invitation sent
-7 - game session invitation received
+TeamAllAvailable          4         All team members available
+TeamPartAvailable         5         Part of the team available
+
+----STATES FOR INVITATION----
+InvitationSent            6         game session invitation sent
+InvitationReceived        7         game session invitation received
 */
 
 interface TimeSlotBtnProps {
@@ -56,7 +58,6 @@ const TimeSlotBtn: React.FC<TimeSlotBtnProps> = ({
   // handle click on the button
   const handleClick = (e: React.MouseEvent) => {
     console.log(state);
-    if (isDragging) return;
 
     // If the state is not 1, 2, or 3, prevent further state changes
     if (
@@ -65,6 +66,8 @@ const TimeSlotBtn: React.FC<TimeSlotBtnProps> = ({
       state !== TimeSlotState.AvailableAlways
     )
       return;
+
+    if (isDragging) return;
 
     // Update state for valid state values (1, 2, or 3)
     if (state === TimeSlotState.AvailableNever) {

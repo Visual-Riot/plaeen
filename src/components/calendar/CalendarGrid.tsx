@@ -104,6 +104,15 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
 
           const currentState =
             dayHours[day]?.[hour] || TimeSlotState.AvailableNever;
+
+          if (
+            currentState === TimeSlotState.TeamAllAvailable ||
+            TimeSlotState.TeamPartAvailable ||
+            TimeSlotState.TeamNotAvailable ||
+            TimeSlotState.InvitationReceived ||
+            TimeSlotState.InvitationSent
+          )
+            return;
           const newState =
             currentState === TimeSlotState.AvailableNever
               ? TimeSlotState.AvailableOnce
