@@ -67,6 +67,7 @@ export const SignUpForm = () => {
                   <FormLabel className="">Email Address</FormLabel>
                   <FormControl>
                     <Input
+                      variant="greenFilled"
                       disabled={isPending}
                       {...field}
                       placeholder="spiderman@gmail.com"
@@ -85,6 +86,7 @@ export const SignUpForm = () => {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
+                      variant="greenFilled"
                       disabled={isPending}
                       {...field}
                       placeholder="••••••••"
@@ -98,7 +100,7 @@ export const SignUpForm = () => {
           </div>
           <Button
             size="full"
-            className="font-bold text-md"
+            className="font-bold"
             type="submit"
             disabled={isPending}
           >

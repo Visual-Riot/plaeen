@@ -68,6 +68,7 @@ export const ResetPasswordForm = () => {
                   <FormLabel>New password</FormLabel>
                   <FormControl>
                     <Input
+                      variant="greenFilled"
                       disabled={isPending}
                       {...field}
                       placeholder="••••••••"
@@ -81,7 +82,7 @@ export const ResetPasswordForm = () => {
           </div>
           <Button
             size="full"
-            className="font-bold text-md"
+            className="font-bold"
             type="submit"
             disabled={isPending}
           >
