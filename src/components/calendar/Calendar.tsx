@@ -1,364 +1,297 @@
-"use client";
-import PlayerTimeSlot from "../buttons/PlayerTimeSlot";
-import DayButton from "../buttons/DayButton"; // for mobile
-import React, { useState, useCallback, useEffect } from "react";
-import { startOfWeek, format, addDays } from "date-fns";
-import { Tooltip } from "@nextui-org/react";
-import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
+/*
+This component is the main calendar component that contains the calendar grid and navigation buttons.
+It is used in the CalendarPage and in GameCalendar.
+
+It contains:
+  - the calendar grid and navigation buttons. 
+  - the logic for displaying the current week and month
+  - logic for for navigating between weeks and months. 
+  - handles the display of the calendar widget on desktop and mobile views.
+*/
+
+import React from "react";
+import CalendarContainer from "./CalendarContainer";
+import LeftArrow from "../icons/LeftArrow";
+import CalendarIcon from "../icons/CalendarIcon";
+import RightArrow from "../icons/RightArrow";
+import TertiaryButton from "../buttons/TertiaryButton";
+import OutlineButton from "../buttons/OutlineButton";
+import CalendarWidget from "./CalendarWidget";
+import {
+  format,
+  addWeeks,
+  subWeeks,
+  addMonths,
+  subMonths,
+  startOfWeek,
+  endOfWeek,
+  startOfMonth,
+  isBefore,
+} from "date-fns";
+import { useState, useEffect, useRef } from "react";
 
 interface CalendarProps {
   dayHours: { [key: string]: { [key: number]: string } };
-  currentDate: Date;
-  onHoursStateChange: (
-    day: string,
-    hour: number,
-    newState: "1" | "2" | "3" | "4" | "5" | "6" | "7",
-    selectedDay?: string
-  ) => void;
-  onSelectAllSlotsForDays?: (
-    day: string,
-    currentStates: { [hour: number]: string },
-    hoursOfDay: number[]
-  ) => void;
-  onSelectAllSlotsForHours?: (
-    hour: number,
-    currentStates: { [day: string]: string },
-    daysOfWeek: string[]
-  ) => void;
-  className?: string;
+  setDayHours: React.Dispatch<
+    React.SetStateAction<{ [key: string]: { [key: number]: string } }>
+  >;
+  desktopWidgetTop?: string;
   isActive?: boolean;
-  isMobile?: boolean;
+  className?: string;
 }
 
 const Calendar: React.FC<CalendarProps> = ({
   dayHours,
-  currentDate,
-  onHoursStateChange,
-  onSelectAllSlotsForDays,
-  onSelectAllSlotsForHours,
-  className = "",
-  isActive = true,
-  isMobile = false,
+  setDayHours,
+  desktopWidgetTop = "top-[220px]", // calendar widget offset from top
+  isActive = true, // should time slots be active from default (active btns change their slots on click)
+  className,
 }) => {
-  const start = startOfWeek(currentDate, { weekStartsOn: 1 });
-  const weekKey = format(start, "yyy-MM-dd");
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
-  const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
-    const date = addDays(start, i);
-    return {
-      dayName: format(date, "EEEE"),
-      shortDayName: format(date, "EEE"),
-      dayDate: format(date, "dd"),
-      dayDesktopDate: format(date, "EEEE dd"),
-      dayKey: format(date, "yyyy-MM-dd"),
-    };
-  });
+  const desktopCalendarRef = useRef<HTMLDivElement>(null);
 
-  const formatHour = (hour: number) => ({
-    formattedHour: hour % 12 || 12,
-    ampm: hour >= 12 ? "PM" : "AM",
-  });
-
-  const hoursOfDay = Array.from({ length: 24 }, (_, i) => i + 1);
-
-  const [selectedDay, setSelectedDay] = useState<string>("Monday");
-  const [animationTrigger, setAnimationTrigger] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [touchedSlots, setTouchedSlots] = useState<{ [key: string]: boolean }>(
-    {}
-  );
-
-  // Flash animation when changing the selected day
-  const handleDayChange = (day: string) => {
-    setSelectedDay(day);
-    setAnimationTrigger(true);
-    setTimeout(() => {
-      setAnimationTrigger(false);
-    }, 300);
-  };
-
-  //   HANDLERS
-
-  //  Select slots on move/drag
-  const processSlotSelection = (elementAtPoint: HTMLElement) => {
-    if (
-      elementAtPoint &&
-      elementAtPoint.classList.contains("player-time-slot")
-    ) {
-      const day = elementAtPoint.getAttribute("data-day") as string;
-      const hour = parseInt(elementAtPoint.getAttribute("data-hour") as string);
-
-      if (day && hour) {
-        const slotKey = `${day}-${hour}`;
-        if (!touchedSlots[slotKey]) {
-          setTouchedSlots((prev) => ({ ...prev, [slotKey]: true }));
-
-          const currentState = dayHours[day]?.[hour] || "1";
-          const newState =
-            currentState === "1" ? "2" : currentState === "2" ? "3" : "1";
-          onHoursStateChange(day, hour, newState);
-          updateHourStateInLocalStorage(
-            weekKey,
-            day,
-            hour.toString(),
-            newState
-          );
-        }
-      }
-    }
-  };
-
-  //   TOUCH EVENTS : FOR DRAGGING & SELECTING ON GESTURE -- MOBILE
-  const handleTouchStart = () => setIsDragging(true);
-
-  const handleTouchMove = (e: TouchEvent) => {
-    const touch = e.touches[0];
-    const elementAtPoint = document.elementFromPoint(
-      touch.clientX,
-      touch.clientY
-    ) as HTMLElement;
-    processSlotSelection(elementAtPoint);
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-    setTouchedSlots({});
-  };
-
-  // HANDLE MOUSE EVENTS : FOR DRAGGING & SELECTING ON GESTURE -- DESKTOP
-  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    setIsDragging(true);
-  }, []);
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (isDragging) {
-        const elementAtPoint = document.elementFromPoint(
-          e.clientX,
-          e.clientY
-        ) as HTMLElement;
-        processSlotSelection(elementAtPoint);
-      }
-    },
-    [isDragging, touchedSlots, dayHours, onHoursStateChange, weekKey]
-  );
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-    setTouchedSlots({});
-  }, []);
-
-  // Add event listeners for mouse and touch events and remove them on unmount
+  const [showDesktopCalendarWidget, setshowDesktopCalendarWidget] =
+    useState(false);
+  const [showMobileCalendarWidget, setshowMobileCalendarWidget] =
+    useState(false);
 
   useEffect(() => {
-    const addListeners = () => {
-      document.addEventListener("touchstart", handleTouchStart);
-      document.addEventListener("touchmove", handleTouchMove);
-      document.addEventListener("touchend", handleTouchEnd);
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        desktopCalendarRef.current &&
+        !desktopCalendarRef.current.contains(event.target as Node)
+      ) {
+        setshowDesktopCalendarWidget(false);
+      }
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [desktopCalendarRef]);
 
-    const removeListeners = () => {
-      document.removeEventListener("touchstart", handleTouchStart);
-      document.removeEventListener("touchmove", handleTouchMove);
-      document.removeEventListener("touchend", handleTouchEnd);
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
+  // toggle calendar widget
+  const handleDesktopCalendarPrevToggle = () => {
+    setshowMobileCalendarWidget(false);
+    setshowDesktopCalendarWidget((prev) => !prev);
+  };
+  const handleMobileCalendarPrevToggle = () => {
+    setshowDesktopCalendarWidget(false);
+    setshowMobileCalendarWidget((prev) => !prev);
+  };
 
-    addListeners();
-    return removeListeners;
-  }, [handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
+  // Calendar Navigation
+  const handlePreviousWeek = () => {
+    setCurrentDate((prevDate) => subWeeks(prevDate, 1));
+  };
 
-  //   RENDER SLOTS --- on MOBILE
-  const renderMobileTimeSlots = () => {
-    return hoursOfDay.map((hour) => {
-      const { formattedHour, ampm } = formatHour(hour);
+  const handleNextWeek = () => {
+    setCurrentDate((prevDate) => addWeeks(prevDate, 1));
+  };
 
-      const dayKey = daysOfWeek.find(
-        (day) => day.dayName === selectedDay
-      )?.dayKey;
-
-      const slotState = dayKey ? dayHours[dayKey]?.[hour] || "1" : "1";
-
-      return (
-        <div
-          key={hour}
-          className={`flex justify-center ${
-            animationTrigger ? "animate-flash" : ""
-          }`}
-        >
-          <PlayerTimeSlot
-            day={dayKey as string}
-            hour={hour}
-            state={slotState as "1" | "2" | "3" | "4" | "5" | "6" | "7"}
-            displayedHour={{ hour: formattedHour, ampm }}
-            onStateChange={onHoursStateChange}
-            isDragging={isDragging}
-          />
-        </div>
-      );
+  const handlePreviousMonth = () => {
+    setCurrentDate((prevDate) => {
+      const newDate = subMonths(prevDate, 1);
+      const weekStart = getFirstFullWeekOfMonth(newDate);
+      return weekStart;
     });
   };
 
-  const renderDesktopHours = () => {
-    return hoursOfDay.map((hour) => (
-      <div key={hour} className="text-center justify-center items-center">
-        <div className="h-10 flex items-center relative">
-          {/* Display Hours */}
-          <button
-            className="text-lightPurple font-robotoMono font-regular uppercase text-center w-full h-10 pb-2"
-            onClick={() => {
-              // Get the current states for all days for the selected hour
-              const currentStates = daysOfWeek.reduce(
-                (states, { dayKey }) => ({
-                  ...states,
-                  [dayKey]: dayHours[dayKey]?.[hour] || "1",
-                }),
-                {}
-              );
-
-              // Call the function to select all slots for this hour
-              if (onSelectAllSlotsForHours) {
-                // Call the function to select all slots for this hour
-                onSelectAllSlotsForHours(
-                  hour,
-                  currentStates,
-                  daysOfWeek.map(({ dayKey }) => dayKey)
-                );
-              } else {
-                console.error("onSelectAllSlotsForHours is not defined");
-              }
-            }}
-          >
-            <Tooltip
-              closeDelay={50}
-              content="Select all"
-              key={"default"}
-              color="default"
-              className="bg-black rounded text-nowrap text-sm text-offWhite transition-opacity duration-500 ease-in-out py-1 px-2"
-            >
-              {hour}
-            </Tooltip>
-          </button>
-        </div>
-        <div className="flex flex-col">
-          {daysOfWeek.map(({ dayKey }) => (
-            <div key={`${dayKey}-${hour}`} className="h-10 flex">
-              <PlayerTimeSlot
-                day={dayKey}
-                hour={hour}
-                state={
-                  (dayHours[dayKey]?.[hour] as
-                    | "1"
-                    | "2"
-                    | "3"
-                    | "4"
-                    | "5"
-                    | "6"
-                    | "7") || (isActive ? "1" : "0")
-                }
-                onStateChange={onHoursStateChange}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    ));
+  const handleNextMonth = () => {
+    setCurrentDate((prevDate) => {
+      const newDate = addMonths(prevDate, 1);
+      const weekStart = getFirstFullWeekOfMonth(newDate);
+      return weekStart;
+    });
   };
 
-  const renderDesktopDays = () => {
-    return daysOfWeek.map(({ dayKey, dayDate, dayName }) => (
-      <div key={dayKey} className="h-10 flex items-center relative">
-        <Tooltip
-          closeDelay={50}
-          placement="left"
-          content="Select all"
-          key={"default"}
-          color="default"
-          className="bg-black rounded text-nowrap text-sm text-offWhite transition-opacity duration-500 ease-in-out py-1 px-2"
-        >
-          <button
-            className="hidden md:inline text-lightPurple font-robotoMono font-regular uppercase text-nowrap"
-            onClick={() => {
-              if (onSelectAllSlotsForDays) {
-                onSelectAllSlotsForDays(
-                  dayKey,
-                  dayHours[dayKey] || {},
-                  hoursOfDay
-                );
-              } else {
-                console.error("onSelectAllSlotsForDays is not defined");
-              }
-            }}
-          >
-            <div className="flex items-center gap-x-3">
-              <span className="text-base">{dayName}</span>
-              <span className="text-sm opacity-50">{`${dayDate}`}</span>
-            </div>
-          </button>
-        </Tooltip>
-      </div>
-    ));
+  // display current week
+  const handleWeekSelect = (date: Date) => {
+    setCurrentDate(date);
+  };
+
+  // Current week
+  const currentWeekRangeMobile = `${format(
+    startOfWeek(currentDate, { weekStartsOn: 1 }),
+    "dd MMM"
+  )} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), "dd MMM")}`;
+
+  const currentWeekRangeDesktop = `${format(
+    startOfWeek(currentDate, { weekStartsOn: 1 }),
+    "dd.MM"
+  )} - ${format(endOfWeek(currentDate, { weekStartsOn: 1 }), "dd.MM")}`;
+
+  const currentMonth = format(currentDate, "MMMM yyyy");
+
+  const handleCurrentWeek = () => {
+    setCurrentDate(new Date());
+  };
+
+  let isCurrentWeek =
+    startOfWeek(currentDate, { weekStartsOn: 1 }).toDateString() ===
+    startOfWeek(new Date(), { weekStartsOn: 1 }).toDateString();
+
+  const getFirstFullWeekOfMonth = (date: Date) => {
+    const firstDayOfMonth = startOfMonth(date);
+    const weekStart = startOfWeek(firstDayOfMonth, { weekStartsOn: 1 });
+    if (isBefore(weekStart, firstDayOfMonth)) {
+      return addWeeks(weekStart, 1);
+    }
+    return weekStart;
+  };
+
+  // CHECK FOR EVENTS
+  const hasDayEvents = (date: Date): boolean => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    const weekKey = format(startOfWeek(date, { weekStartsOn: 1 }), "yyy-MM-dd");
+    const storedData = localStorage.getItem(`dayHours-${weekKey}`);
+
+    if (!storedData) {
+      return false;
+    }
+
+    try {
+      const parsedData = JSON.parse(storedData);
+      const dayOfWeek = format(date, "EEEE");
+
+      return (
+        parsedData[dayOfWeek] && Object.keys(parsedData[dayOfWeek]).length > 0
+      );
+    } catch (e) {
+      console.error("Error parsing dayHours data:", e);
+      return false;
+    }
   };
 
   return (
-    <>
-      {isMobile ? (
-        <div className={`mt-2 mb-10 ${className}`}>
-          <div className="w-full">
-            {/* Days Names Column */}
-            <div className="grid grid-cols-7 gap-1 md:gap-1 px-2 mt-4">
-              {daysOfWeek.map(({ shortDayName, dayName, dayDate }) => (
-                <div key={dayName} className="flex justify-center">
-                  <DayButton
-                    state={selectedDay === dayName ? "selected" : "unselected"}
-                    onClick={() => {
-                      handleDayChange(dayName);
-                    }}
-                    className="h-[5rem]"
-                  >
-                    <div className="flex flex-col items-center">
-                      <p className="text-sm">{shortDayName}</p>
-                      <p className="text-xl font-bold">{dayDate}</p>
-                    </div>
-                  </DayButton>
-                </div>
-              ))}
+    <div className={className}>
+      <div
+        className={`flex justify-between items-center md:mb-12 text-lightPurple text-2xl font-semibold`}
+      >
+        {/* Mobile view */}
+        <div className="flex flex-col lg:hidden w-full items-center">
+          <div className="flex items-center">
+            <button onClick={handlePreviousWeek}>
+              <LeftArrow className="mr-2 h-8 w-auto fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+            </button>
+            <div className="w-[240px] flex justify-center items-center">
+              <span className="mx-2 mt-[-0.2em] text-xl text-nowrap">
+                {currentWeekRangeMobile}
+              </span>{" "}
+              <button onClick={handleMobileCalendarPrevToggle} className="ml-2">
+                <CalendarIcon className="ml-2 align-middle fill-lightPurple opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+              </button>
             </div>
-
-            {/* Render time slots for the selected day */}
-            <div className="grid grid-cols-6 gap-2 md:gap-4 px-2 mt-4 touch-none test">
-              {renderMobileTimeSlots()}
-            </div>
-            {/* end of render time slots */}
-          </div>
-        </div>
-      ) : (
-        <div
-          className={`my-5 w-full flex ${className}`}
-          onMouseDown={handleMouseDown}
-        >
-          {/* Days Names Column */}
-          <div className="flex flex-col">
-            <div className="h-[30px]"></div>
-
-            {renderDesktopDays()}
-          </div>
-
-          {/* Hours columns */}
-          <div className="flex flex-col w-full">
-            <div className="flex flex-row">
-              <div className="w-5 md:w-10 h-10"></div>
-              <div className="flex flex-row justify-between w-full">
-                {renderDesktopHours()}
+            {showMobileCalendarWidget && (
+              <div
+                className={`absolute top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black z-10 transition-opacity duration-300 ease-in-out ${
+                  showMobileCalendarWidget
+                    ? "opacity-100"
+                    : "opacity-0 pointer-events-none"
+                }`}
+              >
+                <CalendarWidget
+                  currentDate={currentDate}
+                  handlePrevMonthClick={handlePreviousMonth}
+                  handleNextMonthClick={handleNextMonth}
+                  onClose={handleMobileCalendarPrevToggle}
+                  hasDayEvents={hasDayEvents}
+                  onWeekSelect={handleWeekSelect}
+                  isMobile={true}
+                />
               </div>
+            )}
+            <button onClick={handleNextWeek}>
+              <RightArrow className="ml-2 h-8 w-auto fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+            </button>
+          </div>
+          <TertiaryButton
+            onClick={handleCurrentWeek}
+            className={`text-sm h-8 border-0 underline
+                  ${
+                    isCurrentWeek
+                      ? "mt-[-24px] opacity-0 pointer-events-none"
+                      : "mt-4 opacity-100"
+                  }`}
+            color="lightGrey"
+          >
+            Back to current week
+          </TertiaryButton>
+        </div>
+
+        {/* Desktop view */}
+        <div className="hidden lg:flex justify-between items-center w-full">
+          <div className="flex items-center">
+            <button onClick={handlePreviousWeek}>
+              <LeftArrow className="mr-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+            </button>
+            <span className="mx-2 mt-[-0.2em] w-[150px] flex justify-center items-center text-nowrap">
+              {currentWeekRangeDesktop}
+            </span>
+            <button onClick={handleNextWeek}>
+              <RightArrow className="ml-2 fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+            </button>
+            <OutlineButton
+              onClick={handleCurrentWeek}
+              className={`ml-4 text-base h-8 border-none text-lightGrey
+                  ${
+                    isCurrentWeek
+                      ? "opacity-0 pointer-events-none"
+                      : "opacity-100"
+                  }`}
+            >
+              ◄ <span className="underline">Back to current week</span>
+            </OutlineButton>
+          </div>
+
+          <div className="flex items-center" ref={desktopCalendarRef}>
+            <button onClick={handlePreviousMonth}>
+              <LeftArrow className="mr-2 align-middle fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+            </button>
+            <div className="w-[250px] flex justify-center items-center">
+              <span className="mx-2 mt-[-0.2em] text-nowrap">
+                {currentMonth}
+              </span>{" "}
+              <button
+                onClick={handleDesktopCalendarPrevToggle}
+                className="ml-2"
+              >
+                <CalendarIcon className="ml-2 align-middle fill-lightPurple opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+              </button>
             </div>
+
+            <div
+              className={`absolute opacity-0 ${desktopWidgetTop} right-[38px] z-10 transition-all duration-300 ease-in-out ${
+                showDesktopCalendarWidget
+                  ? "opacity-100 pointer-events-auto"
+                  : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <CalendarWidget
+                currentDate={currentDate}
+                handlePrevMonthClick={handlePreviousMonth}
+                handleNextMonthClick={handleNextMonth}
+                onWeekSelect={handleWeekSelect}
+              />
+            </div>
+
+            <button onClick={handleNextMonth}>
+              <RightArrow className="ml-2 align-middle fill-green opacity-60 hover:opacity-100  transform-all duration-300 ease-in-out" />
+            </button>
           </div>
         </div>
-      )}
-    </>
+      </div>
+
+      {/* CALENDAR */}
+      <CalendarContainer
+        dayHours={dayHours}
+        setDayHours={setDayHours}
+        currentDate={currentDate}
+        isActive={isActive}
+      />
+    </div>
   );
 };
 

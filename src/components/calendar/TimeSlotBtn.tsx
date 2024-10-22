@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { format, startOfWeek, parseISO, set } from "date-fns";
 import { updateHourStateInLocalStorage } from "@/lib/utils/localStorageUtils";
+import { TimeSlotState } from "@/types/TimeSlotState";
 
 /*
 STATES EXPLANATION
@@ -19,17 +20,17 @@ STATES EXPLANATION
 7 - game session invitation received
 */
 
-interface PlayerTimeSlotProps {
+interface TimeSlotBtnProps {
   day: string;
   hour: number;
-  state: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7";
+  state: TimeSlotState;
   displayedHour?: { hour: number; ampm: string };
-  onStateChange: (day: string, hour: number, newState: "1" | "2" | "3") => void;
+  onStateChange: (day: string, hour: number, newState: TimeSlotState) => void;
   isDragging?: boolean;
   className?: string;
 }
 
-const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
+const TimeSlotBtn: React.FC<TimeSlotBtnProps> = ({
   hour,
   day,
   displayedHour,
@@ -38,7 +39,9 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
   className = "",
   isDragging,
 }) => {
-  const [state, setState] = useState(initialState || "1");
+  const [state, setState] = useState(
+    initialState || TimeSlotState.AvailableNever
+  );
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const weekKey = format(
@@ -56,18 +59,23 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
     if (isDragging) return;
 
     // If the state is not 1, 2, or 3, prevent further state changes
-    if (state !== "1" && state !== "2" && state !== "3") return;
+    if (
+      state !== TimeSlotState.AvailableNever &&
+      state !== TimeSlotState.AvailableOnce &&
+      state !== TimeSlotState.AvailableAlways
+    )
+      return;
 
     // Update state for valid state values (1, 2, or 3)
-    if (state === "1") {
-      setState("2");
-      onStateChange(day, hour, "2");
-    } else if (state === "2") {
-      setState("3");
-      onStateChange(day, hour, "3");
-    } else if (state === "3") {
-      setState("1");
-      onStateChange(day, hour, "1");
+    if (state === TimeSlotState.AvailableNever) {
+      setState(TimeSlotState.AvailableOnce);
+      onStateChange(day, hour, TimeSlotState.AvailableOnce);
+    } else if (state === TimeSlotState.AvailableOnce) {
+      setState(TimeSlotState.AvailableAlways);
+      onStateChange(day, hour, TimeSlotState.AvailableAlways);
+    } else if (state === TimeSlotState.AvailableAlways) {
+      setState(TimeSlotState.AvailableNever);
+      onStateChange(day, hour, TimeSlotState.AvailableNever);
     }
 
     updateHourStateInLocalStorage(weekKey, day, hour.toString(), state);
@@ -75,21 +83,21 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
 
   const getButtonColor = () => {
     switch (state) {
-      case "0": // not available and not active (for team calendar)
-        return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90 pointer-events-none cursor-not-allowed";
-      case "1": // not available
+      case TimeSlotState.AvailableNever: // not available
         return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90";
-      case "2": // available this week
+      case TimeSlotState.AvailableOnce: // available this week
         return "bg-lightPurple border-solid border-darkGrey border-opacity-20 border-2 text-black hover:scale-90";
-      case "3": // always available
+      case TimeSlotState.AvailableAlways: // always available
         return "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black hover:scale-90";
-      case "4": // All team members available
+      case TimeSlotState.TeamNotAvailable: // not available and not active (for team calendar)
+        return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90 pointer-events-none cursor-not-allowed";
+      case TimeSlotState.TeamAllAvailable: // All team members available
         return "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black hover:scale-90";
-      case "5": // part of the team available
+      case TimeSlotState.TeamPartAvailable: // part of the team available
         return "bg-green bg-opacity-10 border-solid border-green border-opacity-60 border-2 text-black hover:scale-90";
-      case "6": // game session invitation sent
+      case TimeSlotState.InvitationSent: // game session invitation sent
         return "bg-darkPurple border-solid border-darkGrey border-2 rounded text-offWhite hover:scale-90";
-      case "7": // game session invitation received
+      case TimeSlotState.InvitationReceived: // game session invitation received
         return "bg-lightPurple border-solid border-darkGrey border-2 rounded text-offWhite hover:scale-90";
       default:
         return "border-2 border-solid bg-black border-darkGrey border-opacity-80 bg-opacity-30 rounded text-offWhite hover:scale-90";
@@ -124,4 +132,4 @@ const PlayerTimeSlot: React.FC<PlayerTimeSlotProps> = ({
   );
 };
 
-export default PlayerTimeSlot;
+export default TimeSlotBtn;

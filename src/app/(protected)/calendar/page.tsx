@@ -8,8 +8,10 @@ import HelpIcon from "@/components/icons/HelpIcon";
 import SyncCalendarsIcon from "@/components/icons/SyncCalendarsIcon";
 import PurpleButton from "@/components/buttons/PurpleButton";
 import Navbar from "@/components/layout/Navbar";
-import CalendarWrapper from "@/components/calendar/CalendarWrapper";
+import CalendarWrapper from "@/components/calendar/Calendar";
 import { useUserCalendarData } from "@/lib/hooks/useUserCalendarData";
+
+type helpBtnState = "AvailableNever" | "AvailableOnce" | "AvailableAlways";
 
 export default function Page() {
   const { userAvailability, isLoading } = useUserCalendarData("user-001", true);
@@ -27,7 +29,9 @@ export default function Page() {
   }, [isLoading, userAvailability, savedData]);
 
   const [isHelpOpen, setIsHelpOpen] = useState(false);
-  const [helpBtnState, setHelpBtnState] = useState<string>("1");
+  const [helpBtnState, setHelpBtnState] = useState<string>(
+    "AvailableNever" as helpBtnState
+  );
 
   // FUNCTIONS -------------------------------------------------------------------------
   // *** PLACEHOLDER FOR IMPORT CALENDARS FUNCTIONALITY ***
@@ -37,7 +41,7 @@ export default function Page() {
 
   // toggle help modal
   const toggleHelpModal = () => {
-    setHelpBtnState("1");
+    setHelpBtnState("AvailableNever");
     setIsHelpOpen(!isHelpOpen);
 
     // disable scrolling when modal is open
@@ -50,12 +54,12 @@ export default function Page() {
 
   // Button in tutorial help modal
   const handleSlotClick = () => {
-    if (helpBtnState === "1") {
-      setHelpBtnState("2");
-    } else if (helpBtnState === "2") {
-      setHelpBtnState("3");
+    if (helpBtnState === "AvailableNever") {
+      setHelpBtnState("AvailableOnce");
+    } else if (helpBtnState === "AvailableOnce") {
+      setHelpBtnState("AvailableAlways");
     } else {
-      setHelpBtnState("1");
+      setHelpBtnState("AvailableNever");
     }
   };
 
@@ -94,9 +98,9 @@ export default function Page() {
       "bg-lightPurple border-solid border-darkGrey border-opacity-20 border-2 text-black",
       "bg-green border-solid border-darkGrey border-opacity-20 border-2 text-black",
     ];
-    if (helpBtnState === "1") {
+    if (helpBtnState === "AvailableNever") {
       return styles[0];
-    } else if (helpBtnState === "2") {
+    } else if (helpBtnState === "AvailableOnce") {
       return styles[1];
     } else {
       return styles[2];
@@ -150,9 +154,9 @@ export default function Page() {
                       className={`ml-0 lg:ml-4 grow w-12 h-12 lg:w-5 lg:h-5 font-semibold hover:scale-90 ease-in-out duration-300 rounded ${getSlotStyle()}`}
                     ></button>
                     <p>
-                      {helpBtnState === "1"
+                      {helpBtnState === "AvailableNever"
                         ? "Not available"
-                        : helpBtnState === "2"
+                        : helpBtnState === "AvailableOnce"
                         ? "Available this week"
                         : "Always available"}
                     </p>
