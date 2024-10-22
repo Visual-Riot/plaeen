@@ -8,23 +8,16 @@ const HomePageSignUp = () => {
   return (
     <div className="x-main-paddings flex flex-col w-full mt-16 justify-center items-center">
       <div className="md:w-full flex justify-center flex-col items-center gap-2">
-        <p className="text-lg md:text-xl md:mb-5 text-lightGrey font-sofia font-extralight landing-paragraph">
-          <span className="font-medium">
-            Ready to lose all excuses not to play?
-          </span>{" "}
-          Enter your email to create an account.
+        <p className="text-lg md:text-xl text-center text-lightGrey font-sofia font-extralight landing-paragraph">
+        <span className="font-medium">Ready to lose all excuses not to play? {''} </span>
+          Create an account and start gaming!
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center xs:items-start gap-6 mt-4 w-full">
-          <input
-            type="email"
-            placeholder="john.smith@gmail.com"
-            className="border-neonGreen border-2 h-12 xs:h-[64px] xs:w-full md:w-[408px] p-5 rounded-lg bg-transparent"
-          />
           <Link href="/login" passHref>
             <div className="cursor-pointer">
               <GreenButton
                 onClick={() => console.log("clicked")}
-                className="h-[64px] px-16 text-nowrap"
+                className="h-[64px] xs:w-[115px] sm:w-[170px]  text-nowrap"
               >
                 Get Started
               </GreenButton>
