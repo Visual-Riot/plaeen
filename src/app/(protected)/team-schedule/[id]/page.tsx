@@ -73,7 +73,7 @@ export default function TeamSchedulePage() {
         const [teamResponse, gamesResponse, usersResponse] = await Promise.all([
           fetch(`/api/teams/${teamId}`),
           fetch(`/api/teams/${teamId}/games`),
-          fetch(`/api/teams/${teamId}/players`),
+          fetch(`/api/user`),
         ]);
   
         // Team details response
@@ -105,8 +105,8 @@ export default function TeamSchedulePage() {
         // Users response
         if (usersResponse.ok) {
           const usersData = await usersResponse.json();
-          console.log("Fetched team users: ", usersData); // Debugging log
-          setUsers(usersData.map((teamUser: any) => teamUser.user));
+          console.log("Fetched users: ", usersData); // Debugging log
+          setUsers(usersData);
         } else {
           console.error('Failed to fetch users');
         }
