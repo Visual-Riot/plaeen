@@ -1,12 +1,22 @@
+/*
+This component is the main calendar component that contains the calendar grid and navigation buttons.
+It is used in the CalendarPage and in GameCalendar.
+
+It contains:
+  - the calendar grid and navigation buttons. 
+  - the logic for displaying the current week and month
+  - logic for for navigating between weeks and months. 
+  - handles the display of the calendar widget on desktop and mobile views.
+*/
+
 import React from "react";
-import CalendarGrid from "./CalendarGrid";
+import CalendarContainer from "./CalendarContainer";
 import LeftArrow from "../icons/LeftArrow";
 import CalendarIcon from "../icons/CalendarIcon";
-import CalendarDesktopWidget from "./CalendarDesktopWidget";
-import CalendarMobileWidget from "./CalendarMobileWidget";
 import RightArrow from "../icons/RightArrow";
 import TertiaryButton from "../buttons/TertiaryButton";
 import OutlineButton from "../buttons/OutlineButton";
+import CalendarWidget from "./CalendarWidget";
 import {
   format,
   addWeeks,
@@ -20,19 +30,21 @@ import {
 } from "date-fns";
 import { useState, useEffect, useRef } from "react";
 
-interface CalendarWrapperProps {
+interface CalendarProps {
   dayHours: { [key: string]: { [key: number]: string } };
   setDayHours: React.Dispatch<
     React.SetStateAction<{ [key: string]: { [key: number]: string } }>
   >;
   desktopWidgetTop?: string;
+  isActive?: boolean;
   className?: string;
 }
 
-const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
+const Calendar: React.FC<CalendarProps> = ({
   dayHours,
   setDayHours,
-  desktopWidgetTop = "top-[220px]",
+  desktopWidgetTop = "top-[220px]", // calendar widget offset from top
+  isActive = true, // should time slots be active from default (active btns change their slots on click)
   className,
 }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
@@ -180,13 +192,14 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
                     : "opacity-0 pointer-events-none"
                 }`}
               >
-                <CalendarMobileWidget
+                <CalendarWidget
                   currentDate={currentDate}
                   handlePrevMonthClick={handlePreviousMonth}
                   handleNextMonthClick={handleNextMonth}
                   onClose={handleMobileCalendarPrevToggle}
                   hasDayEvents={hasDayEvents}
                   onWeekSelect={handleWeekSelect}
+                  isMobile={true}
                 />
               </div>
             )}
@@ -256,11 +269,10 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
                   : "opacity-0 pointer-events-none"
               }`}
             >
-              <CalendarDesktopWidget
+              <CalendarWidget
                 currentDate={currentDate}
                 handlePrevMonthClick={handlePreviousMonth}
                 handleNextMonthClick={handleNextMonth}
-                // hasDayEvents={hasDayEvents}
                 onWeekSelect={handleWeekSelect}
               />
             </div>
@@ -273,13 +285,14 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
       </div>
 
       {/* CALENDAR */}
-      <CalendarGrid
+      <CalendarContainer
         dayHours={dayHours}
         setDayHours={setDayHours}
         currentDate={currentDate}
+        isActive={isActive}
       />
     </div>
   );
 };
 
-export default CalendarWrapper;
+export default Calendar;

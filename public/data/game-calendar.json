@@ -1,15 +1,15 @@
 [
   {
     "id": "game-calendar-001",
-    "admin_id": "user-001",
     "team_id": "team-001",
     "game_id": "game-001",
     "sessions": [
       {
         "id": "session-001",
+        "admin_id": "user-001",
         "dates": [
           {
-            "day": "2024-09-30",
+            "day": "2024-10-14",
             "hours": [18, 19],
             "duration_hours": 2,
             "status": "proposed",
@@ -22,9 +22,10 @@
       },
       {
         "id": "session-002",
+        "admin_id": "user-002",
         "dates": [
           {
-            "day": "2024-09-29",
+            "day": "2024-10-14",
             "hours": [13, 14],
             "duration_hours": 2,
             "status": "pending",

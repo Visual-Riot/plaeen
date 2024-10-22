@@ -5,8 +5,9 @@ import GreenButton from "@/components/buttons/GreenButton";
 import TertiaryButton from "@/components/buttons/TertiaryButton";
 import OutlineButton from "@/components/buttons/OutlineButton";
 import EditIcon from "@/components/icons/EditIcon";
-import CalendarWrapper from "@/components/calendar/CalendarWrapper";
+import Calendar from "./Calendar";
 import Link from "next/link";
+import { TimeSlotState } from "@/types/TimeSlotState";
 
 interface Availability {
   day: string;
@@ -25,6 +26,8 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
   teamId: string;
   gameId: string;
 }) => {
+  const user_id = "user-001"; // user_id is hardcoded for now
+
   const [isLoading, setIsLoading] = useState(true);
 
   const [dayHours, setDayHours] = useState<{
@@ -37,7 +40,7 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
       const gameCalendarResponse = await fetch("/data/game-calendar.json");
       const gameCalendars = await gameCalendarResponse.json();
 
-      // Find the correct game calendar based on team_id and game_id --- that is passed to this component
+      // Find the correct game calendar based on team_id and game_id
       const gameCalendar = gameCalendars.find(
         (calendar: { team_id: string; game_id: string }) =>
           calendar.team_id === teamId && calendar.game_id === gameId
@@ -66,6 +69,33 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
 
       let newDayHours: { [key: string]: { [key: number]: string } } = {};
 
+      // Process all sessions in gameCalendar
+      gameCalendar.sessions.forEach(
+        (session: { admin_id: string; dates: any[] }) => {
+          const { admin_id, dates } = session;
+
+          // Loop over each date object in the session
+          dates.forEach((date) => {
+            const { day, hours } = date;
+
+            // Process each hour in the date.hours array
+            hours.forEach((hour: number) => {
+              if (!newDayHours[day]) {
+                newDayHours[day] = {};
+              }
+
+              // Set the admin's session status: 6 if the current user is the admin, otherwise 7
+              if (admin_id === user_id) {
+                newDayHours[day][hour] = TimeSlotState.InvitationSent; // Current user is admin, state 6
+              } else {
+                newDayHours[day][hour] = TimeSlotState.InvitationReceived; // Another user is admin, state 7
+              }
+              console.log({ day, hour, state: newDayHours[day][hour] });
+            });
+          });
+        }
+      );
+
       // Collect each team member's availability
       for (const userId of teamMembers) {
         const userSchedule = userCalendars.find(
@@ -82,12 +112,15 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
 
             availability.hours.forEach(({ hour, state }) => {
               if (!newDayHours[day][hour]) {
-                newDayHours[day][hour] = "0"; // Initialize state to 0 - this is in case no data is available for a specific day-hour
+                newDayHours[day][hour] = TimeSlotState.TeamNotAvailable; // Initialize state to 0 if not already set
               }
 
-              if (state === "2" || state === "3") {
-                // If the member is available, set state to "1" to indicate availability -
-                newDayHours[day][hour] = "1"; // --- this is temporary marking and will be changed so number/state 1 is not final
+              if (
+                state === TimeSlotState.AvailableOnce ||
+                state === TimeSlotState.AvailableAlways
+              ) {
+                // If the member is available, set state to "1" (AvailableNever)
+                newDayHours[day][hour] = TimeSlotState.AvailableNever;
               }
             });
           });
@@ -97,9 +130,8 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
       // Update the state based on the availability of all members
       for (const day in newDayHours) {
         for (const hour in newDayHours[day]) {
-          const availabilityStates = newDayHours[day][hour];
-
-          let availableCount = availabilityStates === "1" ? 1 : 0;
+          let availableCount =
+            newDayHours[day][hour] === TimeSlotState.AvailableNever ? 1 : 0;
 
           // Check how many members are available for this day-hour
           teamMembers.forEach((userId: string) => {
@@ -120,8 +152,8 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
 
                 if (
                   hourAvailability &&
-                  (hourAvailability.state === "2" ||
-                    hourAvailability.state === "3")
+                  (hourAvailability.state === TimeSlotState.AvailableOnce ||
+                    hourAvailability.state === TimeSlotState.AvailableAlways)
                 ) {
                   availableCount++;
                 }
@@ -131,12 +163,13 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
 
           // Set the new state based on the count of available members
           if (availableCount === teamMembers.length) {
-            newDayHours[day][hour] = "4"; // All team members available
+            newDayHours[day][hour] = TimeSlotState.TeamAllAvailable; // All team members available
           } else if (availableCount >= 2) {
-            newDayHours[day][hour] = "5"; // Some team members available
-          } else {
-            newDayHours[day][hour] = "0"; // Less than 2 members available
+            newDayHours[day][hour] = TimeSlotState.TeamPartAvailable; // Some team members available
           }
+          // else {
+          //   newDayHours[day][hour] = "0"; // Less than 2 members available
+          // }
         }
       }
 
@@ -220,10 +253,11 @@ const GameCalendar: React.FC<GameCalendarProps> = ({
   //   RETURNING THE LOADED COMPONENT
   return (
     <>
-      <CalendarWrapper
+      <Calendar
         dayHours={dayHours}
         setDayHours={setDayHours}
         desktopWidgetTop="top-[100px]"
+        isActive={false} // should player buttons be active from default?
       />
 
       {/* Bottom Row with legend and submit button */}

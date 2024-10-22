@@ -1,50 +1,55 @@
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import classNames from 'classnames';
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import classNames from "classnames";
 
 interface FooterProps {
   useBackgroundImage?: boolean; // Optional prop to control background image
   className?: string; // Optional prop for additional class names
 }
 
-const Footer: React.FC<FooterProps> = ({ useBackgroundImage = true, className }) => {
+const Footer: React.FC<FooterProps> = ({
+  useBackgroundImage = true,
+  className,
+}) => {
   const currentYear = new Date().getFullYear();
 
   // Styles for the footer container (including the ellipse)
   const footerContainerStyles = {
-    position: 'relative' as 'relative',
+    position: "relative" as "relative",
     zIndex: 10,
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
   };
 
   // Styles for the ellipse element above the footer
   const ellipseStyles = {
-    position: 'absolute' as 'absolute',
+    position: "absolute" as "absolute",
     left: 0,
     right: 0,
-    top: '-1rem', // Adjust this value as needed to position the ellipse correctly above the footer
-    height: '3rem', // Increased height to make the ellipse more like a semi-circle
-    backgroundColor: 'black',
-    clipPath: 'ellipse(130% 100% at 50% 100%)', // Create a more semi-circular shape
-    borderTop: '3px solid #6606E3', // Purple border on the curved side at the bottom
-    overflow: 'hidden', // Ensure that the content inside does not overflow
+    top: "-1rem", // Adjust this value as needed to position the ellipse correctly above the footer
+    height: "3rem", // Increased height to make the ellipse more like a semi-circle
+    backgroundColor: "black",
+    clipPath: "ellipse(130% 100% at 50% 100%)", // Create a more semi-circular shape
+    borderTop: "3px solid #6606E3", // Purple border on the curved side at the bottom
+    overflow: "hidden", // Ensure that the content inside does not overflow
   };
 
   const footerClass = classNames(
-    "flex items-center justify-center xs:h-[55vh] sm:h-[40vh] mt-[150px] text-center text-white",
+    "flex w-full items-center justify-center xs:h-[55vh] sm:h-[40vh] mt-[150px] text-center text-white",
     {
-      "bg-[url('/img/footer-bg-noshadow.webp')] bg-cover bg-top": useBackgroundImage,
+      "bg-[url('/img/footer-bg-noshadow.webp')] bg-cover bg-top":
+        useBackgroundImage,
       "bg-gray-800": !useBackgroundImage, // Fallback background color if no image is used
     },
     className // Merge with any additional classes passed as props
   );
 
   return (
-    <div style={footerContainerStyles}>
+    <div style={footerContainerStyles} className="max-w-[120rem]">
       {/* Conditionally render the ellipse only if the background image is not used */}
-      {!useBackgroundImage && (
-        <div style={ellipseStyles}></div>
-      )}
+      {!useBackgroundImage && <div style={ellipseStyles}></div>}
       <footer className={footerClass}>
         <div className="text-center">
           <div className="flex justify-center mb-12">

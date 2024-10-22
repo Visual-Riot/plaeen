@@ -8,7 +8,7 @@ const LandingPage = () => {
   return (
     <div className="w-full flex justify-center">
       <div className="x-main-paddings flex absolute left-1/2 -translate-x-1/2 w-full inset-0 top-[40vh] md:top-[70vh] bg-main-gradient z-[-20] opacity-50"></div>
-      <div className="x-main-paddings min-h-[80vh] md:min-h-[90vh] w-full bg-[url('/img/hero-bg-noshadow.webp')] bg-cover bg-bottom pb-8 md:pb-20 mb-[14rem] flex flex-col">
+      <div className="x-main-paddings min-h-[80vh] w-full bg-[url('/img/hero-bg-noshadow.webp')] bg-cover bg-bottom pb-8 md:pb-20 mb-[14rem] flex flex-col">
         <HomeNavbar />
         <div className="flex-grow flex items-center">
           <div className="relative space-y-4 md:space-y-6 lg:space-y-8 px-6 md:px-16 ">
@@ -24,7 +24,7 @@ const LandingPage = () => {
               <input
                 type="email"
                 placeholder="john.smith@gmail.com"
-                className="border-neonGreen border-2 h-12 h-[64px] w-full md:w-[408px] p-5 rounded-lg bg-transparent"
+                className="border-neonGreen border-2 h-12 w-full md:w-[408px] p-5 rounded-lg bg-transparent"
               />
               <Link href="/login" passHref>
                 <div className="cursor-pointer">

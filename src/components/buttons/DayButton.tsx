@@ -5,7 +5,7 @@ type ButtonProps = {
   children: React.ReactNode; // Accept any valid React node
   onClick: () => void; // Function to call on button click
   className?: string; // Optional prop to allow custom styling
-  state: "selected" | "unselected";
+  state?: "selected" | "unselected";
 };
 
 // Button component
