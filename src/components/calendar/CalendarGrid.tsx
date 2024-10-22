@@ -100,32 +100,32 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
       if (day && hour) {
         const slotKey = `${day}-${hour}`;
         if (!touchedSlots[slotKey]) {
-          setTouchedSlots((prev) => ({ ...prev, [slotKey]: true }));
-
           const currentState =
             dayHours[day]?.[hour] || TimeSlotState.AvailableNever;
 
+          // Only allow state change if the current state is one of the allowed states
           if (
-            currentState === TimeSlotState.TeamAllAvailable ||
-            TimeSlotState.TeamPartAvailable ||
-            TimeSlotState.TeamNotAvailable ||
-            TimeSlotState.InvitationReceived ||
-            TimeSlotState.InvitationSent
-          )
-            return;
-          const newState =
+            currentState === TimeSlotState.AvailableOnce ||
+            currentState === TimeSlotState.AvailableAlways ||
             currentState === TimeSlotState.AvailableNever
-              ? TimeSlotState.AvailableOnce
-              : currentState === TimeSlotState.AvailableOnce
-              ? TimeSlotState.AvailableAlways
-              : TimeSlotState.AvailableNever;
-          onHoursStateChange(day, hour, newState);
-          updateHourStateInLocalStorage(
-            weekKey,
-            day,
-            hour.toString(),
-            newState
-          );
+          ) {
+            setTouchedSlots((prev) => ({ ...prev, [slotKey]: true }));
+
+            const newState =
+              currentState === TimeSlotState.AvailableNever
+                ? TimeSlotState.AvailableOnce
+                : currentState === TimeSlotState.AvailableOnce
+                ? TimeSlotState.AvailableAlways
+                : TimeSlotState.AvailableNever;
+
+            onHoursStateChange(day, hour, newState);
+            updateHourStateInLocalStorage(
+              weekKey,
+              day,
+              hour.toString(),
+              newState
+            );
+          }
         }
       }
     }

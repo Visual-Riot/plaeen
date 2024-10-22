@@ -144,6 +144,7 @@ const CalendarContainer: React.FC<CalendarContainerProps> = ({
   return (
     <div className="player-calendar-wrapper">
       {/* Mobile version of the calendar */}
+
       {isMobile ? (
         <CalendarGrid
           className="flex lg:hidden"

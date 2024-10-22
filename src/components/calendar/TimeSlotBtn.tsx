@@ -28,6 +28,7 @@ interface TimeSlotBtnProps {
   state: TimeSlotState;
   displayedHour?: { hour: number; ampm: string };
   onStateChange: (day: string, hour: number, newState: TimeSlotState) => void;
+  openModal?: () => void;
   isDragging?: boolean;
   className?: string;
 }
@@ -38,6 +39,7 @@ const TimeSlotBtn: React.FC<TimeSlotBtnProps> = ({
   displayedHour,
   state: initialState,
   onStateChange,
+  openModal,
   className = "",
   isDragging,
 }) => {
@@ -57,17 +59,24 @@ const TimeSlotBtn: React.FC<TimeSlotBtnProps> = ({
 
   // handle click on the button
   const handleClick = (e: React.MouseEvent) => {
-    console.log(state);
+    if (isDragging) return;
 
     // If the state is not 1, 2, or 3, prevent further state changes
-    if (
-      state !== TimeSlotState.AvailableNever &&
-      state !== TimeSlotState.AvailableOnce &&
-      state !== TimeSlotState.AvailableAlways
-    )
-      return;
+    if (state === TimeSlotState.TeamNotAvailable) return;
 
-    if (isDragging) return;
+    if (
+      state === TimeSlotState.TeamAllAvailable ||
+      state === TimeSlotState.TeamPartAvailable
+    ) {
+      console.log("Open new invitation modal");
+      isDragging = false;
+    } else if (state === TimeSlotState.InvitationReceived) {
+      console.log("Open received invitation details modal");
+      isDragging = false;
+    } else if (state === TimeSlotState.InvitationSent) {
+      console.log("Open sent invitation details modal");
+      isDragging = false;
+    }
 
     // Update state for valid state values (1, 2, or 3)
     if (state === TimeSlotState.AvailableNever) {
