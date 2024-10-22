@@ -92,7 +92,17 @@ const AddPlayerModal: React.FC<AddPlayerModalProps> = ({ users, onAddPlayers, on
                     onChange={() => handleSelectUser(user)}
                     className="mr-4"
                   />
-                  <img src={user.image} alt={user.name || "Unnamed Player"} className="w-8 h-8 rounded-full mr-4" />
+                  <img
+                    src={
+                      user.image
+                        ? user.image.startsWith("data:image") || user.image.startsWith("http")
+                          ? user.image // Handle base64 and regular URLs
+                          : `/icons/avatar-default.jpg` // Fallback if it's an invalid string (unlikely)
+                        : `/icons/avatar-default.jpg` // Fallback if null
+                    }
+                    alt={user.name || "Unnamed Player"}
+                    className="w-8 h-8 rounded-full mr-4"
+                  />
                   {user.name || "Unnamed Player"} {/* Safely handle missing names */}
                 </div>
               </li>
@@ -109,7 +119,7 @@ const AddPlayerModal: React.FC<AddPlayerModalProps> = ({ users, onAddPlayers, on
             className="w-full mr-2"
             disabled={selectedPlayers.length === 0 } // Disable button if no players selected
           >
-            Confirm Selection
+            Send invite
           </GreenButton>
           <OutlineButton onClick={onClose} className="w-full ml-2">
             Cancel
